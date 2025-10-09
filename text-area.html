@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Code Input</title>
+  <title>Paste Code Only</title>
   <style>
     body {
       background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       margin: 0;
-      padding: 20px;
     }
 
     textarea {
@@ -33,6 +36,6 @@
   </style>
 </head>
 <body>
-  <textarea placeholder="Paste or write code here..."></textarea>
+  <textarea placeholder="Paste code here..." onkeydown="return false;"></textarea>
 </body>
 </html>
