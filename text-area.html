@@ -39,7 +39,7 @@
     }
 
     .editable-box:focus {
-      outline: 2px solid #3399ff;
+      outline: 2px solid #3399ff; /* blue highlight when tapped */
     }
 
     .animated-placeholder,
@@ -117,6 +117,13 @@
     input.addEventListener('input', () => {
       if (input.textContent.trim() !== "") {
         transitionToOne();
+      }
+    });
+
+    // Deselect input instantly when tapping outside
+    document.addEventListener('click', (e) => {
+      if (!input.contains(e.target)) {
+        input.blur();
       }
     });
   </script>
