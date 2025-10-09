@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Layer 1</title>
+  <title>Layer 1 Input</title>
   <style>
     body {
       background: #111;
@@ -16,8 +16,8 @@
 
     .input-container {
       position: relative;
-      width: 4ch;
-      height: 1.6em;
+      width: 3ch; /* tighter width for 3 dots */
+      height: 1.5em; /* tighter height */
     }
 
     textarea {
@@ -25,13 +25,14 @@
       height: 100%;
       background: #2b2b2b;
       color: transparent;
-      caret-color: #fff; /* visible cursor at start */
+      caret-color: #fff;
       font-family: monospace;
       font-size: 16px;
       border: none;
       border-radius: 6px;
-      padding: 4px 10px;
-      box-sizing: content-box;
+      padding: 0;
+      text-align: center;
+      box-sizing: border-box;
       resize: none;
       overflow: hidden;
       position: relative;
@@ -104,7 +105,7 @@
       confirm.classList.add('fade-in');
       input.blur();
       input.disabled = true;
-      input.style.caretColor = 'transparent'; // hide blinking cursor AFTER input
+      input.style.caretColor = 'transparent';
     }
 
     function handlePaste(e) {
