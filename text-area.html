@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Auto Hide Input</title>
+  <title>Fade Dots to 1</title>
   <style>
     body {
       background: #111;
@@ -37,7 +37,8 @@
       z-index: 1;
     }
 
-    .animated-placeholder {
+    .animated-placeholder,
+    .confirm-text {
       position: absolute;
       top: 4px;
       left: 12px;
@@ -46,8 +47,6 @@
       color: #888;
       pointer-events: none;
       z-index: 2;
-      display: flex;
-      gap: 2px;
     }
 
     .dot {
@@ -63,27 +62,54 @@
       0%, 100% { opacity: 0; }
       50%      { opacity: 1; }
     }
+
+    .hidden {
+      display: none;
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: appear 0.6s forwards;
+    }
+
+    @keyframes appear {
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
-  <div class="input-container" id="container">
-    <textarea id="input"></textarea>
+  <div class="input-container">
+    <textarea id="input" onpaste="handlePaste(event)" oninput="handleInput()"></textarea>
     <div class="animated-placeholder" id="placeholder">
       <span class="dot">.</span>
       <span class="dot">.</span>
       <span class="dot">.</span>
     </div>
+    <div class="confirm-text hidden" id="confirm">1</div>
   </div>
 
   <script>
+    const placeholder = document.getElementById('placeholder');
     const input = document.getElementById('input');
-    const container = document.getElementById('container');
+    const confirm = document.getElementById('confirm');
 
-    input.addEventListener('input', () => {
-      if (input.value.trim() !== '') {
-        container.style.display = 'none';
+    function handlePaste(e) {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text');
+      transitionToOne();
+    }
+
+    function handleInput() {
+      if (input.value.trim() !== "") {
+        transitionToOne();
       }
-    });
+    }
+
+    function transitionToOne() {
+      placeholder.classList.add('hidden');
+      confirm.classList.remove('hidden');
+      confirm.classList.add('fade-in');
+    }
   </script>
 </body>
 </html>
