@@ -10,9 +10,9 @@
   <style>
     body {
       margin: 0;
-      background: #111; /* background is back here */
+      background: #111;
       display: flex;
-      flex-direction: column; /* top + bottom layout */
+      flex-direction: column; /* top + bottom */
       align-items: center;
       justify-content: center;
       height: 100vh;
@@ -31,23 +31,22 @@
       margin-top: 2%;
     }
 
-    /* make text iframe untouchable so taps go to paster */
     #frame1 {
-      pointer-events: none;
+      pointer-events: none; /* so only bottom iframe is clickable */
     }
   </style>
 </head>
 <body>
 
-  <!-- Text on top -->
+  <!-- top: text -->
   <iframe id="frame1"></iframe>
-  <!-- Paster (square) on bottom -->
+  <!-- bottom: square -->
   <iframe id="frame2"></iframe>
 
   <script>
     const v = Date.now();
     document.getElementById('frame1').src = `welcome.html?v=${v}`;
-    document.getElementById('frame2').src = `text-area.html?v=${v}`;
+    document.getElementById('frame2').src = `square.html?v=${v}`;
   </script>
 
 </body>
