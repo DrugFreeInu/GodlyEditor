@@ -20,21 +20,33 @@
       height: 4em;
     }
 
+    /* --- Caret position section --- */
+    :root {
+      --caret-left: -25px; /* horizontal position */
+      --caret-top: 10px;   /* vertical position */
+    }
+
     .editable-box {
-      position: absolute;
       width: 100%;
       height: 100%;
-      z-index: 0; /* behind placeholder and number */
-      background: transparent;
+      background: #2b2b2b;
       color: transparent;
-      caret-color: transparent;
       font-family: monospace;
       font-size: 40px;
       border-radius: 6px;
-      padding-left: 32px; /* shift input start slightly */
+      text-align: center;
+      box-sizing: border-box;
+      text-indent: var(--caret-left);
+      padding-top: var(--caret-top);
       line-height: 1;
       user-select: none;
-      outline: none;
+      outline: 2px solid transparent;
+      z-index: 1;
+      caret-color: transparent; /* make caret invisible */
+    }
+
+    .editable-box:focus {
+      outline: 2px solid #3399ff;
     }
 
     .animated-placeholder,
@@ -47,7 +59,7 @@
       font-size: 35px;
       color: #888;
       pointer-events: none;
-      z-index: 1;
+      z-index: 2;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -112,6 +124,12 @@
     input.addEventListener('input', () => {
       if (input.textContent.trim() !== "") {
         transitionToOne();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!input.contains(e.target)) {
+        input.blur();
       }
     });
   </script>
