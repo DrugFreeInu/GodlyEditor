@@ -50,9 +50,23 @@
 
   <script>
     const v = Date.now();
-    document.getElementById('frame1').src = `welcome.html?v=${v}`;
-    document.getElementById('frame2').src = `text-area.html?v=${v}`;
-    document.getElementById('frame3').src = `preview.html?v=${v}`;
+    const frame1 = document.getElementById('frame1');
+    const frame2 = document.getElementById('frame2');
+    const frame3 = document.getElementById('frame3');
+
+    // Load each file with cache-busting
+    frame1.src = `welcome.html?v=${v}`;
+    frame2.src = `text-area.html?v=${v}`;
+    frame3.src = `preview.html?v=${v}`;
+
+    // Listen for pasted code from text-area and inject directly into the preview
+    window.addEventListener('message', (event) => {
+      const data = event.data;
+      if (!data || data.type !== 'updatePreview') return;
+
+      // iPhone-safe: directly inject code as iframe srcdoc
+      frame3.srcdoc = data.code;
+    });
   </script>
 
 </body>
