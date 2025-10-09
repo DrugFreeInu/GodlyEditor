@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dots to 1 Graphic</title>
+  <title>Layer 1</title>
   <style>
     body {
       background: #111;
@@ -25,13 +25,13 @@
       height: 100%;
       background: #2b2b2b;
       color: transparent;
-      caret-color: #fff;
+      caret-color: transparent; /* hide blinking cursor */
       font-family: monospace;
       font-size: 16px;
       border: none;
       border-radius: 6px;
       padding: 4px 10px;
-      box-sizing: border-box;
+      box-sizing: content-box;
       resize: none;
       overflow: hidden;
       position: relative;
@@ -113,6 +113,8 @@
       placeholder.classList.add('hidden');
       confirm.classList.remove('hidden');
       confirm.classList.add('fade-in');
+      input.blur(); // removes blinking cursor
+      input.disabled = true; // disable typing completely
     }
   </script>
 </body>
