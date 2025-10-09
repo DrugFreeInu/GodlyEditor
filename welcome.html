@@ -1,0 +1,30 @@
+<div id="welcome">
+  <div class="line">LAYER 1:</div>
+  <div class="line">THE FOUNDATION</div>
+  <div class="line">FOR YOUR CREATION</div>
+</div>
+
+<style>
+#welcome{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  z-index:9999;
+  text-align:center;
+  font-family:'Courier New',monospace;
+  color:#fff;
+  text-transform:uppercase;
+  font-weight:bold;
+  letter-spacing:3px;
+  opacity:0;
+  animation:fadeInAll 1.5s ease forwards;
+}
+#welcome .line{
+  margin:8px 0;
+  font-size:1.6rem;
+}
+@keyframes fadeInAll{
+  to{opacity:1;}
+}
+</style>
