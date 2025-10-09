@@ -43,15 +43,17 @@
   <script>
     const btn = document.getElementById('addLayerBtn');
 
-    // fade-in after small delay
-    setTimeout(() => {
-      btn.classList.add('visible');
-    }, 1200);
+    // Wait for message from index.html before showing
+    window.addEventListener('message', (e) => {
+      const data = e.data;
+      if (data && data.type === 'showAddLayer') {
+        btn.classList.add('visible');
+      }
+    });
 
     btn.addEventListener('click', () => {
       alert('Layer 2 will be added soon!');
-      // later: postMessage to parent to actually spawn the next layer
-      // parent.postMessage({ type: 'addLayer', layer: 2 }, '*');
+      // Future: parent.postMessage({ type: 'addLayer', layer: 2 }, '*');
     });
   </script>
 </body>
