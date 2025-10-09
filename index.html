@@ -12,7 +12,7 @@
       margin: 0;
       background: #111;
       display: flex;
-      flex-direction: column; /* top = text, editor, preview, add-layer */
+      flex-direction: column; /* top = text, middle = editor, bottom = preview */
       align-items: center;
       justify-content: center;
       height: 100vh;
@@ -21,14 +21,14 @@
 
     iframe {
       width: 90%;
-      height: 22%; /* fits 4 layers evenly */
+      height: 30%; /* adjust to fit 3 layers nicely */
       border: none;
       border-radius: 10px;
       background: transparent;
     }
 
     iframe + iframe {
-      margin-top: 1.5%;
+      margin-top: 2%;
     }
 
     /* top section (text) non-interactive */
@@ -45,24 +45,19 @@
   <!-- Middle: Your editor/square area -->
   <iframe id="frame2"></iframe>
 
-  <!-- Next: Preview area -->
+  <!-- Bottom: Preview area -->
   <iframe id="frame3"></iframe>
-
-  <!-- Bottom: Add Layer button -->
-  <iframe id="frame4"></iframe>
 
   <script>
     const v = Date.now();
     const frame1 = document.getElementById('frame1');
     const frame2 = document.getElementById('frame2');
     const frame3 = document.getElementById('frame3');
-    const frame4 = document.getElementById('frame4');
 
     // Load each file with cache-busting
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `text-area.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
-    frame4.src = `add-layer.html?v=${v}`;
 
     // Listen for pasted code from text-area and inject directly into the preview
     window.addEventListener('message', (event) => {
