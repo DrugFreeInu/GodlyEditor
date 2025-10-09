@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #addLayerBtn {
+      background: linear-gradient(90deg, #222, #444);
+      color: #fff;
+      border: 1px solid #666;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.8s ease, transform 0.2s ease;
+    }
+
+    #addLayerBtn:hover {
+      transform: scale(1.05);
+    }
+
+    #addLayerBtn.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="addLayerBtn">+ Add Layer</button>
+
+  <script>
+    const btn = document.getElementById('addLayerBtn');
+
+    // fade-in after small delay
+    setTimeout(() => {
+      btn.classList.add('visible');
+    }, 1200);
+
+    btn.addEventListener('click', () => {
+      alert('Layer 2 will be added soon!');
+      // later: postMessage to parent to actually spawn the next layer
+      // parent.postMessage({ type: 'addLayer', layer: 2 }, '*');
+    });
+  </script>
+</body>
+</html>
