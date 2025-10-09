@@ -42,18 +42,19 @@
       user-select: none;
       outline: 2px solid transparent;
       z-index: 1;
-      caret-color: transparent; /* make caret invisible */
+      caret-color: transparent;
     }
 
     .editable-box:focus {
       outline: 2px solid #3399ff;
     }
 
+    /* --- Animated placeholder and number display --- */
     .animated-placeholder,
     .number-display {
       position: absolute;
-      top: 45%;
-      left: 50%;
+      top: 50%;  /* center vertically */
+      left: 50%; /* center horizontally */
       transform: translate(-50%, -50%);
       font-family: monospace;
       font-size: 35px;
@@ -66,7 +67,17 @@
       line-height: 1;
     }
 
+    /* --- Dots animation --- */
+    .animated-placeholder {
+      width: 40px;           /* fixed width so dots stay centered */
+      justify-content: space-between; /* evenly spaced dots */
+    }
+
     .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;    /* circular dots */
+      background: #888;
       opacity: 0;
       animation: fadeIn 1.2s infinite;
     }
@@ -97,9 +108,9 @@
   <div class="input-container">
     <div class="editable-box" id="input" contenteditable="true"></div>
     <div class="animated-placeholder" id="placeholder">
-      <span class="dot">.</span>
-      <span class="dot">.</span>
-      <span class="dot">.</span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
     </div>
     <div class="number-display hidden" id="confirm">1</div>
   </div>
