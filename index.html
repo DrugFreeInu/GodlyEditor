@@ -2,31 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Editor</title>
+  <link rel="stylesheet" href="background.css" />
   <style>
     body {
       margin: 0;
-      background: #111;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      overflow: hidden;
+      position: relative;
     }
 
     iframe {
+      position: absolute;
       width: 90%;
       height: 90%;
       border: none;
       border-radius: 10px;
-      background: #1e1e1e;
+    }
+
+    iframe:nth-of-type(1) {
+      z-index: 1;
+    }
+    iframe:nth-of-type(2) {
+      z-index: 2;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
-  <iframe src="text-area.html"></iframe>
-  <iframe src="welcome.html"></iframe>
+  <iframe id="frame1"></iframe>
+  <iframe id="frame2"></iframe>
+
+  <script>
+    // add a timestamp to force reloads
+    const version = Date.now();
+    document.getElementById('frame1').src = `text-area.html?v=${version}`;
+    document.getElementById('frame2').src = `welcome.html?v=${version}`;
+  </script>
 
 </body>
 </html>
