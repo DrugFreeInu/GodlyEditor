@@ -16,8 +16,8 @@
 
     .input-container {
       position: relative;
-      width: 4ch; /* wider than before */
-      height: 2em; /* taller for better look */
+      width: 8ch;
+      height: 4em;
     }
 
     textarea {
@@ -27,7 +27,7 @@
       color: transparent;
       caret-color: #fff;
       font-family: monospace;
-      font-size: 20px; /* increased size */
+      font-size: 40px;
       border: none;
       border-radius: 6px;
       padding: 0;
@@ -42,17 +42,18 @@
     .animated-placeholder,
     .number-display {
       position: absolute;
-      top: 50%;
+      top: 43%; /* adjusted */
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: monospace;
-      font-size: 20px;
+      font-size: 35px; /* updated */
       color: #888;
       pointer-events: none;
       z-index: 2;
       display: flex;
       align-items: center;
       justify-content: center;
+      line-height: 1;
     }
 
     .dot {
@@ -105,7 +106,6 @@
       confirm.classList.add('fade-in');
       input.blur();
       input.disabled = true;
-      input.style.caretColor = 'transparent';
     }
 
     function handlePaste(e) {
