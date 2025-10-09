@@ -20,33 +20,36 @@
       height: 4em;
     }
 
-    textarea {
+    .editable-box {
       width: 100%;
       height: 100%;
       background: #2b2b2b;
       color: transparent;
-      caret-color: #fff;
       font-family: monospace;
       font-size: 40px;
-      border: none;
       border-radius: 6px;
-      padding: 0;
       text-align: center;
       box-sizing: border-box;
-      resize: none;
-      overflow: hidden;
-      position: relative;
+      padding-left: 32px; /* shift insertion point 2 chars left */
+      padding-top: 0;
+      line-height: 1;
+      user-select: none;
+      outline: 2px solid transparent;
       z-index: 1;
+    }
+
+    .editable-box:focus {
+      outline: 2px solid #3399ff;
     }
 
     .animated-placeholder,
     .number-display {
       position: absolute;
-      top: 43%; /* adjusted */
+      top: 45%;
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: monospace;
-      font-size: 35px; /* updated */
+      font-size: 35px;
       color: #888;
       pointer-events: none;
       z-index: 2;
@@ -60,7 +63,6 @@
       opacity: 0;
       animation: fadeIn 1.2s infinite;
     }
-
     .dot:nth-child(1) { animation-delay: 0s; }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
@@ -86,7 +88,7 @@
 </head>
 <body>
   <div class="input-container">
-    <textarea id="input" onpaste="handlePaste(event)" oninput="handleInput()"></textarea>
+    <div class="editable-box" id="input" contenteditable="true"></div>
     <div class="animated-placeholder" id="placeholder">
       <span class="dot">.</span>
       <span class="dot">.</span>
@@ -104,20 +106,19 @@
       placeholder.classList.add('hidden');
       confirm.classList.remove('hidden');
       confirm.classList.add('fade-in');
-      input.blur();
-      input.disabled = true;
+      input.contentEditable = "false";
     }
 
-    function handlePaste(e) {
+    input.addEventListener('paste', (e) => {
       e.preventDefault();
       transitionToOne();
-    }
+    });
 
-    function handleInput() {
-      if (input.value.trim() !== "") {
+    input.addEventListener('input', () => {
+      if (input.textContent.trim() !== "") {
         transitionToOne();
       }
-    }
+    });
   </script>
 </body>
 </html>
