@@ -3,39 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Paste Code Only</title>
+  <title>Auto Hide Input</title>
   <style>
     body {
       background: #111;
+      margin: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+    }
+
+    .input-container {
+      position: relative;
+      width: fit-content;
     }
 
     textarea {
-      width: 90%;
-      max-width: 600px;
-      height: 2.2em;
+      width: 4ch;
+      height: 1.6em;
       background: #2b2b2b;
-      color: #fff;
+      color: transparent;
+      caret-color: #fff;
       font-family: monospace;
-      font-size: 14px;
+      font-size: 16px;
       border: none;
-      border-radius: 8px;
-      padding: 10px;
-      box-sizing: border-box;
-      resize: vertical;
-      overflow: auto;
+      border-radius: 6px;
+      padding: 4px 10px;
+      box-sizing: content-box;
+      resize: none;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
     }
 
-    textarea::placeholder {
+    .animated-placeholder {
+      position: absolute;
+      top: 4px;
+      left: 12px;
+      font-family: monospace;
+      font-size: 16px;
       color: #888;
+      pointer-events: none;
+      z-index: 2;
+      display: flex;
+      gap: 2px;
+    }
+
+    .dot {
+      opacity: 0;
+      animation: fadeIn 1.2s infinite;
+    }
+
+    .dot:nth-child(1) { animation-delay: 0s; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes fadeIn {
+      0%, 100% { opacity: 0; }
+      50%      { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <textarea placeholder="Paste code here..." onkeydown="return false;"></textarea>
+  <div class="input-container" id="container">
+    <textarea id="input"></textarea>
+    <div class="animated-placeholder" id="placeholder">
+      <span class="dot">.</span>
+      <span class="dot">.</span>
+      <span class="dot">.</span>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('input');
+    const container = document.getElementById('container');
+
+    input.addEventListener('input', () => {
+      if (input.value.trim() !== '') {
+        container.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
