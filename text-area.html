@@ -25,7 +25,7 @@
       height: 100%;
       background: #2b2b2b;
       color: transparent;
-      caret-color: transparent; /* hide blinking cursor */
+      caret-color: #fff; /* visible cursor at start */
       font-family: monospace;
       font-size: 16px;
       border: none;
@@ -98,6 +98,15 @@
     const input = document.getElementById('input');
     const confirm = document.getElementById('confirm');
 
+    function transitionToOne() {
+      placeholder.classList.add('hidden');
+      confirm.classList.remove('hidden');
+      confirm.classList.add('fade-in');
+      input.blur();
+      input.disabled = true;
+      input.style.caretColor = 'transparent'; // hide blinking cursor AFTER input
+    }
+
     function handlePaste(e) {
       e.preventDefault();
       transitionToOne();
@@ -107,14 +116,6 @@
       if (input.value.trim() !== "") {
         transitionToOne();
       }
-    }
-
-    function transitionToOne() {
-      placeholder.classList.add('hidden');
-      confirm.classList.remove('hidden');
-      confirm.classList.add('fade-in');
-      input.blur(); // removes blinking cursor
-      input.disabled = true; // disable typing completely
     }
   </script>
 </body>
