@@ -21,25 +21,20 @@
     }
 
     .editable-box {
+      position: absolute;
       width: 100%;
       height: 100%;
-      background: #2b2b2b;
+      z-index: 0; /* behind placeholder and number */
+      background: transparent;
       color: transparent;
+      caret-color: transparent;
       font-family: monospace;
       font-size: 40px;
       border-radius: 6px;
-      text-align: center;
-      box-sizing: border-box;
-      padding-left: 32px; /* shift insertion point 2 chars left */
-      padding-top: 0;
+      padding-left: 32px; /* shift input start slightly */
       line-height: 1;
       user-select: none;
-      outline: 2px solid transparent;
-      z-index: 1;
-    }
-
-    .editable-box:focus {
-      outline: 2px solid #3399ff; /* blue highlight when tapped */
+      outline: none;
     }
 
     .animated-placeholder,
@@ -52,7 +47,7 @@
       font-size: 35px;
       color: #888;
       pointer-events: none;
-      z-index: 2;
+      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -117,13 +112,6 @@
     input.addEventListener('input', () => {
       if (input.textContent.trim() !== "") {
         transitionToOne();
-      }
-    });
-
-    // Deselect input instantly when tapping outside
-    document.addEventListener('click', (e) => {
-      if (!input.contains(e.target)) {
-        input.blur();
       }
     });
   </script>
