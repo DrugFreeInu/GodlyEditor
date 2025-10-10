@@ -20,7 +20,6 @@
       position: relative;
     }
 
-    /* Top: Welcome */
     #frame1 {
       width: 90%;
       height: 15%;
@@ -32,7 +31,6 @@
       transition: opacity 0.8s ease;
     }
 
-    /* Middle: Text input / editor */
     #frame2 {
       width: 90%;
       height: 15%;
@@ -42,7 +40,6 @@
       margin-bottom: 1%;
     }
 
-    /* Large Preview area */
     #frame3 {
       width: 90%;
       height: 60%;
@@ -53,7 +50,6 @@
       z-index: 1;
     }
 
-    /* Add Layer Button now sits up top */
     #frame4 {
       position: absolute;
       top: 2%;
@@ -71,16 +67,9 @@
 </head>
 <body>
 
-  <!-- Top: Welcome text -->
   <iframe id="frame1"></iframe>
-
-  <!-- Middle: Your editor/square area -->
   <iframe id="frame2"></iframe>
-
-  <!-- Large Preview area -->
   <iframe id="frame3"></iframe>
-
-  <!-- Add Layer button (will move into welcome space after fade) -->
   <iframe id="frame4"></iframe>
 
   <script>
@@ -90,29 +79,33 @@
     const frame3 = document.getElementById('frame3');
     const frame4 = document.getElementById('frame4');
 
-    // Load each file with cache-busting
+    // load files
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
 
-    // Listen for pasted code from text-area and inject directly into the preview
     window.addEventListener('message', (event) => {
       const data = event.data;
       if (!data) return;
 
+      // when user pastes -> preview + show add button
       if (data.type === 'updatePreview') {
         frame3.srcdoc = data.code;
-
-        // Fade out welcome
         frame1.style.opacity = '0';
         frame1.style.visibility = 'hidden';
-
-        // Fade in Add Layer button in the same area
         setTimeout(() => {
           frame4.style.opacity = '1';
           frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
         }, 800);
+      }
+
+      // when add-layer is pressed -> swap to layer2
+      if (data.type === 'newLayer') {
+        // reload editor iframe with layer2.html
+        frame2.src = `layer2.html?v=${Date.now()}`;
+        // hide add-layer button again until next paste
+        frame4.style.opacity = '0';
       }
     });
   </script>
