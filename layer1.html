@@ -14,10 +14,27 @@
       align-items: center;
     }
 
+    /* ===== Animated Border Flow ===== */
+    @keyframes borderFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .border-wrap {
+      background: linear-gradient(90deg, #00ff88, #00ffaa, #16c784, #00ff88);
+      background-size: 300% 300%;
+      animation: borderFlow 3s linear infinite;
+      border-radius: 12px;
+      padding: 3px;
+      display: inline-block;
+    }
+
     .input-container {
       position: relative;
       width: 8ch;
       height: 4em;
+      border-radius: 10px;
     }
 
     :root {
@@ -32,20 +49,15 @@
       color: transparent;
       font-family: monospace;
       font-size: 40px;
-      border-radius: 6px;
+      border-radius: 8px;
       text-align: center;
       box-sizing: border-box;
       text-indent: var(--caret-left);
       padding-top: var(--caret-top);
       line-height: 1;
       user-select: none;
-      outline: 2px solid transparent;
-      z-index: 1;
+      outline: none;
       caret-color: transparent;
-    }
-
-    .editable-box:focus {
-      outline: 2px solid #3399ff;
     }
 
     .animated-placeholder,
@@ -78,7 +90,6 @@
       opacity: 0;
       animation: fadeIn 1.2s infinite;
     }
-
     .dot:nth-child(1) { animation-delay: 0s; }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
@@ -101,14 +112,16 @@
   </style>
 </head>
 <body>
-  <div class="input-container">
-    <div class="editable-box" id="input" contenteditable="true"></div>
-    <div class="animated-placeholder" id="placeholder">
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
+  <div class="border-wrap">
+    <div class="input-container">
+      <div class="editable-box" id="input" contenteditable="true"></div>
+      <div class="animated-placeholder" id="placeholder">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <div class="number-display hidden" id="confirm">1</div>
     </div>
-    <div class="number-display hidden" id="confirm">1</div>
   </div>
 
   <script>
@@ -116,7 +129,6 @@
     const input = document.getElementById('input');
     const confirm = document.getElementById('confirm');
 
-    // smooth transition animation
     function transitionToOne() {
       placeholder.classList.add('hidden');
       confirm.classList.remove('hidden');
@@ -124,7 +136,6 @@
       input.contentEditable = "false";
     }
 
-    // send message safely to parent -> preview
     function sendToPreview(code) {
       try {
         parent.postMessage({ type: 'updatePreview', code: code }, window.origin || '*');
@@ -133,7 +144,6 @@
       }
     }
 
-    // handle paste
     input.addEventListener('paste', (e) => {
       e.preventDefault();
       const pasted = (e.clipboardData || window.clipboardData).getData('text');
@@ -142,7 +152,6 @@
       sendToPreview(pasted);
     });
 
-    // handle typing input
     input.addEventListener('input', () => {
       const val = input.textContent.trim();
       if (val !== '') {
@@ -151,7 +160,6 @@
       }
     });
 
-    // blur when clicking outside
     document.addEventListener('click', (e) => {
       if (!input.contains(e.target)) {
         input.blur();
