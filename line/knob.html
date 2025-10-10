@@ -1,63 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  html,body{margin:0;height:100%;background:transparent;}
-  svg{width:100vw;height:100vh;display:block;background:transparent;}
-  circle{fill:#00ff99;cursor:pointer;}
+html,body{
+  margin:0;
+  height:100%;
+  background:transparent;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+svg{
+  width:80vmin;   /* match graph.html */
+  height:80vmin;
+  background:transparent;
+}
+circle{
+  fill:#00ff99;
+  cursor:pointer;
+}
 </style>
 </head>
 <body>
-  <!-- EXACT same viewBox and sizing as graph.html -->
-  <svg id="knobLayer" viewBox="0 0 100 100" preserveAspectRatio="none">
-    <circle id="knob" cx="20" cy="80" r="3" />
-  </svg>
+
+<svg id="knobLayer" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+  <circle id="knob" cx="20" cy="80" r="3" />
+</svg>
 
 <script>
-const svg  = document.getElementById('knobLayer');
 const knob = document.getElementById('knob');
+const svg = document.getElementById('knobLayer');
+
 let dragging = false;
-let segment = 'vertical'; // 'vertical' (x=20, y:20→80) then 'horizontal' (y=80, x:20→80)
+let segment = 'vertical'; // knob moves along one segment of the L
 
-function getXY(e){
-  const pt = ('touches' in e) ? e.touches[0] : e;
-  const r = svg.getBoundingClientRect();
-  const x = ((pt.clientX - r.left) / r.width)  * 100;
-  const y = ((pt.clientY - r.top)  / r.height) * 100;
-  return {x, y};
-}
+svg.addEventListener('mousedown', e => {
+  if (e.target === knob) dragging = true;
+});
+window.addEventListener('mouseup', () => dragging = false);
 
-function start(e){
-  if (e.target !== knob) return;
-  dragging = true;
-  e.preventDefault();
-}
-function move(e){
+svg.addEventListener('mousemove', e => {
   if (!dragging) return;
-  const {x, y} = getXY(e);
-  if (segment === 'vertical'){
-    const ny = Math.max(20, Math.min(80, y));
+
+  const rect = svg.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+  // lock to L path
+  if (segment === 'vertical') {
+    const newY = Math.min(80, Math.max(20, y));
     knob.setAttribute('cx', 20);
-    knob.setAttribute('cy', ny);
-    if (ny > 78) segment = 'horizontal';
-  } else {
-    const nx = Math.max(20, Math.min(80, x));
-    knob.setAttribute('cx', nx);
+    knob.setAttribute('cy', newY);
+    if (newY > 78) segment = 'horizontal';
+  } else if (segment === 'horizontal') {
+    const newX = Math.min(80, Math.max(20, x));
+    knob.setAttribute('cx', newX);
     knob.setAttribute('cy', 80);
-    if (nx < 22) segment = 'vertical';
+    if (newX < 22) segment = 'vertical';
   }
-}
-function end(){ dragging = false; }
-
-svg.addEventListener('mousedown', start);
-window.addEventListener('mouseup', end);
-svg.addEventListener('mousemove', move);
-
-svg.addEventListener('touchstart', start, {passive:false});
-window.addEventListener('touchend', end);
-svg.addEventListener('touchmove', move, {passive:false});
+});
 </script>
+
 </body>
 </html>
