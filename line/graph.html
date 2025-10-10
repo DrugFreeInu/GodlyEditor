@@ -1,33 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
-html, body {
-  height: 100%;
-  margin: 0;
-  background: #111;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-svg {
-  width: 80vmin;   /* stays square on all devices */
-  height: 80vmin;
-}
-path {
-  stroke: #00ff99;
-  stroke-width: 2; /* thinner */
-  fill: none;
-}
+  html,body{margin:0;height:100%;background:transparent;}
+  svg{width:100vw;height:100vh;display:block;background:transparent;}
+  path{stroke:#00ff99;stroke-width:3;fill:none;}
 </style>
 </head>
 <body>
-
-<svg viewBox="0 0 100 100">
-  <path d="M20 10 L20 90 L90 90" />
-</svg>
-
+  <!-- SAME coordinate system for both files -->
+  <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+    <!-- L from (20,20) → (20,80) → (80,80) -->
+    <path d="M20 20 L20 80 L80 80"/>
+  </svg>
 </body>
 </html>
