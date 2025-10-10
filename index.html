@@ -16,7 +16,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       position: relative;
     }
 
@@ -29,20 +29,12 @@
     /* Top: Welcome */
     #frame1 {
       width: 90%;
-      height: 15%;
+      height: 12%;
       pointer-events: none;
-      margin-bottom: 1%;
       transition: opacity 0.8s ease;
     }
 
-    /* Middle: Text input / editor */
-    #frame2 {
-      width: 90%;
-      height: 15%;
-      margin-bottom: 1%;
-    }
-
-    /* Large Preview area */
+    /* Middle: Large Preview */
     #frame3 {
       width: 90%;
       height: 60%;
@@ -50,10 +42,17 @@
       z-index: 1;
     }
 
-    /* Add Layer Button in the welcome space after first paste */
+    /* Bottom: Text input / editor */
+    #frame2 {
+      width: 90%;
+      height: 15%;
+      margin-bottom: 2%;
+    }
+
+    /* Floating Add Layer Button */
     #frame4 {
       position: absolute;
-      top: 2%;
+      bottom: 3%;
       left: 50%;
       transform: translateX(-50%);
       width: 200px;
@@ -67,8 +66,8 @@
 <body>
 
   <iframe id="frame1"></iframe>
-  <iframe id="frame2"></iframe>
   <iframe id="frame3"></iframe>
+  <iframe id="frame2"></iframe>
   <iframe id="frame4"></iframe>
 
   <script>
@@ -81,32 +80,27 @@
     // Load all files with cache-busting
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
-    frame3.src = `preview.html?v=${v}`;   // stays constant; we send it layers
+    frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
 
-    // Listen for messages from layer files & button
     window.addEventListener('message', (event) => {
       const data = event.data;
       if (!data) return;
 
-      // After first paste -> send that code to preview (as a new stacked layer)
       if (data.type === 'updatePreview') {
-        // send layer to the preview iframe to STACK (not replace)
         frame3.contentWindow.postMessage({ type: 'addLayer', code: data.code }, '*');
-
-        // fade out welcome & show add-layer button
         frame1.style.opacity = '0';
         frame1.style.visibility = 'hidden';
+
         setTimeout(() => {
           frame4.style.opacity = '1';
           frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
         }, 800);
       }
 
-      // When Add Layer is pressed -> replace editor with Layer 2 input
       if (data.type === 'addLayer' && data.layer === 2) {
         frame2.src = `layer2.html?v=${Date.now()}`;
-        frame4.style.opacity = '0'; // hide button until the next paste happens
+        frame4.style.opacity = '0';
       }
     });
   </script>
