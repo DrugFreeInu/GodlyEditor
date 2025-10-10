@@ -8,27 +8,24 @@ html, body {
   height: 100%;
   margin: 0;
   background: #111;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 svg {
-  width: 300px;
-  height: 300px;
+  width: 100vw;
+  height: 100vh;
   background: transparent;
 }
 path {
   stroke: #00ff99;
-  stroke-width: 6;
+  stroke-width: 10;
   fill: none;
 }
 </style>
 </head>
 <body>
 
-<svg viewBox="0 0 300 300">
-  <!-- L shape -->
-  <path d="M50 50 L50 250 L250 250" />
+<svg viewBox="0 0 100 100" preserveAspectRatio="none">
+  <!-- L shape scaled to full window -->
+  <path d="M10 10 L10 90 L90 90" />
 </svg>
 
 </body>
