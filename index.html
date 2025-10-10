@@ -26,7 +26,7 @@
       background: transparent;
     }
 
-    /* Top: Welcome (blank now) */
+    /* Top: Welcome */
     #frame1 {
       width: 90%;
       height: 12%;
@@ -37,8 +37,8 @@
     /* Middle: Large Preview */
     #frame3 {
       width: 90%;
-      height: 60%;
-      position: relative;
+      height: 58%; /* slightly less to move up */
+      margin-top: -1%;
       z-index: 1;
     }
 
@@ -46,13 +46,13 @@
     #frame2 {
       width: 90%;
       height: 15%;
-      margin-bottom: 2%;
+      margin-bottom: 1%;
     }
 
     /* Floating Add Layer Button */
     #frame4 {
       position: absolute;
-      bottom: 3%;
+      bottom: 10%; /* moved up from 3% to prevent cutting off */
       left: 50%;
       transform: translateX(-50%);
       width: 200px;
@@ -65,7 +65,7 @@
 </head>
 <body>
 
-  <iframe id="frame1" srcdoc=""></iframe>
+  <iframe id="frame1"></iframe>
   <iframe id="frame3"></iframe>
   <iframe id="frame2"></iframe>
   <iframe id="frame4"></iframe>
@@ -77,7 +77,7 @@
     const frame3 = document.getElementById('frame3');
     const frame4 = document.getElementById('frame4');
 
-    // Load all files with cache-busting (except frame1 which is now empty)
+    frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
