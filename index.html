@@ -79,17 +79,18 @@
     const frame3 = document.getElementById('frame3');
     const frame4 = document.getElementById('frame4');
 
-    // load files
+    // Load all files with cache-busting
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
 
+    // Listen for messages
     window.addEventListener('message', (event) => {
       const data = event.data;
       if (!data) return;
 
-      // when user pastes -> preview + show add button
+      // After first paste -> preview updates + show Add Layer button
       if (data.type === 'updatePreview') {
         frame3.srcdoc = data.code;
         frame1.style.opacity = '0';
@@ -100,12 +101,10 @@
         }, 800);
       }
 
-      // when add-layer is pressed -> swap to layer2
-      if (data.type === 'newLayer') {
-        // reload editor iframe with layer2.html
+      // When Add Layer is pressed -> replace editor with Layer 2
+      if (data.type === 'addLayer' && data.layer === 2) {
         frame2.src = `layer2.html?v=${Date.now()}`;
-        // hide add-layer button again until next paste
-        frame4.style.opacity = '0';
+        frame4.style.opacity = '0'; // Hide button again until next paste
       }
     });
   </script>
