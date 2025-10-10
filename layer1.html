@@ -61,7 +61,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: monospace;
-      font-size: 22px;
+      font-size: 20px;
       color: #aaa;
       opacity: 0.6;
       pointer-events: none;
@@ -71,7 +71,13 @@
       align-items: center;
       justify-content: center;
       line-height: 1.2;
-      text-shadow: none;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+      animation: glowFade 2s ease-in-out infinite;
+    }
+
+    @keyframes glowFade {
+      0%, 100% { opacity: 0.4; text-shadow: 0 0 6px rgba(255, 255, 255, 0.2); }
+      50%      { opacity: 1;   text-shadow: 0 0 8px rgba(255, 255, 255, 0.35); }
     }
 
     .hidden { display: none; }
