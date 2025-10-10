@@ -24,16 +24,13 @@
 
     .input-container {
       position: relative;
-      width: 8ch;
-      height: 4em;
-      border-radius: 12px;
+      width: 120px;
+      height: 90px;
+      border-radius: 16px;
       background: #222;
-      box-shadow: none;
-    }
-
-    :root {
-      --caret-left: -25px;
-      --caret-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .editable-box {
@@ -46,9 +43,6 @@
       border-radius: 8px;
       text-align: center;
       box-sizing: border-box;
-      text-indent: var(--caret-left);
-      padding-top: var(--caret-top);
-      line-height: 1;
       user-select: none;
       outline: none;
       caret-color: transparent;
@@ -57,11 +51,8 @@
     .animated-placeholder,
     .number-display {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       font-family: monospace;
-      font-size: 22px;
+      font-size: 18px;
       color: #aaa;
       opacity: 0.6;
       pointer-events: none;
@@ -71,7 +62,7 @@
       align-items: center;
       justify-content: center;
       line-height: 1.2;
-      text-shadow: none;
+      text-align: center;
     }
 
     .hidden { display: none; }
