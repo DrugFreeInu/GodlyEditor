@@ -10,27 +10,75 @@
       background: transparent;
       font-family: 'Courier New', monospace;
     }
-
-    #preview-box {
+    #stage {
       width: 100%;
       height: 100%;
+      position: relative;
       border: 1px dashed rgba(255,255,255,0.3);
       border-radius: 6px;
-      background: rgba(255,255,255,0.05);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: rgba(255,255,255,0.6);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-size: 0.9rem;
       box-sizing: border-box;
+      background: rgba(255,255,255,0.05);
+      overflow: hidden;
+    }
+    #hint {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+    .layerFrame {
+      position: absolute;
+      inset: 0;           /* fill the box */
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: transparent;
     }
   </style>
 </head>
 <body>
+  <div id="stage">
+    <div id="hint">Preview Area</div>
+  </div>
 
-  <div id="preview-box">Preview Area</div>
+  <script>
+    const stage = document.getElementById('stage');
+    const hint  = document.getElementById('hint');
 
+    function addLayer(code) {
+      // Make pasted docs transparent so lower layers stay visible
+      let patched = code;
+      if (code.includes('</head>')) {
+        patched = code.replace(
+          '</head>',
+          '<style>html,body{background:transparent!important;}</style></head>'
+        );
+      } else {
+        patched = '<style>html,body{background:transparent!important;}</style>' + code;
+      }
+
+      const f = document.createElement('iframe');
+      f.className = 'layerFrame';
+      // Allow the user code to render normally inside the layer frame
+      f.srcdoc = patched;
+      stage.appendChild(f);
+
+      // Hide the hint after the first real layer
+      if (hint) hint.style.display = 'none';
+    }
+
+    // Receive layers from index.html
+    window.addEventListener('message', (e) => {
+      const d = e.data;
+      if (!d || d.type !== 'addLayer') return;
+      addLayer(d.code);
+    });
+  </script>
 </body>
 </html>
