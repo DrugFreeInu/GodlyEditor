@@ -26,7 +26,6 @@
       background: transparent;
     }
 
-    /* Top: Welcome */
     #frame1 {
       width: 90%;
       height: 12%;
@@ -34,25 +33,23 @@
       transition: opacity 0.8s ease;
     }
 
-    /* Middle: Large Preview */
     #frame3 {
       width: 90%;
-      height: 58%; /* slightly less to move up */
-      margin-top: -1%;
+      height: 60%;
+      position: relative;
       z-index: 1;
+      margin-top: -20px; /* shift preview up */
     }
 
-    /* Bottom: Text input / editor */
     #frame2 {
       width: 90%;
       height: 15%;
-      margin-bottom: 1%;
+      margin-bottom: 2%;
     }
 
-    /* Floating Add Layer Button */
     #frame4 {
       position: absolute;
-      bottom: 10%; /* moved up from 3% to prevent cutting off */
+      bottom: 5.5%; /* moved up */
       left: 50%;
       transform: translateX(-50%);
       width: 200px;
@@ -65,7 +62,7 @@
 </head>
 <body>
 
-  <iframe id="frame1"></iframe>
+  <iframe id="frame1" srcdoc=""></iframe>
   <iframe id="frame3"></iframe>
   <iframe id="frame2"></iframe>
   <iframe id="frame4"></iframe>
@@ -77,7 +74,6 @@
     const frame3 = document.getElementById('frame3');
     const frame4 = document.getElementById('frame4');
 
-    frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
