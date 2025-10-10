@@ -63,7 +63,7 @@
       font-family: monospace;
       font-size: 20px;
       color: #aaa;
-      opacity: 0.6;
+      opacity: 0.4;
       pointer-events: none;
       z-index: 2;
       display: flex;
@@ -71,13 +71,19 @@
       align-items: center;
       justify-content: center;
       line-height: 1.2;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
-      animation: glowFade 2s ease-in-out infinite;
+      text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+      animation: glowFade 2.5s ease-in-out infinite;
     }
 
     @keyframes glowFade {
-      0%, 100% { opacity: 0.4; text-shadow: 0 0 6px rgba(255, 255, 255, 0.2); }
-      50%      { opacity: 1;   text-shadow: 0 0 8px rgba(255, 255, 255, 0.35); }
+      0%, 100% {
+        opacity: 0.3;
+        text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+      }
+      50% {
+        opacity: 0.5;
+        text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+      }
     }
 
     .hidden { display: none; }
