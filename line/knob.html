@@ -11,25 +11,26 @@ html,body{
   display:flex;
   justify-content:center;
   align-items:center;
-  overflow:hidden; /* prevent scrolling */
+  overflow:hidden;
 }
 svg{
   width:80vmin;
   height:80vmin;
   background:transparent;
-  touch-action:none; /* disable page drag */
+  touch-action:none;
 }
 circle{
-  fill:#00ff99;
+  fill:#000;            /* black color */
   cursor:pointer;
   touch-action:none;
+  r:6;                  /* make it bigger */
 }
 </style>
 </head>
 <body>
 
 <svg id="knobLayer" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-  <circle id="knob" cx="20" cy="80" r="3" />
+  <circle id="knob" cx="20" cy="80" r="6" />
 </svg>
 
 <script>
