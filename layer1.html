@@ -61,14 +61,30 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: monospace;
-      font-size: 16px;
-      color: #aaa;
+      font-size: 28px;
+      color: #fff;
       pointer-events: none;
       z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       line-height: 1;
+      text-shadow: none;
+    }
+
+    .animated-placeholder .placeholder-text {
+      font-family: monospace;
+      font-size: 28px;
+      color: #aaa;
       opacity: 0.6;
-      text-align: center;
-      padding: 4px 8px;
+      animation: fadeIn 1.2s infinite;
+      line-height: 1.2;
+    }
+
+    @keyframes fadeIn {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
     }
 
     .hidden { display: none; }
@@ -88,7 +104,8 @@
     <div class="input-container">
       <div class="editable-box" id="input" contenteditable="true"></div>
       <div class="animated-placeholder" id="placeholder">
-        paste<br>code
+        <span class="placeholder-text">paste</span>
+        <span class="placeholder-text">code</span>
       </div>
       <div class="number-display hidden" id="confirm">1</div>
     </div>
