@@ -11,16 +11,18 @@ html,body{
   display:flex;
   justify-content:center;
   align-items:center;
+  overflow:hidden; /* prevent scrolling */
 }
 svg{
   width:80vmin;
   height:80vmin;
   background:transparent;
+  touch-action:none; /* disable page drag */
 }
 circle{
   fill:#00ff99;
   cursor:pointer;
-  transition:cx 0.05s, cy 0.05s;
+  touch-action:none;
 }
 </style>
 </head>
@@ -35,34 +37,49 @@ const knob = document.getElementById('knob');
 const svg  = document.getElementById('knobLayer');
 
 let dragging = false;
-let segment  = 'vertical'; // start along the left line
+let segment  = 'vertical';
 
-svg.addEventListener('mousedown', e => {
-  if (e.target === knob) dragging = true;
-});
-window.addEventListener('mouseup', () => dragging = false);
-
-svg.addEventListener('mousemove', e => {
-  if (!dragging) return;
-
+function getXY(e){
+  const point = e.touches ? e.touches[0] : e;
   const rect = svg.getBoundingClientRect();
-  const x = ((e.clientX - rect.left) / rect.width) * 100;
-  const y = ((e.clientY - rect.top) / rect.height) * 100;
+  const x = ((point.clientX - rect.left) / rect.width) * 100;
+  const y = ((point.clientY - rect.top) / rect.height) * 100;
+  return {x,y};
+}
+
+function start(e){
+  if(e.target !== knob) return;
+  dragging = true;
+  e.preventDefault();
+}
+
+function move(e){
+  if(!dragging) return;
+  const {x,y} = getXY(e);
+  e.preventDefault();
 
   if (segment === 'vertical') {
-    const newY = Math.max(20, Math.min(80, y)); // limit up/down
+    const newY = Math.max(20, Math.min(80, y));
     knob.setAttribute('cx', 20);
     knob.setAttribute('cy', newY);
-    // switch to horizontal at the corner
     if (newY >= 79) segment = 'horizontal';
   } else if (segment === 'horizontal') {
-    const newX = Math.max(20, Math.min(80, x)); // limit left/right
+    const newX = Math.max(20, Math.min(80, x));
     knob.setAttribute('cx', newX);
     knob.setAttribute('cy', 80);
-    // switch back if pulled left
     if (newX <= 21) segment = 'vertical';
   }
-});
+}
+
+function stop(){ dragging = false; }
+
+svg.addEventListener('mousedown', start);
+window.addEventListener('mouseup', stop);
+svg.addEventListener('mousemove', move);
+
+svg.addEventListener('touchstart', start, {passive:false});
+window.addEventListener('touchend', stop);
+svg.addEventListener('touchmove', move, {passive:false});
 </script>
 
 </body>
