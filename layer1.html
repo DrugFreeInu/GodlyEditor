@@ -61,7 +61,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: monospace;
-      font-size: 20px; /* Updated from 22px to 20px */
+      font-size: 20px;
       color: #aaa;
       opacity: 0.6;
       pointer-events: none;
@@ -72,6 +72,21 @@
       justify-content: center;
       line-height: 1.2;
       text-shadow: none;
+    }
+
+    .animated-placeholder {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.07);
+        opacity: 1;
+      }
     }
 
     .hidden { display: none; }
