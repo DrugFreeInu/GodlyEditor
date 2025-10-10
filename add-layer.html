@@ -43,7 +43,7 @@
   <script>
     const btn = document.getElementById('addLayerBtn');
 
-    // Wait for message from index.html before showing
+    // Show button when told by parent
     window.addEventListener('message', (e) => {
       const data = e.data;
       if (data && data.type === 'showAddLayer') {
@@ -51,9 +51,9 @@
       }
     });
 
+    // Notify parent (index.html) to load Layer 2
     btn.addEventListener('click', () => {
-      alert('Layer 2 will be added soon!');
-      // Future: parent.postMessage({ type: 'addLayer', layer: 2 }, '*');
+      parent.postMessage({ type: 'addLayer', layer: 2 }, '*');
     });
   </script>
 </body>
