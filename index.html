@@ -26,9 +26,10 @@
       background: transparent;
     }
 
+    /* Shrink top space to push everything up */
     #frame1 {
       width: 90%;
-      height: 12%;
+      height: 8%; /* was 12% */
       pointer-events: none;
       transition: opacity 0.8s ease;
     }
@@ -38,7 +39,6 @@
       height: 60%;
       position: relative;
       z-index: 1;
-      margin-top: -20px; /* shift preview up */
     }
 
     #frame2 {
@@ -49,7 +49,7 @@
 
     #frame4 {
       position: absolute;
-      bottom: 5.5%; /* moved up */
+      bottom: 6.5%; /* was 5.5%, moved up slightly more */
       left: 50%;
       transform: translateX(-50%);
       width: 200px;
