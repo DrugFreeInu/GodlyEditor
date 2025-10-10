@@ -1,47 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Line Tool</title>
 <style>
-html, body {
-  height: 100%;
-  margin: 0;
-  background: #111;
-}
-#container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-iframe {
-  border: none;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-#knobFrame {
-  pointer-events: none; /* lets mouse pass through to graph */
-}
+  html, body { margin:0; height:100%; background:#111; }
+  #stage { position:relative; width:100vw; height:100vh; overflow:hidden; }
+  iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
+  /* knob is on top */
+  #knobFrame { z-index:2; }
+  #graphFrame { z-index:1; }
 </style>
 </head>
 <body>
-
-<div id="container">
-  <iframe id="graphFrame"></iframe>
-  <iframe id="knobFrame"></iframe>
-</div>
-
+  <div id="stage">
+    <iframe id="graphFrame"></iframe>
+    <iframe id="knobFrame"></iframe>
+  </div>
 <script>
-function loadFresh(id, file) {
-  document.getElementById(id).src = file + '?v=' + Date.now();
-}
-loadFresh('graphFrame', 'graph.html');
-loadFresh('knobFrame', 'knob.html');
+  const fresh = (id, file) => {
+    document.getElementById(id).src = file + '?v=' + Date.now();
+  };
+  fresh('graphFrame','graph.html');
+  fresh('knobFrame','knob.html');
 </script>
-
 </body>
 </html>
