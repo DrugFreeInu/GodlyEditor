@@ -1,1 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+html,body{
+  height:100%;
+  margin:0;
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+svg{
+  width:60vmin;
+  height:60vmin;
+}
+path{
+  stroke:#00ff99;
+  stroke-width:2;
+  fill:none;
+}
+circle{
+  fill:#00ff99;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
 
+<svg id="graph" viewBox="0 0 100 100">
+  <!-- your 80x80 L -->
+  <path id="path" d="M20 20 L20 80 L80 80" />
+  <circle id="knob" cx="20" cy="80" r="3" />
+</svg>
+
+<script>
+const knob = document.getElementById('knob');
+const svg = document.getElementById('graph');
+let dragging = false;
+let segment = 'vertical'; // which leg the knob is on
+
+// drag start
+svg.addEventListener('mousedown', e => {
+  if (e.target === knob) dragging = true;
+});
+window.addEventListener('mouseup', () => dragging = false);
+
+// drag move
+svg.addEventListener('mousemove', e => {
+  if (!dragging) return;
+
+  const rect = svg.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+  if (segment === 'vertical') {
+    const newY = Math.min(80, Math.max(20, y));
+    knob.setAttribute('cx', 20);
+    knob.setAttribute('cy', newY);
+    if (newY > 78) segment = 'horizontal';
+  } else if (segment === 'horizontal') {
+    const newX = Math.min(80, Math.max(20, x));
+    knob.setAttribute('cy', 80);
+    knob.setAttribute('cx', newX);
+    if (newX < 22) segment = 'vertical';
+  }
+});
+</script>
+
+</body>
+</html>
