@@ -104,11 +104,9 @@
         frame3.srcdoc = data.code;
         frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
 
-        // Hide the welcome text gracefully
+        // Fade out welcome smoothly but keep layout stable
         frame1.style.opacity = '0';
-        setTimeout(() => {
-          frame1.style.display = 'none';
-        }, 800);
+        frame1.style.visibility = 'hidden';
       }
     });
   </script>
