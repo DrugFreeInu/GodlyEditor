@@ -13,13 +13,14 @@ html,body{
   align-items:center;
 }
 svg{
-  width:80vmin;   /* match graph.html */
+  width:80vmin;
   height:80vmin;
   background:transparent;
 }
 circle{
   fill:#00ff99;
   cursor:pointer;
+  transition:cx 0.05s, cy 0.05s;
 }
 </style>
 </head>
@@ -31,10 +32,10 @@ circle{
 
 <script>
 const knob = document.getElementById('knob');
-const svg = document.getElementById('knobLayer');
+const svg  = document.getElementById('knobLayer');
 
 let dragging = false;
-let segment = 'vertical'; // knob moves along one segment of the L
+let segment  = 'vertical'; // start along the left line
 
 svg.addEventListener('mousedown', e => {
   if (e.target === knob) dragging = true;
@@ -48,17 +49,18 @@ svg.addEventListener('mousemove', e => {
   const x = ((e.clientX - rect.left) / rect.width) * 100;
   const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-  // lock to L path
   if (segment === 'vertical') {
-    const newY = Math.min(80, Math.max(20, y));
+    const newY = Math.max(20, Math.min(80, y)); // limit up/down
     knob.setAttribute('cx', 20);
     knob.setAttribute('cy', newY);
-    if (newY > 78) segment = 'horizontal';
+    // switch to horizontal at the corner
+    if (newY >= 79) segment = 'horizontal';
   } else if (segment === 'horizontal') {
-    const newX = Math.min(80, Math.max(20, x));
+    const newX = Math.max(20, Math.min(80, x)); // limit left/right
     knob.setAttribute('cx', newX);
     knob.setAttribute('cy', 80);
-    if (newX < 22) segment = 'vertical';
+    // switch back if pulled left
+    if (newX <= 21) segment = 'vertical';
   }
 });
 </script>
