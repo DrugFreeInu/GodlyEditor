@@ -49,7 +49,7 @@
       pointer-events: auto;
     }
 
-    /* Preview box – moved up higher */
+    /* Preview box */
     #frame3 {
       width: 70%;
       height: 50%;
@@ -58,7 +58,7 @@
       background: transparent;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.8s ease;
+      transition: opacity 1.2s ease;
     }
 
     /* Add layer button */
@@ -98,14 +98,23 @@
       if (!data) return;
 
       if (data.type === 'updatePreview') {
+        // Send code to preview frame
         frame3.contentWindow.postMessage({ type: 'addLayer', code: data.code }, '*');
+
+        // Fade out the poem (title layer)
         frame1.style.opacity = '0';
         frame1.style.visibility = 'hidden';
 
+        // Fade in the preview box slightly after poem fade
+        setTimeout(() => {
+          frame3.style.opacity = '1';
+        }, 800); // matches poem fade duration
+
+        // Show add-layer button after preview appears
         setTimeout(() => {
           frame4.style.opacity = '1';
           frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
-        }, 800);
+        }, 1600);
       }
 
       if (data.type === 'addLayer' && data.layer === 2 && spawnEnabled) {
