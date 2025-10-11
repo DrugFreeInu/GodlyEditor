@@ -26,49 +26,42 @@
       border-radius: 10px;
       background: transparent;
       display: block;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
-    /* Header / overlay area */
+    /* Poem (welcome) */
     #frame1 {
       width: 90%;
-      height: 12%;
+      height: 20%;
+      top: 35%; /* vertically centered area */
+      z-index: 3;
       pointer-events: none;
       transition: opacity 0.8s ease;
-      position: absolute;
-      top: 2%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
     }
 
-    /* Preview (center area) */
-    #frame3 {
-      width: 90%;
-      height: 60%;
-      position: absolute;
-      top: 15%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-      background: transparent;
-    }
-
-    /* Code paste box (bottom area) */
+    /* Paste box (layer1) */
     #frame2 {
       width: 90%;
-      height: 45%;
-      position: absolute;
-      bottom: 2%;
-      left: 50%;
-      transform: translateX(-50%);
+      height: 25%;
+      top: 55%; /* just below the poem */
       z-index: 2;
       background: transparent;
       pointer-events: auto;
     }
 
-    /* Add-layer button area */
+    /* Preview (behind) */
+    #frame3 {
+      width: 90%;
+      height: 100%;
+      top: 0;
+      z-index: 1;
+      background: transparent;
+    }
+
+    /* Add-layer button */
     #frame4 {
-      position: absolute;
       bottom: 8%;
       left: 50%;
       transform: translateX(-50%);
@@ -94,10 +87,8 @@
     const frame3 = document.getElementById('frame3');
     const frame4 = document.getElementById('frame4');
 
-    // Toggle this later when you want spawning back on
     const spawnEnabled = false;
 
-    // Load main components
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
@@ -108,7 +99,6 @@
       if (!data) return;
 
       if (data.type === 'updatePreview') {
-        // Send code to preview and fade header
         frame3.contentWindow.postMessage({ type: 'addLayer', code: data.code }, '*');
         frame1.style.opacity = '0';
         frame1.style.visibility = 'hidden';
@@ -119,7 +109,6 @@
         }, 800);
       }
 
-      // Spawn trigger kept but disabled until you flip spawnEnabled = true
       if (data.type === 'addLayer' && data.layer === 2 && spawnEnabled) {
         frame2.src = `layer2.html?v=${Date.now()}`;
         frame4.style.opacity = '0';
