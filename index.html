@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +20,7 @@
       left: 0;
     }
 
-    /* Universal iframe style (fixed comma bug) */
+    /* Universal iframe style */
     #frame1, #frame5, #frame2, #frame3, #frame4 {
       border: none;
       border-radius: 10px;
@@ -95,6 +94,10 @@
     const frame3 = document.getElementById('frame3');
     const frame4 = document.getElementById('frame4');
 
+    // Toggle this later when you want spawning back on
+    const spawnEnabled = false;
+
+    // Load main components
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
@@ -104,6 +107,7 @@
       if (!data) return;
 
       if (data.type === 'updatePreview') {
+        // Send code to preview and fade header
         frame3.contentWindow.postMessage({ type: 'addLayer', code: data.code }, '*');
         frame1.style.opacity = '0';
         frame1.style.visibility = 'hidden';
@@ -114,7 +118,8 @@
         }, 800);
       }
 
-      if (data.type === 'addLayer' && data.layer === 2) {
+      // Spawn trigger kept but disabled until you flip spawnEnabled = true
+      if (data.type === 'addLayer' && data.layer === 2 && spawnEnabled) {
         frame2.src = `layer2.html?v=${Date.now()}`;
         frame4.style.opacity = '0';
       }
