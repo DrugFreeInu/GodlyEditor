@@ -19,7 +19,7 @@
       left: 0;
     }
 
-    #frame1, #frame2, #frame3, #frame4, #frame5 {
+    #frame1, #frame2, #frame3, #frame4, #frame5, #frame6 {
       border: none;
       border-radius: 10px;
       background: transparent;
@@ -63,12 +63,21 @@
 
     /* Add layer button */
     #frame4 {
-      bottom: 8%;
+      bottom: 15%;
       width: 200px;
       height: 60px;
       opacity: 0;
       transition: opacity 0.8s ease;
       z-index: 4;
+    }
+
+    /* ANCR button (separate layer) */
+    #frame5 {
+      bottom: 5%;
+      width: 180px;
+      height: 60px;
+      z-index: 5;
+      opacity: 1;
     }
   </style>
 </head>
@@ -78,6 +87,7 @@
   <iframe id="frame3"></iframe>
   <iframe id="frame4"></iframe>
   <iframe id="frame5"></iframe>
+  <iframe id="frame6"></iframe>
 
   <script>
     const v = Date.now();
@@ -85,6 +95,7 @@
     const frame2 = document.getElementById('frame2');
     const frame3 = document.getElementById('frame3');
     const frame4 = document.getElementById('frame4');
+    const frame5 = document.getElementById('frame5');
 
     const spawnEnabled = false;
 
@@ -92,25 +103,21 @@
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
+    frame5.src = `ancr.html?v=${v}`;
 
     window.addEventListener('message', (event) => {
       const data = event.data;
       if (!data) return;
 
       if (data.type === 'updatePreview') {
-        // Send code to preview frame
         frame3.contentWindow.postMessage({ type: 'addLayer', code: data.code }, '*');
-
-        // Fade out the poem (title layer)
         frame1.style.opacity = '0';
         frame1.style.visibility = 'hidden';
 
-        // Fade in the preview box slightly after poem fade
         setTimeout(() => {
           frame3.style.opacity = '1';
-        }, 800); // matches poem fade duration
+        }, 800);
 
-        // Show add-layer button after preview appears
         setTimeout(() => {
           frame4.style.opacity = '1';
           frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
