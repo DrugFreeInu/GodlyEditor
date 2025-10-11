@@ -2,63 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preview</title>
   <style>
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
-      background: transparent;
-      font-family: 'Courier New', monospace;
+      background: #222;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      height: 100vh;
     }
-    #stage {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      border: 1px dashed rgba(255,255,255,0.3);
-      border-radius: 6px;
-      box-sizing: border-box;
-      background: rgba(255,255,255,0.05);
-      overflow: hidden;
-    }
-    .layerFrame {
-      position: absolute;
-      inset: 0;           /* fill the box */
-      width: 100%;
-      height: 100%;
-      border: 0;
-      background: transparent;
+
+    #output {
+      display: none;
+      width: 90%;
+      height: 90%;
+      background: #000;
+      padding: 20px;
+      border-radius: 10px;
+      overflow: auto;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <div id="stage"></div>
+  <div id="output">Waiting for paste...</div>
 
   <script>
-    const stage = document.getElementById('stage');
-
-    function addLayer(code) {
-      // Make pasted docs transparent so lower layers stay visible
-      let patched = code;
-      if (code.includes('</head>')) {
-        patched = code.replace(
-          '</head>',
-          '<style>html,body{background:transparent!important;}</style></head>'
-        );
-      } else {
-        patched = '<style>html,body{background:transparent!important;}</style>' + code;
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'addLayer' && event.data.code) {
+        const output = document.getElementById('output');
+        output.textContent = event.data.code;
+        output.style.display = 'block';
       }
-
-      const f = document.createElement('iframe');
-      f.className = 'layerFrame';
-      f.srcdoc = patched;
-      stage.appendChild(f);
-    }
-
-    // Receive layers from index.html
-    window.addEventListener('message', (e) => {
-      const d = e.data;
-      if (!d || d.type !== 'addLayer') return;
-      addLayer(d.code);
     });
   </script>
 </body>
