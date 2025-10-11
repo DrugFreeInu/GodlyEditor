@@ -25,6 +25,7 @@
       border: none;
       border-radius: 10px;
       background: transparent;
+      display: block;
     }
 
     /* Header / overlay area */
@@ -37,6 +38,7 @@
       top: 2%;
       left: 50%;
       transform: translateX(-50%);
+      z-index: 3;
     }
 
     /* Preview (center area) */
@@ -44,34 +46,37 @@
       width: 90%;
       height: 60%;
       position: absolute;
-      top: 15%; /* adjust to move up/down */
+      top: 15%; /* adjust vertical placement */
       left: 50%;
       transform: translateX(-50%);
-      z-index: 1;
+      z-index: 1; /* below paste box */
+      background: transparent; /* ensure no fill */
     }
 
     /* Code paste box (bottom area) */
     #frame2 {
       width: 90%;
-      height: 45%; /* adjust freely now without affecting preview */
+      height: 45%;
       position: absolute;
       bottom: 2%;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 2;
+      z-index: 2; /* above preview, below frame4 */
+      background: transparent;
+      pointer-events: auto;
     }
 
     /* Add-layer button area */
     #frame4 {
       position: absolute;
-      bottom: 8%; /* slightly higher for visibility */
+      bottom: 8%;
       left: 50%;
       transform: translateX(-50%);
       width: 200px;
       height: 60px;
       opacity: 0;
       transition: opacity 0.8s ease;
-      z-index: 3;
+      z-index: 4;
     }
   </style>
 </head>
