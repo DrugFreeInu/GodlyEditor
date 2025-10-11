@@ -2,40 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Preview</title>
   <style>
     body {
       margin: 0;
-      background: #222;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: sans-serif;
-      height: 100vh;
-    }
-
-    #output {
-      display: none;
-      width: 90%;
-      height: 90%;
-      background: #000;
+      background: #111;
+      color: #0f0;
+      font-family: monospace;
       padding: 20px;
-      border-radius: 10px;
-      overflow: auto;
       white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <div id="output">Waiting for paste...</div>
+  <div id="preview">Waiting for code...</div>
 
   <script>
+    const preview = document.getElementById('preview');
+
     window.addEventListener('message', (event) => {
-      if (event.data.type === 'addLayer' && event.data.code) {
-        const output = document.getElementById('output');
-        output.textContent = event.data.code;
-        output.style.display = 'block';
+      const data = event.data;
+      if (data?.type === 'addLayer' && data.code) {
+        preview.textContent = data.code;
       }
     });
   </script>
