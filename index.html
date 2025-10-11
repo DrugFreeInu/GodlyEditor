@@ -8,7 +8,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Editor</title>
   <style>
-    /* Lock entire page in place */
     body {
       margin: 0;
       background: #111;
@@ -20,8 +19,7 @@
       left: 0;
     }
 
-    /* Universal iframe style */
-    #frame1, #frame5, #frame2, #frame3, #frame4 {
+    #frame1, #frame2, #frame3, #frame4, #frame5 {
       border: none;
       border-radius: 10px;
       background: transparent;
@@ -31,27 +29,24 @@
       transform: translateX(-50%);
     }
 
-    /* Poem (welcome) */
     #frame1 {
       width: 90%;
       height: 20%;
-      top: 35%; /* vertically centered area */
+      top: 30%;
       z-index: 3;
       pointer-events: none;
       transition: opacity 0.8s ease;
     }
 
-    /* Paste box (layer1) */
     #frame2 {
       width: 90%;
       height: 25%;
-      top: 55%; /* just below the poem */
+      top: 50%;
       z-index: 2;
       background: transparent;
       pointer-events: auto;
     }
 
-    /* Preview (behind) */
     #frame3 {
       width: 90%;
       height: 100%;
@@ -60,11 +55,8 @@
       background: transparent;
     }
 
-    /* Add-layer button */
     #frame4 {
       bottom: 8%;
-      left: 50%;
-      transform: translateX(-50%);
       width: 200px;
       height: 60px;
       opacity: 0;
@@ -75,8 +67,8 @@
 </head>
 <body>
   <iframe id="frame1"></iframe>
-  <iframe id="frame3"></iframe>
   <iframe id="frame2"></iframe>
+  <iframe id="frame3"></iframe>
   <iframe id="frame4"></iframe>
   <iframe id="frame5"></iframe>
 
