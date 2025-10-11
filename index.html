@@ -21,7 +21,7 @@
     }
 
     /* Universal iframe style */
-    #frame1, #frame2, #frame3, #frame4 {
+    #frame1, #frame5 #frame2, #frame3, #frame4 {
       border: none;
       border-radius: 10px;
       background: transparent;
@@ -65,6 +65,18 @@
       background: transparent;
       pointer-events: auto;
     }
+      #frame5 {
+      width: 90%;
+      height: 45%;
+      position: absolute;
+      bottom: 2%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2; /* above preview, below frame4 */
+      background: transparent;
+      pointer-events: auto;
+    }
+
 
     /* Add-layer button area */
     #frame4 {
