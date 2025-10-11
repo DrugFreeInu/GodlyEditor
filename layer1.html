@@ -6,36 +6,149 @@
   <title>Layer 1</title>
   <style>
     body {
-      margin: 0;
       background: transparent;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    textarea {
+    .border-wrap {
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: none;
+    }
+
+    .input-container {
+      position: relative;
+      width: 8ch;
+      height: 4em;
+      border-radius: 12px;
+      background: #222;
+      box-shadow: none;
+    }
+
+    :root {
+      --caret-left: -25px;
+      --caret-top: 10px;
+    }
+
+    .editable-box {
       width: 100%;
       height: 100%;
-      font-size: 16px;
-      background: #222;
-      color: #fff;
-      border: none;
-      padding: 10px;
-      resize: none;
+      background: transparent;
+      color: transparent;
+      font-family: monospace;
+      font-size: 40px;
+      border-radius: 8px;
+      text-align: center;
       box-sizing: border-box;
+      text-indent: var(--caret-left);
+      padding-top: var(--caret-top);
+      line-height: 1;
+      user-select: none;
+      outline: none;
+      caret-color: transparent;
+    }
+
+    .animated-placeholder,
+    .number-display {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: monospace;
+      font-size: 20px;
+      color: #aaa;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.2;
+      text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+      animation: glowFade 2.5s ease-in-out infinite;
+    }
+
+    @keyframes glowFade {
+      0%, 100% {
+        opacity: 0.3;
+        text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+      }
+      50% {
+        opacity: 0.5;
+        text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    .hidden { display: none; }
+
+    .fade-in {
+      opacity: 0;
+      animation: appear 0.4s forwards;
+    }
+
+    @keyframes appear {
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <textarea id="pastebox" placeholder="Paste your code here..."></textarea>
+  <div class="border-wrap">
+    <div class="input-container">
+      <div class="editable-box" id="input" contenteditable="true"></div>
+      <div class="animated-placeholder" id="placeholder">
+        <span>paste</span>
+        <span>code</span>
+      </div>
+      <div class="number-display hidden" id="confirm">1</div>
+    </div>
+  </div>
 
   <script>
-    const box = document.getElementById('pastebox');
+    const placeholder = document.getElementById('placeholder');
+    const input = document.getElementById('input');
+    const confirm = document.getElementById('confirm');
 
-    box.addEventListener('paste', (e) => {
-      setTimeout(() => {
-        const code = box.value.trim();
-        if (code.length > 0) {
-          parent.postMessage({ type: 'updatePreview', code }, '*');
-        }
-      }, 50); // wait for paste to complete
+    function transitionToOne() {
+      placeholder.classList.add('hidden');
+      confirm.classList.remove('hidden');
+      confirm.classList.add('fade-in');
+      input.contentEditable = "false";
+    }
+
+    function sendToPreview(code) {
+      try {
+        parent.postMessage({ type: 'updatePreview', code: code }, '*');
+      } catch (err) {
+        console.error('Message send failed:', err);
+      }
+    }
+
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text');
+      if (pasted.trim() === '') return;
+      transitionToOne();
+      sendToPreview(pasted);
+    });
+
+    input.addEventListener('input', () => {
+      const val = input.textContent.trim();
+      if (val !== '') {
+        transitionToOne();
+        sendToPreview(val);
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!input.contains(e.target)) {
+        input.blur();
+      }
     });
   </script>
 </body>
