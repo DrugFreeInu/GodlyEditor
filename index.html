@@ -8,44 +8,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Editor</title>
   <style>
+    /* Lock entire page in place */
     body {
       margin: 0;
       background: #111;
       height: 100vh;
+      width: 100%;
       overflow: hidden;
-      display: fixed;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
+      position: fixed;
+      top: 0;
+      left: 0;
     }
 
+    /* Universal iframe style */
     #frame1, #frame2, #frame3, #frame4 {
       border: none;
       border-radius: 10px;
       background: transparent;
     }
 
+    /* Header / overlay area */
     #frame1 {
       width: 90%;
       height: 12%;
       pointer-events: none;
       transition: opacity 0.8s ease;
+      position: absolute;
+      top: 2%;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
+    /* Preview (center area) */
     #frame3 {
       width: 90%;
       height: 60%;
       position: absolute;
+      top: 15%; /* adjust to move up/down */
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 1;
-      margin-top: 10px; /* moved way up */
     }
 
+    /* Code paste box (bottom area) */
     #frame2 {
       width: 90%;
-      height: 45%;
-      margin-bottom: 2%;
+      height: 45%; /* adjust freely now without affecting preview */
+      position: absolute;
+      bottom: 2%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
     }
 
+    /* Add-layer button area */
     #frame4 {
       position: absolute;
       bottom: 8%; /* slightly higher for visibility */
