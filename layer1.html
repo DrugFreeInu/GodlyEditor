@@ -1,3 +1,4 @@
+<!-- layer1.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,14 +7,42 @@
   <title>Layer 1 Input</title>
   <style>
     body {
-      background: ;
+      background: transparent; /* fixed */
       margin: 0;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative; /* for the row positioning */
     }
 
+    /* Six “paste code” markers row, just under preview edge (top of this iframe) */
+    .paste-row {
+      position: absolute;
+      top: 8px;               /* sits right under the preview’s bottom line */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;   /* don’t block clicks/paste */
+      z-index: 5;
+    }
+
+    .paste-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.1;
+      font-family: monospace;
+      font-size: 20px;        /* same size as current */
+      color: #aaa;
+      opacity: 0.4;
+      text-shadow: 0 0 2px rgba(255,255,255,0.1);
+      user-select: none;
+    }
+
+    /* Existing container */
     .border-wrap {
       padding: 0;
       border-radius: 0;
@@ -76,14 +105,8 @@
     }
 
     @keyframes glowFade {
-      0%, 100% {
-        opacity: 0.3;
-        text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
-      }
-      50% {
-        opacity: 0.5;
-        text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
-      }
+      0%, 100% { opacity: 0.3; text-shadow: 0 0 2px rgba(255,255,255,0.1); }
+      50% { opacity: 0.5; text-shadow: 0 0 4px rgba(255,255,255,0.2); }
     }
 
     .hidden { display: none; }
@@ -93,12 +116,20 @@
       animation: appear 0.4s forwards;
     }
 
-    @keyframes appear {
-      to { opacity: 1; }
-    }
+    @keyframes appear { to { opacity: 1; } }
   </style>
 </head>
 <body>
+  <!-- Six duplicates directly under the preview edge -->
+  <div class="paste-row">
+    <div class="paste-chip"><span>paste</span><span>code</span></div>
+    <div class="paste-chip"><span>paste</span><span>code</span></div>
+    <div class="paste-chip"><span>paste</span><span>code</span></div>
+    <div class="paste-chip"><span>paste</span><span>code</span></div>
+    <div class="paste-chip"><span>paste</span><span>code</span></div>
+    <div class="paste-chip"><span>paste</span><span>code</span></div>
+  </div>
+
   <div class="border-wrap">
     <div class="input-container">
       <div class="editable-box" id="input" contenteditable="true"></div>
@@ -147,9 +178,7 @@
     });
 
     document.addEventListener('click', (e) => {
-      if (!input.contains(e.target)) {
-        input.blur();
-      }
+      if (!input.contains(e.target)) input.blur();
     });
   </script>
 </body>
