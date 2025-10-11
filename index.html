@@ -29,6 +29,7 @@
       transform: translateX(-50%);
     }
 
+    /* Title (Layer 1) */
     #frame1 {
       width: 90%;
       height: 20%;
@@ -38,6 +39,7 @@
       transition: opacity 0.8s ease;
     }
 
+    /* Paste box */
     #frame2 {
       width: 90%;
       height: 25%;
@@ -47,17 +49,19 @@
       pointer-events: auto;
     }
 
-      #frame3 {
+    /* Preview box – moved up higher */
+    #frame3 {
       width: 70%;
-      height: 70%;
-      top: 0;
+      height: 50%;
+      top: 20%;
       z-index: 1;
       background: transparent;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.8s ease;
     }
-    
+
+    /* Add layer button */
     #frame4 {
       bottom: 8%;
       width: 200px;
