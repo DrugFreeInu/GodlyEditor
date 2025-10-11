@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ancr</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Button styling */
+    #ancrButton {
+      font-family: monospace;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      color: #00ff6a;
+      background: transparent;
+      border: 2px solid #00ff6a;
+      padding: 14px 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px #00ff6a;
+    }
+
+    #ancrButton:hover {
+      background: #00ff6a22;
+      box-shadow: 0 0 15px #00ff6a;
+      transform: scale(1.05);
+    }
+
+    /* Subtle pulse to show life */
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 8px #00ff6a44; }
+      50% { box-shadow: 0 0 18px #00ff6a; }
+    }
+
+    #ancrButton {
+      animation: pulse 3s infinite;
+    }
+  </style>
+</head>
+<body>
+  <button id="ancrButton">ANCR</button>
+</body>
+</html>
