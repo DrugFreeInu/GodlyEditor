@@ -70,7 +70,7 @@
       z-index: 4;
     }
 
-    /* ANCR button */
+    /* ANCHOR button */
     #frame5 {
       bottom: 5%;
       width: 180px;
@@ -83,13 +83,13 @@
     #run, #clear, #clearAll, #move, #light, #save {
       width: 90px;
       height: 50px;
-      top: 5%;
+      bottom: 12%; /* moved from top: 5% to bottom strip */
       z-index: 6;
       opacity: 0;
       pointer-events: none;
     }
 
-    /* Layout */
+    /* Layout (centered horizontally) */
     #run { left: calc(50% - 270px); }
     #clear { left: calc(50% - 165px); }
     #clearAll { left: calc(50% - 60px); }
@@ -106,7 +106,7 @@
   <iframe id="frame5"></iframe>
   <iframe id="frame6"></iframe>
 
-  <!-- Top control buttons -->
+  <!-- Bottom control buttons -->
   <iframe id="run"></iframe>
   <iframe id="clear"></iframe>
   <iframe id="clearAll"></iframe>
