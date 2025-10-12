@@ -28,6 +28,7 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
+      transition: opacity 0.8s ease;
     }
 
     /* Title (Layer 1) */
@@ -37,7 +38,6 @@
       top: 30%;
       z-index: 3;
       pointer-events: none;
-      transition: opacity 0.8s ease;
     }
 
     /* Paste box */
@@ -59,7 +59,6 @@
       background: transparent;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 1.2s ease;
     }
 
     /* Add layer button */
@@ -68,11 +67,10 @@
       width: 200px;
       height: 60px;
       opacity: 0;
-      transition: opacity 0.8s ease;
       z-index: 4;
     }
 
-    /* ANCR button (separate layer) */
+    /* ANCR button */
     #frame5 {
       bottom: 5%;
       width: 180px;
@@ -81,15 +79,17 @@
       opacity: 1;
     }
 
-    /* Button row */
+    /* Control buttons (hidden by default) */
     #run, #clear, #clearAll, #move, #light, #save {
       width: 90px;
       height: 50px;
       top: 5%;
       z-index: 6;
+      opacity: 0;
+      pointer-events: none;
     }
 
-    /* Horizontal layout across top */
+    /* Layout */
     #run { left: calc(50% - 270px); }
     #clear { left: calc(50% - 165px); }
     #clearAll { left: calc(50% - 60px); }
@@ -122,8 +122,10 @@
     const frame4 = document.getElementById('frame4');
     const frame5 = document.getElementById('frame5');
 
+    const buttons = ['run', 'clear', 'clearAll', 'move', 'light', 'save'].map(id => document.getElementById(id));
     const spawnEnabled = false;
 
+    // Core frame sources
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
@@ -143,17 +145,23 @@
       if (!data) return;
 
       if (data.type === 'updatePreview') {
+        // Send code to preview
         frame3.contentWindow.postMessage({ type: 'addLayer', code: data.code }, '*');
+
+        // Transition visuals
         frame1.style.opacity = '0';
         frame1.style.visibility = 'hidden';
 
-        setTimeout(() => {
-          frame3.style.opacity = '1';
-        }, 800);
-
+        setTimeout(() => { frame3.style.opacity = '1'; }, 800);
         setTimeout(() => {
           frame4.style.opacity = '1';
           frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
+
+          // Reveal buttons after paste event
+          buttons.forEach(btn => {
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+          });
         }, 1600);
       }
 
