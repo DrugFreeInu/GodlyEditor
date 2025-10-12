@@ -62,7 +62,7 @@
     #frame4 {
       width: 200px;
       height: 60px;
-      bottom: 140px;
+      bottom: 200px;
       z-index: 4;
       opacity: 0;
     }
@@ -71,37 +71,38 @@
     #frame5 {
       width: 180px;
       height: 190px;
-      bottom: 70px;
+      bottom: 130px;
       z-index: 5;
       opacity: 0;
       pointer-events: none;
     }
 
-    /* Control buttons */
+    /* Control buttons - now in two rows */
     #run, #clear, #clearAll, #move, #light, #save {
       width: 90px;
       height: 50px;
-      bottom: 45px;        /* lifted up into the empty space */
       opacity: 0;
       pointer-events: none;
       z-index: 6;
     }
 
-    /* Horizontal layout */
-    #run      { left: calc(50% - 270px); }
-    #clear    { left: calc(50% - 165px); }
-    #clearAll { left: calc(50% -  60px); }
-    #move     { left: calc(50% +  45px); }
-    #light    { left: calc(50% + 150px); }
-    #save     { left: calc(50% + 255px); }
+    /* Top row */
+    #run      { bottom: 90px; left: calc(50% - 150px); }
+    #clear    { bottom: 90px; left: calc(50% - 45px); }
+    #clearAll { bottom: 90px; left: calc(50% + 60px); }
+
+    /* Bottom row */
+    #move     { bottom: 30px; left: calc(50% - 150px); }
+    #light    { bottom: 30px; left: calc(50% - 45px); }
+    #save     { bottom: 30px; left: calc(50% + 60px); }
 
     @media (max-width: 600px) {
-      #run      { left: calc(50% - 150px); }
-      #clear    { left: calc(50% - 90px); }
-      #clearAll { left: calc(50% - 30px); }
-      #move     { left: calc(50% + 30px); }
-      #light    { left: calc(50% + 90px); }
-      #save     { left: calc(50% + 150px); }
+      #run      { bottom: 90px; left: calc(50% - 110px); }
+      #clear    { bottom: 90px; left: calc(50% - 5px); }
+      #clearAll { bottom: 90px; left: calc(50% + 100px); }
+      #move     { bottom: 30px; left: calc(50% - 110px); }
+      #light    { bottom: 30px; left: calc(50% - 5px); }
+      #save     { bottom: 30px; left: calc(50% + 100px); }
     }
   </style>
 </head>
