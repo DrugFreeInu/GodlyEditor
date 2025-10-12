@@ -3,52 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ancr</title>
+  <title>Anchor</title>
   <style>
     body {
       margin: 0;
-      background: #000;
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      height: 100%;
+      width: 100%;
       overflow: hidden;
     }
 
-    /* Button styling */
-    #ancrButton {
+    /* Match other button sizes */
+    #anchorButton {
       font-family: monospace;
-      font-size: 1.3rem;
-      letter-spacing: 2px;
+      font-size: 1rem;
+      letter-spacing: 1px;
       color: #00ff6a;
       background: transparent;
       border: 2px solid #00ff6a;
-      padding: 14px 40px;
+      padding: 10px 25px;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.4s ease;
       text-transform: uppercase;
-      text-shadow: 0 0 10px #00ff6a;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 6px #00ff6a;
+      animation: pulse 3s infinite;
     }
 
-    #ancrButton:hover {
+    #anchorButton:hover {
       background: #00ff6a22;
-      box-shadow: 0 0 15px #00ff6a;
+      box-shadow: 0 0 12px #00ff6a;
       transform: scale(1.05);
     }
 
-    /* Subtle pulse to show life */
     @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 8px #00ff6a44; }
-      50% { box-shadow: 0 0 18px #00ff6a; }
-    }
-
-    #ancrButton {
-      animation: pulse 3s infinite;
+      0%, 100% { box-shadow: 0 0 6px #00ff6a44; }
+      50% { box-shadow: 0 0 14px #00ff6a; }
     }
   </style>
 </head>
 <body>
-  <button id="ancrButton">ANCR</button>
+  <button id="anchorButton">ANCHOR</button>
 </body>
 </html>
