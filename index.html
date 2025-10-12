@@ -58,27 +58,8 @@
       pointer-events: none;
     }
 
-    /* Add Layer button */
-    #frame4 {
-      width: 200px;
-      height: 60px;
-      bottom: 200px;
-      z-index: 4;
-      opacity: 0;
-    }
-
-    /* ANCHOR button — hidden by default */
-    #frame5 {
-      width: 180px;
-      height: 190px;
-      bottom: 130px;
-      z-index: 5;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* Control buttons - now in two rows */
-    #run, #clear, #clearAll, #move, #light, #save {
+    /* Unified control buttons (8 total) */
+    #run, #clear, #clearAll, #move, #light, #save, #anchor, #add {
       width: 90px;
       height: 50px;
       opacity: 0;
@@ -86,23 +67,28 @@
       z-index: 6;
     }
 
-    /* Top row */
-    #run      { bottom: 90px; left: calc(50% - 150px); }
-    #clear    { bottom: 90px; left: calc(50% - 45px); }
-    #clearAll { bottom: 90px; left: calc(50% + 60px); }
+    /* Row 1 */
+    #run      { bottom: 150px; left: calc(50% - 195px); }
+    #clear    { bottom: 150px; left: calc(50% - 90px); }
+    #clearAll { bottom: 150px; left: calc(50% + 15px); }
+    #move     { bottom: 150px; left: calc(50% + 120px); }
 
-    /* Bottom row */
-    #move     { bottom: 30px; left: calc(50% - 150px); }
-    #light    { bottom: 30px; left: calc(50% - 45px); }
-    #save     { bottom: 30px; left: calc(50% + 60px); }
+    /* Row 2 */
+    #light    { bottom: 80px; left: calc(50% - 195px); }
+    #save     { bottom: 80px; left: calc(50% - 90px); }
+    #anchor   { bottom: 80px; left: calc(50% + 15px); }
+    #add      { bottom: 80px; left: calc(50% + 120px); }
 
     @media (max-width: 600px) {
-      #run      { bottom: 90px; left: calc(50% - 110px); }
-      #clear    { bottom: 90px; left: calc(50% - 5px); }
-      #clearAll { bottom: 90px; left: calc(50% + 100px); }
-      #move     { bottom: 30px; left: calc(50% - 110px); }
-      #light    { bottom: 30px; left: calc(50% - 5px); }
-      #save     { bottom: 30px; left: calc(50% + 100px); }
+      #run      { bottom: 150px; left: calc(50% - 150px); }
+      #clear    { bottom: 150px; left: calc(50% - 50px); }
+      #clearAll { bottom: 150px; left: calc(50% + 50px); }
+      #move     { bottom: 150px; left: calc(50% + 150px); }
+
+      #light    { bottom: 80px; left: calc(50% - 150px); }
+      #save     { bottom: 80px; left: calc(50% - 50px); }
+      #anchor   { bottom: 80px; left: calc(50% + 50px); }
+      #add      { bottom: 80px; left: calc(50% + 150px); }
     }
   </style>
 </head>
@@ -111,26 +97,27 @@
   <iframe id="frame1"></iframe>
   <iframe id="frame2"></iframe>
   <iframe id="frame3"></iframe>
-  <iframe id="frame4"></iframe>
-  <iframe id="frame5"></iframe>
   <iframe id="frame6"></iframe>
 
-  <!-- Buttons -->
+  <!-- Buttons (now all 8 unified) -->
   <iframe id="run"></iframe>
   <iframe id="clear"></iframe>
   <iframe id="clearAll"></iframe>
   <iframe id="move"></iframe>
   <iframe id="light"></iframe>
   <iframe id="save"></iframe>
+  <iframe id="anchor"></iframe>
+  <iframe id="add"></iframe>
 
   <script>
     const v = Date.now();
     const frame1 = document.getElementById('frame1');
     const frame2 = document.getElementById('frame2');
     const frame3 = document.getElementById('frame3');
-    const frame4 = document.getElementById('frame4');
-    const frame5 = document.getElementById('frame5'); // ANCHOR
-    const buttons = ['run','clear','clearAll','move','light','save'].map(id => document.getElementById(id));
+
+    const buttons = [
+      'run','clear','clearAll','move','light','save','anchor','add'
+    ].map(id => document.getElementById(id));
 
     const spawnEnabled = false;
 
@@ -138,14 +125,14 @@
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
-    frame4.src = `add-layer.html?v=${v}`;
-    frame5.src = `ancr.html?v=${v}`;
     document.getElementById('run').src = `run.html?v=${v}`;
     document.getElementById('clear').src = `clear.html?v=${v}`;
     document.getElementById('clearAll').src = `clear-all.html?v=${v}`;
     document.getElementById('move').src = `move.html?v=${v}`;
     document.getElementById('light').src = `light.html?v=${v}`;
     document.getElementById('save').src = `save.html?v=${v}`;
+    document.getElementById('anchor').src = `ancr.html?v=${v}`;
+    document.getElementById('add').src = `add-layer.html?v=${v}`;
 
     // Reveal flow
     window.addEventListener('message', event => {
@@ -159,11 +146,7 @@
 
         setTimeout(() => frame3.style.opacity = '1', 800);
         setTimeout(() => {
-          frame4.style.opacity = '1';
-          frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
-
-          // Show buttons and ANCHOR
-          [...buttons, frame5].forEach(b => {
+          buttons.forEach(b => {
             b.style.opacity = '1';
             b.style.pointerEvents = 'auto';
           });
@@ -172,7 +155,6 @@
 
       if (data.type === 'addLayer' && data.layer === 2 && spawnEnabled) {
         frame2.src = `layer2.html?v=${Date.now()}`;
-        frame4.style.opacity = '0';
       }
     });
   </script>
