@@ -19,7 +19,8 @@
       left: 0;
     }
 
-    #frame1, #frame2, #frame3, #frame4, #frame5, #frame6 {
+    #frame1, #frame2, #frame3, #frame4, #frame5, #frame6,
+    #run, #clear, #clearAll, #move, #light, #save {
       border: none;
       border-radius: 10px;
       background: transparent;
@@ -79,6 +80,22 @@
       z-index: 5;
       opacity: 1;
     }
+
+    /* Button row */
+    #run, #clear, #clearAll, #move, #light, #save {
+      width: 90px;
+      height: 50px;
+      top: 5%;
+      z-index: 6;
+    }
+
+    /* Horizontal layout across top */
+    #run { left: calc(50% - 270px); }
+    #clear { left: calc(50% - 165px); }
+    #clearAll { left: calc(50% - 60px); }
+    #move { left: calc(50% + 45px); }
+    #light { left: calc(50% + 150px); }
+    #save { left: calc(50% + 255px); }
   </style>
 </head>
 <body>
@@ -88,6 +105,14 @@
   <iframe id="frame4"></iframe>
   <iframe id="frame5"></iframe>
   <iframe id="frame6"></iframe>
+
+  <!-- Top control buttons -->
+  <iframe id="run"></iframe>
+  <iframe id="clear"></iframe>
+  <iframe id="clearAll"></iframe>
+  <iframe id="move"></iframe>
+  <iframe id="light"></iframe>
+  <iframe id="save"></iframe>
 
   <script>
     const v = Date.now();
@@ -104,6 +129,14 @@
     frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
     frame5.src = `ancr.html?v=${v}`;
+
+    // Button files
+    document.getElementById('run').src = `run.html?v=${v}`;
+    document.getElementById('clear').src = `clear.html?v=${v}`;
+    document.getElementById('clearAll').src = `clear-all.html?v=${v}`;
+    document.getElementById('move').src = `move.html?v=${v}`;
+    document.getElementById('light').src = `light.html?v=${v}`;
+    document.getElementById('save').src = `save.html?v=${v}`;
 
     window.addEventListener('message', (event) => {
       const data = event.data;
