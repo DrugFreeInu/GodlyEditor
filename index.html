@@ -67,13 +67,14 @@
       opacity: 0;
     }
 
-    /* ANCHOR button */
+    /* ANCHOR button — hidden by default */
     #frame5 {
       width: 180px;
       height: 190px;
       bottom: 70px;
       z-index: 5;
-      opacity: 1;
+      opacity: 0;             /* was 1 — now hidden until paste */
+      pointer-events: none;   /* disable clicks until shown */
     }
 
     /* Control buttons */
@@ -105,7 +106,7 @@
   </style>
 </head>
 <body>
-  <!-- All frames restored -->
+  <!-- All frames -->
   <iframe id="frame1"></iframe>
   <iframe id="frame2"></iframe>
   <iframe id="frame3"></iframe>
@@ -127,7 +128,7 @@
     const frame2 = document.getElementById('frame2');
     const frame3 = document.getElementById('frame3');
     const frame4 = document.getElementById('frame4');
-    const frame5 = document.getElementById('frame5');
+    const frame5 = document.getElementById('frame5'); // ANCHOR
     const buttons = ['run','clear','clearAll','move','light','save'].map(id => document.getElementById(id));
 
     const spawnEnabled = false;
@@ -159,7 +160,9 @@
         setTimeout(() => {
           frame4.style.opacity = '1';
           frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
-          buttons.forEach(b => {
+
+          // Show control buttons + anchor
+          [...buttons, frame5].forEach(b => {
             b.style.opacity = '1';
             b.style.pointerEvents = 'auto';
           });
