@@ -50,11 +50,11 @@
       pointer-events: auto;
     }
 
-    /* Preview box */
+    /* Preview box — now large and filling the top portion */
     #frame3 {
-      width: 70%;
-      height: 50%;
-      top: 30%;
+      width: 90%;
+      height: 70%; /* fills more space vertically */
+      top: 5%;
       z-index: 1;
       background: transparent;
       opacity: 0;
@@ -63,7 +63,7 @@
 
     /* Add layer button */
     #frame4 {
-      bottom: 15%;
+      bottom: 25%; /* moved up slightly to leave room for controls */
       width: 200px;
       height: 60px;
       opacity: 0;
@@ -83,7 +83,7 @@
     #run, #clear, #clearAll, #move, #light, #save {
       width: 90px;
       height: 50px;
-      bottom: 12%; /* moved from top: 5% to bottom strip */
+      bottom: 15px;
       z-index: 6;
       opacity: 0;
       pointer-events: none;
@@ -145,10 +145,7 @@
       if (!data) return;
 
       if (data.type === 'updatePreview') {
-        // Send code to preview
         frame3.contentWindow.postMessage({ type: 'addLayer', code: data.code }, '*');
-
-        // Transition visuals
         frame1.style.opacity = '0';
         frame1.style.visibility = 'hidden';
 
@@ -157,7 +154,6 @@
           frame4.style.opacity = '1';
           frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
 
-          // Reveal buttons after paste event
           buttons.forEach(btn => {
             btn.style.opacity = '1';
             btn.style.pointerEvents = 'auto';
