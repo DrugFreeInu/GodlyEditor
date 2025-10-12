@@ -8,12 +8,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Editor</title>
   <style>
-    :root{
+    :root {
       --safe: env(safe-area-inset-bottom, 0px);
-      --controls-h: 50px;       /* button height */
-      --controls-gap: 12px;     /* gap above bottom bar */
-      --anchor-h: 60px;         /* space for ANCHOR button iframe */
-      --stack-pad: 24px;        /* extra breathing room */
+      --controls-h: 50px;     /* control button height */
+      --anchor-h: 70px;       /* anchor button height */
+      --gap: 10px;            /* spacing between stacked items */
     }
 
     body {
@@ -22,9 +21,12 @@
       height: 100vh;
       width: 100%;
       overflow: hidden;
-      position: fixed; top: 0; left: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
     }
 
+    /* Base frame settings */
     #frame1, #frame2, #frame3, #frame4, #frame5, #frame6,
     #run, #clear, #clearAll, #move, #light, #save {
       border: none;
@@ -55,36 +57,39 @@
       pointer-events: auto;
     }
 
-    /* PREVIEW — fill everything above buttons+anchor */
+    /* Preview area — fills the main section of the screen */
     #frame3 {
-      width: 92%;
-      top: 4%;
-      bottom: calc(var(--safe) + var(--controls-h) + var(--controls-gap) + var(--anchor-h) + var(--stack-pad));
+      width: 90%;
+      top: 5%;
+      height: calc(100vh - (var(--controls-h) + var(--anchor-h) + var(--gap) * 5));
       z-index: 1;
       opacity: 0;
       pointer-events: none;
     }
 
-    /* Add layer button (sits above ANCHOR) */
+    /* Add Layer */
     #frame4 {
-      width: 200px; height: 60px;
-      bottom: calc(var(--safe) + var(--controls-h) + var(--controls-gap) + var(--anchor-h) + 8px);
+      width: 200px;
+      height: 60px;
+      bottom: calc(var(--controls-h) + var(--anchor-h) + var(--gap) * 2 + var(--safe));
       opacity: 0;
       z-index: 4;
     }
 
-    /* ANCHOR button area */
+    /* ANCHOR button */
     #frame5 {
-      width: 180px; height: 190px;
-      bottom: calc(var(--safe) + var(--controls-h) + var(--controls-gap));
+      width: 180px;
+      height: 190px;
+      bottom: calc(var(--controls-h) + var(--gap) + var(--safe));
       z-index: 5;
       opacity: 1;
     }
 
-    /* Control buttons (revealed after paste) */
+    /* Control buttons (hidden initially) */
     #run, #clear, #clearAll, #move, #light, #save {
-      width: 90px; height: var(--controls-h);
-      bottom: calc(var(--safe) + 6px);
+      width: 90px;
+      height: var(--controls-h);
+      bottom: calc(4px + var(--safe));
       z-index: 6;
       opacity: 0;
       pointer-events: none;
@@ -97,6 +102,15 @@
     #move     { left: calc(50% +  45px); }
     #light    { left: calc(50% + 150px); }
     #save     { left: calc(50% + 255px); }
+
+    @media (max-width: 600px) {
+      #run      { left: calc(50% - 150px); }
+      #clear    { left: calc(50% - 90px); }
+      #clearAll { left: calc(50% - 30px); }
+      #move     { left: calc(50% + 30px); }
+      #light    { left: calc(50% + 90px); }
+      #save     { left: calc(50% + 150px); }
+    }
   </style>
 </head>
 <body>
@@ -107,7 +121,7 @@
   <iframe id="frame5"></iframe>
   <iframe id="frame6"></iframe>
 
-  <!-- Bottom control buttons -->
+  <!-- Control buttons -->
   <iframe id="run"></iframe>
   <iframe id="clear"></iframe>
   <iframe id="clearAll"></iframe>
@@ -122,18 +136,17 @@
     const frame3 = document.getElementById('frame3');
     const frame4 = document.getElementById('frame4');
     const frame5 = document.getElementById('frame5');
-
-    const buttons = ['run','clear','clearAll','move','light','save'].map(id=>document.getElementById(id));
+    const buttons = ['run','clear','clearAll','move','light','save'].map(id => document.getElementById(id));
     const spawnEnabled = false;
 
-    // Core sources
+    // Core frame sources
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
     frame5.src = `ancr.html?v=${v}`;
 
-    // Button files
+    // Button sources
     document.getElementById('run').src = `run.html?v=${v}`;
     document.getElementById('clear').src = `clear.html?v=${v}`;
     document.getElementById('clearAll').src = `clear-all.html?v=${v}`;
@@ -141,7 +154,7 @@
     document.getElementById('light').src = `light.html?v=${v}`;
     document.getElementById('save').src = `save.html?v=${v}`;
 
-    // Reveal flow
+    // Interaction flow
     window.addEventListener('message', (event) => {
       const data = event.data;
       if (!data) return;
@@ -155,7 +168,10 @@
         setTimeout(() => {
           frame4.style.opacity = '1';
           frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
-          buttons.forEach(b => { b.style.opacity = '1'; b.style.pointerEvents = 'auto'; });
+          buttons.forEach(btn => {
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+          });
         }, 1600);
       }
 
