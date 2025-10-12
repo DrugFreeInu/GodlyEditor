@@ -50,10 +50,10 @@
       pointer-events: auto;
     }
 
-    /* Preview box — now large and filling the top portion */
+    /* Preview box (adjusted to stop above controls) */
     #frame3 {
       width: 90%;
-      height: 70%; /* fills more space vertically */
+      height: 60%; /* was 70% */
       top: 5%;
       z-index: 1;
       background: transparent;
@@ -63,7 +63,7 @@
 
     /* Add layer button */
     #frame4 {
-      bottom: 25%; /* moved up slightly to leave room for controls */
+      bottom: 24%;
       width: 200px;
       height: 60px;
       opacity: 0;
@@ -72,24 +72,24 @@
 
     /* ANCHOR button */
     #frame5 {
-      bottom: 5%;
+      bottom: 10%;
       width: 180px;
       height: 190px;
       z-index: 5;
       opacity: 1;
     }
 
-    /* Control buttons (hidden by default) */
+    /* Control buttons */
     #run, #clear, #clearAll, #move, #light, #save {
       width: 90px;
       height: 50px;
-      bottom: 15px;
+      bottom: 2%; /* visible above phone bar */
       z-index: 6;
       opacity: 0;
       pointer-events: none;
     }
 
-    /* Layout (centered horizontally) */
+    /* Layout */
     #run { left: calc(50% - 270px); }
     #clear { left: calc(50% - 165px); }
     #clearAll { left: calc(50% - 60px); }
@@ -125,14 +125,12 @@
     const buttons = ['run', 'clear', 'clearAll', 'move', 'light', 'save'].map(id => document.getElementById(id));
     const spawnEnabled = false;
 
-    // Core frame sources
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
     frame4.src = `add-layer.html?v=${v}`;
     frame5.src = `ancr.html?v=${v}`;
 
-    // Button files
     document.getElementById('run').src = `run.html?v=${v}`;
     document.getElementById('clear').src = `clear.html?v=${v}`;
     document.getElementById('clearAll').src = `clear-all.html?v=${v}`;
@@ -153,7 +151,6 @@
         setTimeout(() => {
           frame4.style.opacity = '1';
           frame4.contentWindow.postMessage({ type: 'showAddLayer' }, '*');
-
           buttons.forEach(btn => {
             btn.style.opacity = '1';
             btn.style.pointerEvents = 'auto';
