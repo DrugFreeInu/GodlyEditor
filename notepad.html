@@ -2,50 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Anchored Notepad</title>
   <style>
     body {
-      margin: 0;
       background: #111;
       color: #fff;
-      font-family: monospace;
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      color: #00ffcc;
+      padding: 20px;
+      margin: 0;
     }
 
     textarea {
-      width: 90%;
-      max-width: 800px;
-      height: 70vh;
-      background: #000;
-      color: #0f0;
-      border: 1px solid #0f0;
-      border-radius: 6px;
+      width: 100%;
+      max-width: 900px;
+      height: 60vh;
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 8px;
       padding: 15px;
       font-size: 1rem;
       resize: none;
       outline: none;
     }
 
-    footer {
-      margin-top: 20px;
-      color: #555;
+    .controls {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    button {
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      padding: 10px 18px;
       font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #00ddb0;
+    }
+
+    .info {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    .dark {
+      background: #eee;
+      color: #111;
+    }
+
+    .dark textarea {
+      background: #fff;
+      color: #111;
+      border: 1px solid #aaa;
+    }
+
+    .dark button {
+      background: #111;
+      color: #00ffcc;
+      border: 1px solid #00ffcc;
+    }
+
+    .dark button:hover {
+      background: #222;
     }
   </style>
 </head>
 <body>
-  <h1>Anchor Your Thoughts</h1>
-  <textarea placeholder="Write anything you need to anchor in your mind..."></textarea>
-  <footer>Local memory. Stored in your soul. 🧠💾</footer>
+  <textarea id="note" placeholder="Type your thoughts here..."></textarea>
+
+  <div class="controls">
+    <button onclick="save()">Save</button>
+    <button onclick="exportText()">Export .txt</button>
+    <button onclick="exportMarkdown()">Export .md</button>
+    <button onclick="toggleDark()">Toggle Dark</button>
+    <button onclick="restore()">Restore</button>
+  </div>
+
+  <div class="info" id="info">Words: 0 — Saved</div>
+
+  <script>
+    const note = document.getElementById('note');
+    const info = document.getElementById('info');
+    let version = '';
+
+    function save() {
+      const content = note.value;
+      localStorage.setItem('ancr_note', content);
+      localStorage.setItem('ancr_backup_' + Date.now(), content);
+      info.textContent = `Words: ${wordCount()} — Saved`;
+    }
+
+    function restore() {
+      const backups = Object.keys(localStorage)
+        .filter(k => k.startsWith('ancr_backup_'))
+        .sort()
+        .reverse();
+
+      if (backups.length > 0) {
+        const latest = localStorage.getItem(backups[0]);
+        note.value = latest;
+        info.textContent = `Words: ${wordCount()} — Restored`;
+      } else {
+        info.textContent = `No backup found`;
+      }
+    }
+
+    function exportText() {
+      const blob = new Blob([note.value], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'ancr-note.txt';
+      a.click();
+    }
+
+    function exportMarkdown() {
+      const blob = new Blob([note.value], { type: 'text/markdown' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'ancr-note.md';
+      a.click();
+    }
+
+    function toggleDark() {
+      document.body.classList.toggle('dark');
+    }
+
+    function wordCount() {
+      return note.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+    }
+
+    note.addEventListener('input', () => {
+      info.textContent = `Words: ${wordCount()} — Unsaved`;
+    });
+
+    // Load saved
+    window.onload = () => {
+      const saved = localStorage.getItem('ancr_note');
+      if (saved) {
+        note.value = saved;
+        info.textContent = `Words: ${wordCount()} — Loaded`;
+      }
+    };
+  </script>
 </body>
 </html>
