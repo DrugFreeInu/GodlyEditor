@@ -9,29 +9,32 @@
       background: #111;
       color: #fff;
       font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0;
       margin: 0;
+      padding: 0;
       overflow: hidden;
     }
 
-    /* Draggable Container */
+    /* Draggable & resizable container */
     #notepad-container {
       position: fixed;
       top: 50px;
       left: 50px;
       width: 400px;
-      min-width: 300px;
+      min-width: 250px;
       max-width: 90%;
+      height: 400px;
+      min-height: 200px;
+      max-height: 90%;
       background: #222;
       border-radius: 12px;
       border: 1px solid #444;
       box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-      cursor: grab;
       z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      cursor: grab;
       transition: background 0.3s ease;
+      overflow: hidden;
     }
 
     /* Header for dragging */
@@ -41,19 +44,16 @@
       background: #111;
       font-weight: bold;
       user-select: none;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
       cursor: grab;
     }
 
     /* Textarea */
     #note {
+      flex: 1;
       width: 100%;
-      height: 300px;
       background: #222;
       color: #fff;
       border: none;
-      border-radius: 0 0 12px 12px;
       padding: 15px;
       font-size: 1rem;
       resize: none;
@@ -70,7 +70,6 @@
       padding: 10px;
       background: #111;
       border-top: 1px solid #444;
-      border-radius: 0 0 12px 12px;
     }
 
     button {
@@ -96,30 +95,27 @@
       color: #888;
     }
 
+    /* Resize handle */
+    #resize-handle {
+      width: 15px;
+      height: 15px;
+      background: #00ffcc;
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      cursor: se-resize;
+      border-radius: 3px;
+    }
+
     /* Dark mode */
     .dark {
       background: #eee;
       color: #111;
     }
-
-    .dark #note {
-      background: #fff;
-      color: #111;
-    }
-
-    .dark button {
-      background: #111;
-      color: #00ffcc;
-      border: 1px solid #00ffcc;
-    }
-
-    .dark button:hover {
-      background: #222;
-    }
-
-    .dark .info {
-      color: #555;
-    }
+    .dark #note { background: #fff; color: #111; }
+    .dark button { background: #111; color: #00ffcc; border: 1px solid #00ffcc; }
+    .dark button:hover { background: #222; }
+    .dark .info { color: #555; }
   </style>
 </head>
 <body>
@@ -129,102 +125,3 @@
     <textarea id="note" placeholder="Type your thoughts here..."></textarea>
     <div class="controls">
       <button onclick="save()">Save</button>
-      <button onclick="exportText()">Export .txt</button>
-      <button onclick="exportMarkdown()">Export .md</button>
-      <button onclick="toggleDark()">Toggle Dark</button>
-      <button onclick="restore()">Restore</button>
-    </div>
-    <div class="info" id="info">Words: 0 — Saved</div>
-  </div>
-
-  <script>
-    const container = document.getElementById('notepad-container');
-    const header = document.getElementById('notepad-header');
-    const note = document.getElementById('note');
-    const info = document.getElementById('info');
-
-    // Drag functionality
-    let isDragging = false, offsetX = 0, offsetY = 0;
-
-    header.addEventListener('mousedown', e => {
-      isDragging = true;
-      offsetX = e.clientX - container.offsetLeft;
-      offsetY = e.clientY - container.offsetTop;
-      container.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-      let x = e.clientX - offsetX;
-      let y = e.clientY - offsetY;
-
-      // Keep within viewport
-      x = Math.max(0, Math.min(window.innerWidth - container.offsetWidth, x));
-      y = Math.max(0, Math.min(window.innerHeight - container.offsetHeight, y));
-
-      container.style.left = x + 'px';
-      container.style.top = y + 'px';
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        container.style.cursor = 'grab';
-      }
-    });
-
-    // Save content
-    function save() {
-      const content = note.value;
-      localStorage.setItem('ancr_note', content);
-      localStorage.setItem('ancr_backup_' + Date.now(), content);
-      updateInfo('Saved');
-    }
-
-    // Restore latest backup
-    function restore() {
-      const backups = Object.keys(localStorage)
-        .filter(key => key.startsWith('ancr_backup_'))
-        .sort((a, b) => b.localeCompare(a));
-      if (backups.length > 0) {
-        note.value = localStorage.getItem(backups[0]);
-        updateInfo('Restored');
-      } else {
-        info.textContent = 'No backup found';
-      }
-    }
-
-    // Export
-    function exportText() { downloadFile(note.value, 'ancr-note.txt', 'text/plain'); }
-    function exportMarkdown() { downloadFile(note.value, 'ancr-note.md', 'text/markdown'); }
-    function downloadFile(content, filename, type) {
-      const blob = new Blob([content], { type });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      a.click();
-    }
-
-    // Dark mode toggle
-    function toggleDark() { document.body.classList.toggle('dark'); }
-
-    // Word count & info
-    function wordCount() {
-      return note.value.trim().split(/\s+/).filter(w => w.length > 0).length;
-    }
-    function updateInfo(status) {
-      info.textContent = `Words: ${wordCount()} — ${status}`;
-    }
-    note.addEventListener('input', () => updateInfo('Unsaved'));
-
-    // Load saved
-    window.addEventListener('load', () => {
-      const saved = localStorage.getItem('ancr_note');
-      if (saved) {
-        note.value = saved;
-        updateInfo('Loaded');
-      }
-    });
-  </script>
-</body>
-</html>
