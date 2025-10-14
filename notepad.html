@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anchored Notepad</title>
+  <title>Ancr Notepad</title>
   <style>
     body {
       margin: 0;
@@ -15,17 +15,39 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      flex-direction: column;
     }
 
-    /* Outer wrap */
-    .border-wrap {
-      background: none;
-      border-radius: 0;
-      box-shadow: none;
-      padding: 0;
+    /* ANCR Button Style */
+    #ancrButton {
+      font-size: 1rem;
+      letter-spacing: 1px;
+      color: #00ff6a;
+      background: transparent;
+      border: 2px solid #00ff6a;
+      padding: 10px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 6px #00ff6a;
+      animation: pulse 3s infinite;
+      margin-bottom: 20px;
+      z-index: 10;
     }
 
-    /* Main notepad box */
+    #ancrButton:hover {
+      background: #00ff6a22;
+      box-shadow: 0 0 12px #00ff6a;
+      transform: scale(1.05);
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 6px #00ff6a44; }
+      50% { box-shadow: 0 0 14px #00ff6a; }
+    }
+
+    /* Notepad Container (hidden by default) */
     .notepad-container {
       position: relative;
       width: 60ch;
@@ -36,12 +58,20 @@
       flex-direction: column;
       overflow: hidden;
       box-shadow: 0 0 30px rgba(0,0,0,0.5);
-      transition: transform 0.2s ease, background 0.3s ease;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: scale(0.95);
+      pointer-events: none;
+    }
+
+    .notepad-container.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
     }
 
     .notepad-container:focus-within {
       background: #252525;
-      transform: scale(1.01);
     }
 
     /* Header */
@@ -129,37 +159,37 @@
     }
 
     .hidden { display: none; }
-
-    /* Fade-in effect */
-    .fade-in {
-      opacity: 0;
-      animation: appear 0.4s forwards;
-    }
-
-    @keyframes appear {
-      to { opacity: 1; }
-    }
   </style>
 </head>
 <body>
-  <div class="border-wrap">
-    <div class="notepad-container">
-      <div class="header">📝 Anchored Notepad</div>
-      <div class="animated-placeholder" id="placeholder">
-        <span>type</span>
-        <span>thoughts</span>
-      </div>
-      <textarea id="note" placeholder=""></textarea>
-      <div class="controls">
-        <button onclick="save()">Anchor</button>
-        <button onclick="clearNote()">Clear</button>
-      </div>
+
+  <!-- ANCR Button -->
+  <button id="ancrButton">ANCR</button>
+
+  <!-- Notepad -->
+  <div class="notepad-container" id="notepadContainer">
+    <div class="header">📝 Anchored Notepad</div>
+    <div class="animated-placeholder" id="placeholder">
+      <span>type</span>
+      <span>thoughts</span>
+    </div>
+    <textarea id="note" placeholder=""></textarea>
+    <div class="controls">
+      <button onclick="save()">Anchor</button>
+      <button onclick="clearNote()">Clear</button>
     </div>
   </div>
 
   <script>
+    const ancrButton = document.getElementById('ancrButton');
+    const notepadContainer = document.getElementById('notepadContainer');
     const note = document.getElementById('note');
     const placeholder = document.getElementById('placeholder');
+
+    // Toggle notepad visibility
+    ancrButton.addEventListener('click', () => {
+      notepadContainer.classList.toggle('active');
+    });
 
     // Load saved note
     window.addEventListener('load', () => {
