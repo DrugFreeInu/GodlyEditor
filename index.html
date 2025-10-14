@@ -43,20 +43,19 @@
       pointer-events: none;
     }
 
-    /* Notepad - hidden by default */
+    /* Notepad - hidden & draggable */
     #frame7 {
       width: 300px;
       height: 300px;
       bottom: 10px;
       right: 10px;
       position: fixed;
-      transform: none;
-      left: auto;
       border-radius: 12px;
       z-index: 5;
       opacity: 0;               /* hidden */
       pointer-events: none;     /* not clickable */
-      transition: opacity 0.5s ease;
+      transition: opacity 0.3s ease, transform 0.2s ease;
+      cursor: grab;
     }
 
     /* Eight unified controls (2 rows × 4) */
@@ -77,10 +76,6 @@
     #save     { bottom: 80px; left: calc(50% -  50px); }
     #anchor   { bottom: 80px; left: calc(50% +  50px); }
     #add      { bottom: 80px; left: calc(50% + 150px); }
-
-    @media (max-width: 600px) {
-      /* same positions as above */
-    }
 
     /* Toggle Notepad Button */
     #toggleNotepad {
@@ -129,7 +124,7 @@
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
-    frame7.src = `notepad.html?v=${v}`; // Notepad iframe
+    frame7.src = `notepad.html?v=${v}`;
 
     document.getElementById('run').src      = `run.html?v=${v}`;
     document.getElementById('clear').src    = `clear.html?v=${v}`;
@@ -143,7 +138,6 @@
     // Reveal after paste
     window.addEventListener('message', (e) => {
       const d = e.data; if (!d) return;
-
       if (d.type === 'updatePreview') {
         frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
         setTimeout(() => { frame3.style.opacity = '1'; }, 800);
@@ -153,7 +147,7 @@
       }
     });
 
-    // Toggle Notepad Button Logic
+    // Toggle Notepad
     const toggleBtn = document.getElementById('toggleNotepad');
     toggleBtn.addEventListener('click', () => {
       if (frame7.style.opacity === '1') {
@@ -164,6 +158,37 @@
         frame7.style.opacity = '1';
         frame7.style.pointerEvents = 'auto';
         toggleBtn.textContent = 'Close Notepad';
+      }
+    });
+
+    // Draggable Notepad
+    let isDragging = false, offsetX = 0, offsetY = 0;
+
+    frame7.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - frame7.getBoundingClientRect().left;
+      offsetY = e.clientY - frame7.getBoundingClientRect().top;
+      frame7.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      let x = e.clientX - offsetX;
+      let y = e.clientY - offsetY;
+
+      // Keep within viewport
+      x = Math.max(0, Math.min(window.innerWidth - frame7.offsetWidth, x));
+      y = Math.max(0, Math.min(window.innerHeight - frame7.offsetHeight, y));
+
+      frame7.style.left = x + 'px';
+      frame7.style.top = y + 'px';
+      frame7.style.transform = 'none'; // cancel translateX while dragging
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        frame7.style.cursor = 'grab';
       }
     });
   </script>
