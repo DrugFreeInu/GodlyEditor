@@ -61,79 +61,58 @@
       cursor: grab;
     }
 
-    /* Controls */
+    /* Control button frames */
     #run, #clear, #clearAll, #move,
     #light, #save, #anchor, #add {
-      width: 90px; height: 50px;
-      opacity: 0; pointer-events: none; z-index: 6;
+      width: 90px;
+      height: 50px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 6;
     }
 
+    /* Row 1 */
     #run      { bottom: 150px; left: calc(50% - 150px); }
     #clear    { bottom: 150px; left: calc(50% -  50px); }
     #clearAll { bottom: 150px; left: calc(50% +  50px); }
     #move     { bottom: 150px; left: calc(50% + 150px); }
+
+    /* Row 2 */
     #light    { bottom: 80px; left: calc(50% - 150px); }
     #save     { bottom: 80px; left: calc(50% -  50px); }
     #anchor   { bottom: 80px; left: calc(50% +  50px); }
     #add      { bottom: 80px; left: calc(50% + 150px); }
 
-    /* ---- Toggle Notepad styled exactly like Layer 1 paste box ---- */
+    /* ---- Toggle Notepad (matches other bright buttons) ---- */
     #toggleNotepad {
       position: fixed;
       bottom: 15px;
       left: 15px;
       z-index: 10;
-      width: 8ch;
-      height: 4em;
-      border-radius: 12px;
-      background: #222;
-      color: transparent;
-      border: none;
-      box-shadow: none;
       font-family: monospace;
-      font-size: 40px;
-      text-align: center;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #000;
+      background: #00ffcc;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
       cursor: pointer;
-      text-indent: -25px;
-      padding-top: 10px;
-      line-height: 1;
-      user-select: none;
-      caret-color: transparent;
-      overflow: hidden;
-      transition: transform 0.2s ease, background 0.3s ease;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0,255,204,0.3);
     }
 
     #toggleNotepad:hover {
-      background: #252525;
-      transform: scale(1.03);
+      background: #00ddb0;
+      box-shadow: 0 0 20px rgba(0,255,204,0.6);
+      transform: scale(1.05);
     }
 
-    .toggle-placeholder {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: monospace;
-      font-size: 20px;
-      color: #aaa;
-      opacity: 0.4;
-      pointer-events: none;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      line-height: 1.2;
-      text-shadow: 0 0 2px rgba(255,255,255,0.1);
-      animation: glowFade 2.5s ease-in-out infinite;
+    #toggleNotepad:active {
+      transform: scale(0.96);
+      box-shadow: 0 0 25px rgba(0,255,204,0.9);
     }
-
-    @keyframes glowFade {
-      0%,100% {opacity:0.3;text-shadow:0 0 2px rgba(255,255,255,0.1);}
-      50% {opacity:0.5;text-shadow:0 0 4px rgba(255,255,255,0.2);}
-    }
-
-    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -155,12 +134,7 @@
   <iframe id="add"></iframe>
 
   <!-- Toggle Notepad -->
-  <button id="toggleNotepad">
-    <div class="toggle-placeholder" id="toggleText">
-      <span>open</span>
-      <span>note</span>
-    </div>
-  </button>
+  <button id="toggleNotepad">NOTEPAD</button>
 
   <script>
     const v = Date.now();
@@ -169,7 +143,6 @@
     const frame3 = document.getElementById('frame3');
     const frame7 = document.getElementById('frame7');
     const toggleBtn = document.getElementById('toggleNotepad');
-    const toggleText = document.getElementById('toggleText');
 
     const ids = ['run','clear','clearAll','move','light','save','anchor','add'];
     const buttons = ids.map(id => document.getElementById(id));
@@ -195,46 +168,47 @@
       if (!d) return;
       if (d.type === 'updatePreview') {
         frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
-        setTimeout(()=>{frame3.style.opacity='1';},800);
-        setTimeout(()=>{
-          buttons.forEach(b=>{
-            b.style.opacity='1';
-            b.style.pointerEvents='auto';
+        setTimeout(() => { frame3.style.opacity = '1'; }, 800);
+        setTimeout(() => {
+          buttons.forEach(b => {
+            b.style.opacity = '1';
+            b.style.pointerEvents = 'auto';
           });
-        },1600);
+        }, 1600);
       }
     });
 
-    // Toggle Notepad
+    // Toggle Notepad visibility
     toggleBtn.addEventListener('click', () => {
       const open = frame7.style.opacity === '1';
       frame7.style.opacity = open ? '0' : '1';
       frame7.style.pointerEvents = open ? 'none' : 'auto';
-      toggleText.innerHTML = open
-        ? "<span>open</span><span>note</span>"
-        : "<span>close</span><span>note</span>";
+      toggleBtn.textContent = open ? 'NOTEPAD' : 'CLOSE';
     });
 
     // Drag Notepad
-    let isDragging=false, offsetX=0, offsetY=0;
-    frame7.addEventListener('mousedown', (e)=>{
-      isDragging=true;
-      offsetX=e.clientX-frame7.getBoundingClientRect().left;
-      offsetY=e.clientY-frame7.getBoundingClientRect().top;
-      frame7.style.cursor='grabbing';
+    let isDragging = false, offsetX = 0, offsetY = 0;
+    frame7.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - frame7.getBoundingClientRect().left;
+      offsetY = e.clientY - frame7.getBoundingClientRect().top;
+      frame7.style.cursor = 'grabbing';
     });
-    document.addEventListener('mousemove',(e)=>{
-      if(!isDragging)return;
-      let x=e.clientX-offsetX;
-      let y=e.clientY-offsetY;
-      x=Math.max(0,Math.min(window.innerWidth-frame7.offsetWidth,x));
-      y=Math.max(0,Math.min(window.innerHeight-frame7.offsetHeight,y));
-      frame7.style.left=x+'px';
-      frame7.style.top=y+'px';
-      frame7.style.transform='none';
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      let x = e.clientX - offsetX;
+      let y = e.clientY - offsetY;
+      x = Math.max(0, Math.min(window.innerWidth - frame7.offsetWidth, x));
+      y = Math.max(0, Math.min(window.innerHeight - frame7.offsetHeight, y));
+      frame7.style.left = x + 'px';
+      frame7.style.top = y + 'px';
+      frame7.style.transform = 'none';
     });
-    document.addEventListener('mouseup',()=>{
-      if(isDragging){isDragging=false;frame7.style.cursor='grab';}
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        frame7.style.cursor = 'grab';
+      }
     });
   </script>
 </body>
