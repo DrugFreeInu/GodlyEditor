@@ -43,6 +43,21 @@
       pointer-events: none;
     }
 
+    /* Notepad */
+    #frame7 {
+      width: 300px;
+      height: 300px;
+      bottom: 10px;
+      right: 10px;
+      position: fixed;
+      transform: none;
+      left: auto;
+      border-radius: 12px;
+      z-index: 5;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     /* Eight unified controls (2 rows × 4) */
     #run, #clear, #clearAll, #move, #light, #save, #anchor, #add {
       width: 90px; height: 50px;
@@ -62,7 +77,6 @@
     #anchor   { bottom: 80px; left: calc(50% +  50px); }
     #add      { bottom: 80px; left: calc(50% + 150px); }
 
-    /* Small screens keep same centers (fits 390px wide with 90px buttons) */
     @media (max-width: 600px) {
       /* same positions as above */
     }
@@ -74,6 +88,7 @@
   <iframe id="frame2"></iframe>
   <iframe id="frame3"></iframe>
   <iframe id="frame6"></iframe>
+  <iframe id="frame7"></iframe> <!-- Notepad -->
 
   <!-- Buttons (8 total) -->
   <iframe id="run"></iframe>
@@ -90,6 +105,7 @@
     const frame1 = document.getElementById('frame1');
     const frame2 = document.getElementById('frame2');
     const frame3 = document.getElementById('frame3');
+    const frame7 = document.getElementById('frame7'); // Notepad
 
     const ids = ['run','clear','clearAll','move','light','save','anchor','add'];
     const buttons = ids.map(id => document.getElementById(id));
@@ -98,6 +114,7 @@
     frame1.src = `welcome.html?v=${v}`;
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
+    frame7.src = `notepad.html?v=${v}`; // Notepad iframe
 
     document.getElementById('run').src      = `run.html?v=${v}`;
     document.getElementById('clear').src    = `clear.html?v=${v}`;
