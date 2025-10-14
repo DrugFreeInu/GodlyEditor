@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anchor</title>
+  <title>Anchor + Notepad</title>
   <style>
     body {
       margin: 0;
@@ -14,11 +14,11 @@
       height: 100%;
       width: 100%;
       overflow: hidden;
+      font-family: monospace;
     }
 
-    /* Match other button sizes */
+    /* Anchor Button Style */
     #anchorButton {
-      font-family: monospace;
       font-size: 1rem;
       letter-spacing: 1px;
       color: #00ff6a;
@@ -31,6 +31,8 @@
       transition: all 0.3s ease;
       text-shadow: 0 0 6px #00ff6a;
       animation: pulse 3s infinite;
+      z-index: 10;
+      position: relative;
     }
 
     #anchorButton:hover {
@@ -43,9 +45,183 @@
       0%, 100% { box-shadow: 0 0 6px #00ff6a44; }
       50% { box-shadow: 0 0 14px #00ff6a; }
     }
+
+    /* Hidden Notepad overlay */
+    #notepadContainer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      width: 60ch;
+      height: 50vh;
+      background: #222;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 5;
+    }
+
+    #notepadContainer.active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 10px;
+      font-size: 1rem;
+      color: #aaa;
+      background: #111;
+      letter-spacing: 1px;
+      user-select: none;
+      border-bottom: 1px solid #333;
+    }
+
+    /* Text Area */
+    #note {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 15px 20px;
+      font-size: 1rem;
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+      caret-color: #00ffcc;
+      z-index: 2;
+    }
+
+    /* Placeholder */
+    .animated-placeholder {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.2rem;
+      color: #aaa;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.2;
+      animation: glowFade 2.5s ease-in-out infinite;
+    }
+
+    @keyframes glowFade {
+      0%, 100% { opacity: 0.3; text-shadow: 0 0 2px rgba(255, 255, 255, 0.1); }
+      50% { opacity: 0.5; text-shadow: 0 0 4px rgba(255, 255, 255, 0.2); }
+    }
+
+    /* Controls */
+    .controls {
+      background: #111;
+      border-top: 1px solid #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .controls button {
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .controls button:hover {
+      background: #00ddb0;
+      transform: scale(1.05);
+    }
+
+    .hidden { display: none; }
   </style>
 </head>
 <body>
+
+  <!-- Anchor Button -->
   <button id="anchorButton">ANCHOR</button>
+
+  <!-- Hidden Notepad -->
+  <div id="notepadContainer">
+    <div class="header">📝 Anchored Notepad</div>
+    <div class="animated-placeholder" id="placeholder">
+      <span>type</span>
+      <span>thoughts</span>
+    </div>
+    <textarea id="note" placeholder=""></textarea>
+    <div class="controls">
+      <button onclick="save()">Save</button>
+      <button onclick="clearNote()">Clear</button>
+      <button onclick="closeNote()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const anchorBtn = document.getElementById('anchorButton');
+    const notepad = document.getElementById('notepadContainer');
+    const note = document.getElementById('note');
+    const placeholder = document.getElementById('placeholder');
+
+    // Load saved note
+    window.addEventListener('load', () => {
+      const saved = localStorage.getItem('anchoredNote');
+      if (saved) {
+        note.value = saved;
+        placeholder.classList.add('hidden');
+      }
+    });
+
+    // Toggle notepad
+    anchorBtn.addEventListener('click', () => {
+      notepad.classList.toggle('active');
+    });
+
+    function closeNote() {
+      notepad.classList.remove('active');
+    }
+
+    // Save
+    function save() {
+      const text = note.value.trim();
+      if (text !== '') {
+        localStorage.setItem('anchoredNote', text);
+        placeholder.classList.add('hidden');
+      }
+    }
+
+    // Clear
+    function clearNote() {
+      note.value = '';
+      localStorage.removeItem('anchoredNote');
+      placeholder.classList.remove('hidden');
+    }
+
+    // Placeholder toggle
+    note.addEventListener('input', () => {
+      if (note.value.trim() !== '') {
+        placeholder.classList.add('hidden');
+      } else {
+        placeholder.classList.remove('hidden');
+      }
+    });
+  </script>
+
 </body>
 </html>
