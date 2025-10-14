@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Anchored Notepad</title>
   <style>
-    /* General Page Styles */
     body {
       background: #111;
       color: #fff;
@@ -13,44 +12,73 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 0;
       margin: 0;
-      transition: background 0.3s ease, color 0.3s ease;
+      overflow: hidden;
+    }
+
+    /* Draggable Container */
+    #notepad-container {
+      position: fixed;
+      top: 50px;
+      left: 50px;
+      width: 400px;
+      min-width: 300px;
+      max-width: 90%;
+      background: #222;
+      border-radius: 12px;
+      border: 1px solid #444;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+      cursor: grab;
+      z-index: 1000;
+      transition: background 0.3s ease;
+    }
+
+    /* Header for dragging */
+    #notepad-header {
+      width: 100%;
+      padding: 10px 15px;
+      background: #111;
+      font-weight: bold;
+      user-select: none;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      cursor: grab;
     }
 
     /* Textarea */
-    textarea {
+    #note {
       width: 100%;
-      max-width: 900px;
-      height: 60vh;
+      height: 300px;
       background: #222;
       color: #fff;
-      border: 1px solid #444;
-      border-radius: 8px;
+      border: none;
+      border-radius: 0 0 12px 12px;
       padding: 15px;
       font-size: 1rem;
       resize: none;
       outline: none;
-      transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
+      box-sizing: border-box;
     }
 
     /* Controls */
     .controls {
-      margin-top: 15px;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
       justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      background: #111;
+      border-top: 1px solid #444;
+      border-radius: 0 0 12px 12px;
     }
 
-    /* Buttons */
     button {
       background: #00ffcc;
       color: #000;
       border: none;
-      padding: 10px 18px;
+      padding: 8px 15px;
       font-size: 0.9rem;
-      font-weight: bold;
       border-radius: 6px;
       cursor: pointer;
       transition: background 0.3s ease, transform 0.2s ease;
@@ -61,12 +89,11 @@
       transform: scale(1.05);
     }
 
-    /* Info text */
     .info {
-      margin-top: 10px;
+      text-align: center;
+      padding: 5px 0;
       font-size: 0.85rem;
       color: #888;
-      transition: color 0.3s ease;
     }
 
     /* Dark mode */
@@ -75,10 +102,9 @@
       color: #111;
     }
 
-    .dark textarea {
+    .dark #note {
       background: #fff;
       color: #111;
-      border: 1px solid #aaa;
     }
 
     .dark button {
@@ -97,21 +123,55 @@
   </style>
 </head>
 <body>
-  <textarea id="note" placeholder="Type your thoughts here..."></textarea>
 
-  <div class="controls">
-    <button onclick="save()">Save</button>
-    <button onclick="exportText()">Export .txt</button>
-    <button onclick="exportMarkdown()">Export .md</button>
-    <button onclick="toggleDark()">Toggle Dark</button>
-    <button onclick="restore()">Restore</button>
+  <div id="notepad-container">
+    <div id="notepad-header">📝 Notepad</div>
+    <textarea id="note" placeholder="Type your thoughts here..."></textarea>
+    <div class="controls">
+      <button onclick="save()">Save</button>
+      <button onclick="exportText()">Export .txt</button>
+      <button onclick="exportMarkdown()">Export .md</button>
+      <button onclick="toggleDark()">Toggle Dark</button>
+      <button onclick="restore()">Restore</button>
+    </div>
+    <div class="info" id="info">Words: 0 — Saved</div>
   </div>
 
-  <div class="info" id="info">Words: 0 — Saved</div>
-
   <script>
+    const container = document.getElementById('notepad-container');
+    const header = document.getElementById('notepad-header');
     const note = document.getElementById('note');
     const info = document.getElementById('info');
+
+    // Drag functionality
+    let isDragging = false, offsetX = 0, offsetY = 0;
+
+    header.addEventListener('mousedown', e => {
+      isDragging = true;
+      offsetX = e.clientX - container.offsetLeft;
+      offsetY = e.clientY - container.offsetTop;
+      container.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      let x = e.clientX - offsetX;
+      let y = e.clientY - offsetY;
+
+      // Keep within viewport
+      x = Math.max(0, Math.min(window.innerWidth - container.offsetWidth, x));
+      y = Math.max(0, Math.min(window.innerHeight - container.offsetHeight, y));
+
+      container.style.left = x + 'px';
+      container.style.top = y + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        container.style.cursor = 'grab';
+      }
+    });
 
     // Save content
     function save() {
@@ -125,7 +185,7 @@
     function restore() {
       const backups = Object.keys(localStorage)
         .filter(key => key.startsWith('ancr_backup_'))
-        .sort((a, b) => b.localeCompare(a)); // newest first
+        .sort((a, b) => b.localeCompare(a));
       if (backups.length > 0) {
         note.value = localStorage.getItem(backups[0]);
         updateInfo('Restored');
@@ -134,16 +194,9 @@
       }
     }
 
-    // Export as plain text
-    function exportText() {
-      downloadFile(note.value, 'ancr-note.txt', 'text/plain');
-    }
-
-    // Export as markdown
-    function exportMarkdown() {
-      downloadFile(note.value, 'ancr-note.md', 'text/markdown');
-    }
-
+    // Export
+    function exportText() { downloadFile(note.value, 'ancr-note.txt', 'text/plain'); }
+    function exportMarkdown() { downloadFile(note.value, 'ancr-note.md', 'text/markdown'); }
     function downloadFile(content, filename, type) {
       const blob = new Blob([content], { type });
       const a = document.createElement('a');
@@ -152,25 +205,19 @@
       a.click();
     }
 
-    // Toggle dark mode
-    function toggleDark() {
-      document.body.classList.toggle('dark');
-    }
+    // Dark mode toggle
+    function toggleDark() { document.body.classList.toggle('dark'); }
 
-    // Count words
+    // Word count & info
     function wordCount() {
       return note.value.trim().split(/\s+/).filter(w => w.length > 0).length;
     }
-
-    // Update info text
     function updateInfo(status) {
       info.textContent = `Words: ${wordCount()} — ${status}`;
     }
-
-    // Track unsaved changes
     note.addEventListener('input', () => updateInfo('Unsaved'));
 
-    // Load saved content on page load
+    // Load saved
     window.addEventListener('load', () => {
       const saved = localStorage.getItem('ancr_note');
       if (saved) {
