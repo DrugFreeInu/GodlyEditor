@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Anchored Notepad</title>
   <style>
+    /* General Page Styles */
     body {
       background: #111;
       color: #fff;
@@ -14,8 +15,10 @@
       align-items: center;
       padding: 20px;
       margin: 0;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
+    /* Textarea */
     textarea {
       width: 100%;
       max-width: 900px;
@@ -28,8 +31,10 @@
       font-size: 1rem;
       resize: none;
       outline: none;
+      transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
     }
 
+    /* Controls */
     .controls {
       margin-top: 15px;
       display: flex;
@@ -38,27 +43,33 @@
       justify-content: center;
     }
 
+    /* Buttons */
     button {
       background: #00ffcc;
       color: #000;
       border: none;
       padding: 10px 18px;
       font-size: 0.9rem;
+      font-weight: bold;
       border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background 0.3s ease, transform 0.2s ease;
     }
 
     button:hover {
       background: #00ddb0;
+      transform: scale(1.05);
     }
 
+    /* Info text */
     .info {
       margin-top: 10px;
       font-size: 0.85rem;
       color: #888;
+      transition: color 0.3s ease;
     }
 
+    /* Dark mode */
     .dark {
       background: #eee;
       color: #111;
@@ -79,6 +90,10 @@
     .dark button:hover {
       background: #222;
     }
+
+    .dark .info {
+      color: #555;
+    }
   </style>
 </head>
 <body>
@@ -97,66 +112,72 @@
   <script>
     const note = document.getElementById('note');
     const info = document.getElementById('info');
-    let version = '';
 
+    // Save content
     function save() {
       const content = note.value;
       localStorage.setItem('ancr_note', content);
       localStorage.setItem('ancr_backup_' + Date.now(), content);
-      info.textContent = `Words: ${wordCount()} — Saved`;
+      updateInfo('Saved');
     }
 
+    // Restore latest backup
     function restore() {
       const backups = Object.keys(localStorage)
-        .filter(k => k.startsWith('ancr_backup_'))
-        .sort()
-        .reverse();
-
+        .filter(key => key.startsWith('ancr_backup_'))
+        .sort((a, b) => b.localeCompare(a)); // newest first
       if (backups.length > 0) {
-        const latest = localStorage.getItem(backups[0]);
-        note.value = latest;
-        info.textContent = `Words: ${wordCount()} — Restored`;
+        note.value = localStorage.getItem(backups[0]);
+        updateInfo('Restored');
       } else {
-        info.textContent = `No backup found`;
+        info.textContent = 'No backup found';
       }
     }
 
+    // Export as plain text
     function exportText() {
-      const blob = new Blob([note.value], { type: 'text/plain' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'ancr-note.txt';
-      a.click();
+      downloadFile(note.value, 'ancr-note.txt', 'text/plain');
     }
 
+    // Export as markdown
     function exportMarkdown() {
-      const blob = new Blob([note.value], { type: 'text/markdown' });
+      downloadFile(note.value, 'ancr-note.md', 'text/markdown');
+    }
+
+    function downloadFile(content, filename, type) {
+      const blob = new Blob([content], { type });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'ancr-note.md';
+      a.download = filename;
       a.click();
     }
 
+    // Toggle dark mode
     function toggleDark() {
       document.body.classList.toggle('dark');
     }
 
+    // Count words
     function wordCount() {
       return note.value.trim().split(/\s+/).filter(w => w.length > 0).length;
     }
 
-    note.addEventListener('input', () => {
-      info.textContent = `Words: ${wordCount()} — Unsaved`;
-    });
+    // Update info text
+    function updateInfo(status) {
+      info.textContent = `Words: ${wordCount()} — ${status}`;
+    }
 
-    // Load saved
-    window.onload = () => {
+    // Track unsaved changes
+    note.addEventListener('input', () => updateInfo('Unsaved'));
+
+    // Load saved content on page load
+    window.addEventListener('load', () => {
       const saved = localStorage.getItem('ancr_note');
       if (saved) {
         note.value = saved;
-        info.textContent = `Words: ${wordCount()} — Loaded`;
+        updateInfo('Loaded');
       }
-    };
+    });
   </script>
 </body>
 </html>
