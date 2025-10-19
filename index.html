@@ -1,245 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Editor</title>
-  <style>
-    html, body {
-      margin: 0;
-      background: #111;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      position: fixed;
-      top: 0;
-      left: 0;
-      font-family: monospace;
-    }
-
-    iframe {
-      border: none;
-      border-radius: 10px;
-      background: transparent;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      transition: opacity 0.8s ease;
-    }
-
-    /* Poem centered start */
-    #frame1 {
-      width: 90%;
-      height: 15%;
-      top: 35%;
-      z-index: 3;
-      pointer-events: none;
-      opacity: 1;
-      transition: opacity 1s ease;
-    }
-
-    /* Paste box (fixed position, will fade into 1) */
-    #frame2 {
-      width: 90%;
-      height: 20%;
-      bottom: 120px;
-      z-index: 2;
-      pointer-events: auto;
-      opacity: 1;
-      transition: opacity 1s ease;
-    }
-
-    /* Preview */
-    #frame3 {
-      width: 92%;
-      top: 5%;
-      height: 62vh;
-      z-index: 1;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* Notepad */
-    #frame7 {
-      width: 340px;
-      height: 320px;
-      bottom: 10px;
-      right: 10px;
-      position: fixed;
-      border-radius: 12px;
-      z-index: 5;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.2s ease;
-      cursor: grab;
-    }
-
-    /* Compact button layout */
-    #run, #clear, #clearAll, #move,
-    #light, #save, #anchor, #add {
-      width: 80px;
-      height: 45px;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 6;
-    }
-
-    /* Row 1 */
-    #run      { bottom: 100px; left: calc(50% - 160px); }
-    #clear    { bottom: 100px; left: calc(50% - 80px); }
-    #clearAll { bottom: 100px; left: calc(50% + 0px); }
-    #move     { bottom: 100px; left: calc(50% + 80px); }
-
-    /* Row 2 */
-    #light    { bottom: 40px; left: calc(50% - 160px); }
-    #save     { bottom: 40px; left: calc(50% - 80px); }
-    #anchor   { bottom: 40px; left: calc(50% + 0px); }
-    #add      { bottom: 40px; left: calc(50% + 80px); }
-
-    /* Toggle Notepad */
-    #toggleNotepad {
-      position: fixed;
-      bottom: 15px;
-      left: 15px;
-      z-index: 10;
-      font-family: monospace;
-      font-size: 1rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #000;
-      background: #00ffcc;
-      border: none;
-      padding: 10px 25px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(0,255,204,0.3);
-    }
-
-    #toggleNotepad:hover {
-      background: #00ddb0;
-      box-shadow: 0 0 20px rgba(0,255,204,0.6);
-      transform: scale(1.05);
-    }
-
-    #toggleNotepad:active {
-      transform: scale(0.96);
-      box-shadow: 0 0 25px rgba(0,255,204,0.9);
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Editor</title>
+<style>
+html,body{
+  margin:0;
+  background:#111;
+  height:100%;
+  width:100%;
+  overflow:hidden;
+  position:fixed;
+  top:0;left:0;
+  font-family:monospace;
+}
+iframe{
+  border:none;
+  border-radius:10px;
+  background:transparent;
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  transition:opacity .8s ease;
+}
+/* poem centered */
+#frame1{
+  width:90%;height:15%;
+  top:35%;
+  z-index:3;
+  pointer-events:none;
+  opacity:1;
+  transition:opacity 1s ease;
+}
+/* paste box fixed — becomes layer 1 */
+#frame2{
+  width:90%;height:20%;
+  bottom:120px;
+  z-index:2;
+  pointer-events:auto;
+  opacity:1;
+  transition:opacity 1s ease;
+}
+#frame3{
+  width:92%;top:5%;height:62vh;
+  z-index:1;opacity:0;pointer-events:none;
+}
+#frame7{
+  width:340px;height:320px;
+  bottom:10px;right:10px;
+  position:fixed;border-radius:12px;
+  z-index:5;opacity:0;pointer-events:none;
+  transition:opacity .3s ease,transform .2s ease;
+  cursor:grab;
+}
+/* buttons compact */
+#run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
+  width:80px;height:45px;opacity:0;
+  pointer-events:none;z-index:6;
+}
+#run{bottom:100px;left:calc(50% -160px);}
+#clear{bottom:100px;left:calc(50% -80px);}
+#clearAll{bottom:100px;left:calc(50%);}
+#move{bottom:100px;left:calc(50% +80px);}
+#light{bottom:40px;left:calc(50% -160px);}
+#save{bottom:40px;left:calc(50% -80px);}
+#anchor{bottom:40px;left:calc(50%);}
+#add{bottom:40px;left:calc(50% +80px);}
+#toggleNotepad{
+  position:fixed;bottom:15px;left:15px;
+  z-index:10;font-family:monospace;
+  font-size:1rem;letter-spacing:1px;
+  text-transform:uppercase;color:#000;
+  background:#00ffcc;border:none;
+  padding:10px 25px;border-radius:8px;
+  cursor:pointer;transition:all .3s ease;
+  box-shadow:0 0 10px rgba(0,255,204,.3);
+}
+#toggleNotepad:hover{
+  background:#00ddb0;box-shadow:0 0 20px rgba(0,255,204,.6);
+  transform:scale(1.05);
+}
+#toggleNotepad:active{
+  transform:scale(.96);box-shadow:0 0 25px rgba(0,255,204,.9);
+}
+</style>
 </head>
 <body>
-  <!-- Frames -->
-  <iframe id="frame1"></iframe>
-  <iframe id="frame2"></iframe>
-  <iframe id="frame3"></iframe>
-  <iframe id="frame6"></iframe>
-  <iframe id="frame7"></iframe>
+<iframe id="frame1"></iframe>
+<iframe id="frame2"></iframe>
+<iframe id="frame3"></iframe>
+<iframe id="frame6"></iframe>
+<iframe id="frame7"></iframe>
 
-  <!-- Button Frames -->
-  <iframe id="run"></iframe>
-  <iframe id="clear"></iframe>
-  <iframe id="clearAll"></iframe>
-  <iframe id="move"></iframe>
-  <iframe id="light"></iframe>
-  <iframe id="save"></iframe>
-  <iframe id="anchor"></iframe>
-  <iframe id="add"></iframe>
+<iframe id="run"></iframe>
+<iframe id="clear"></iframe>
+<iframe id="clearAll"></iframe>
+<iframe id="move"></iframe>
+<iframe id="light"></iframe>
+<iframe id="save"></iframe>
+<iframe id="anchor"></iframe>
+<iframe id="add"></iframe>
 
-  <!-- Toggle Notepad -->
-  <button id="toggleNotepad">NOTEPAD</button>
+<button id="toggleNotepad">NOTEPAD</button>
 
-  <script>
-    const v = Date.now();
-    const frame1 = document.getElementById('frame1');
-    const frame2 = document.getElementById('frame2');
-    const frame3 = document.getElementById('frame3');
-    const frame7 = document.getElementById('frame7');
-    const toggleBtn = document.getElementById('toggleNotepad');
-    const ids = ['run','clear','clearAll','move','light','save','anchor','add'];
-    const buttons = ids.map(id => document.getElementById(id));
+<script>
+const v=Date.now();
+const frame1=document.getElementById('frame1');
+const frame2=document.getElementById('frame2');
+const frame3=document.getElementById('frame3');
+const frame7=document.getElementById('frame7');
+const toggleBtn=document.getElementById('toggleNotepad');
+const ids=['run','clear','clearAll','move','light','save','anchor','add'];
+const buttons=ids.map(id=>document.getElementById(id));
 
-    // Load sources
-    frame1.src = `welcome.html?v=${v}`;
-    frame2.src = `layer1.html?v=${v}`;
-    frame3.src = `preview.html?v=${v}`;
-    frame7.src = `notepad.html?v=${v}`;
-    document.getElementById('run').src = `run.html?v=${v}`;
-    document.getElementById('clear').src = `clear.html?v=${v}`;
-    document.getElementById('clearAll').src = `clear-all.html?v=${v}`;
-    document.getElementById('move').src = `move.html?v=${v}`;
-    document.getElementById('light').src = `light.html?v=${v}`;
-    document.getElementById('save').src = `save.html?v=${v}`;
-    document.getElementById('anchor').src = `ancr.html?v=${v}`;
-    document.getElementById('add').src = `add-layer.html?v=${v}`;
+// sources
+frame1.src=`welcome.html?v=${v}`;
+frame2.src=`layer1.html?v=${v}`;
+frame3.src=`preview.html?v=${v}`;
+frame7.src=`notepad.html?v=${v}`;
+document.getElementById('run').src=`run.html?v=${v}`;
+document.getElementById('clear').src=`clear.html?v=${v}`;
+document.getElementById('clearAll').src=`clear-all.html?v=${v}`;
+document.getElementById('move').src=`move.html?v=${v}`;
+document.getElementById('light').src=`light.html?v=${v}`;
+document.getElementById('save').src=`save.html?v=${v}`;
+document.getElementById('anchor').src=`ancr.html?v=${v}`;
+document.getElementById('add').src=`add-layer.html?v=${v}`;
 
-    // Paste triggers layer 1 fade morph without movement
-    window.addEventListener('message', (e) => {
-      const d = e.data;
-      if (!d) return;
-      if (d.type === 'updatePreview') {
-        // Fade out poem
-        frame1.style.opacity = '0';
-        setTimeout(() => { frame1.style.display = 'none'; }, 1000);
+// paste triggers fade → permanent layer 1
+window.addEventListener('message',(e)=>{
+  const d=e.data;if(!d)return;
+  if(d.type==='updatePreview'){
+    // fade poem
+    frame1.style.opacity='0';
+    setTimeout(()=>{frame1.style.display='none';},1000);
 
-        // Fade paste box into its layer 1 version (no move)
-        setTimeout(() => {
-          frame2.style.opacity = '0';
-          setTimeout(() => {
-            frame2.src = `layer1.html?v=${v}`;
-            frame2.style.opacity = '1';
-          }, 500);
-        }, 800);
+    // fade paste box into 1 in place, then keep forever
+    setTimeout(()=>{
+      frame2.contentWindow.postMessage({type:'fadeToLayerNumber',number:1},'*');
+    },600);
 
-        // Show preview
-        frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
-        setTimeout(() => { frame3.style.opacity = '1'; }, 1200);
+    // show preview
+    frame3.contentWindow.postMessage({type:'addLayer',code:d.code},'*');
+    setTimeout(()=>{frame3.style.opacity='1';},1200);
 
-        // Show buttons
-        setTimeout(() => {
-          buttons.forEach(b => {
-            b.style.opacity = '1';
-            b.style.pointerEvents = 'auto';
-          });
-        }, 1800);
-      }
-    });
+    // reveal buttons
+    setTimeout(()=>{
+      buttons.forEach(b=>{
+        b.style.opacity='1';
+        b.style.pointerEvents='auto';
+      });
+    },1800);
+  }
+});
 
-    // Toggle Notepad
-    toggleBtn.addEventListener('click', () => {
-      const open = frame7.style.opacity === '1';
-      frame7.style.opacity = open ? '0' : '1';
-      frame7.style.pointerEvents = open ? 'none' : 'auto';
-      toggleBtn.textContent = open ? 'NOTEPAD' : 'CLOSE';
-    });
+// toggle notepad
+toggleBtn.addEventListener('click',()=>{
+  const open=frame7.style.opacity==='1';
+  frame7.style.opacity=open?'0':'1';
+  frame7.style.pointerEvents=open?'none':'auto';
+  toggleBtn.textContent=open?'NOTEPAD':'CLOSE';
+});
 
-    // Drag Notepad
-    let isDragging = false, offsetX = 0, offsetY = 0;
-    frame7.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      offsetX = e.clientX - frame7.getBoundingClientRect().left;
-      offsetY = e.clientY - frame7.getBoundingClientRect().top;
-      frame7.style.cursor = 'grabbing';
-    });
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      let x = e.clientX - offsetX;
-      let y = e.clientY - offsetY;
-      x = Math.max(0, Math.min(window.innerWidth - frame7.offsetWidth, x));
-      y = Math.max(0, Math.min(window.innerHeight - frame7.offsetHeight, y));
-      frame7.style.left = x + 'px';
-      frame7.style.top = y + 'px';
-      frame7.style.transform = 'none';
-    });
-    document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        frame7.style.cursor = 'grab';
-      }
-    });
-  </script>
+// drag notepad
+let isDragging=false,offsetX=0,offsetY=0;
+frame7.addEventListener('mousedown',e=>{
+  isDragging=true;
+  offsetX=e.clientX-frame7.getBoundingClientRect().left;
+  offsetY=e.clientY-frame7.getBoundingClientRect().top;
+  frame7.style.cursor='grabbing';
+});
+document.addEventListener('mousemove',e=>{
+  if(!isDragging)return;
+  let x=e.clientX-offsetX;
+  let y=e.clientY-offsetY;
+  x=Math.max(0,Math.min(window.innerWidth-frame7.offsetWidth,x));
+  y=Math.max(0,Math.min(window.innerHeight-frame7.offsetHeight,y));
+  frame7.style.left=x+'px';
+  frame7.style.top=y+'px';
+  frame7.style.transform='none';
+});
+document.addEventListener('mouseup',()=>{
+  if(isDragging){isDragging=false;frame7.style.cursor='grab';}
+});
+</script>
 </body>
 </html>
