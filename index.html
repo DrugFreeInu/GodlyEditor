@@ -40,7 +40,7 @@
     #frame3 {
       width: 92%;
       top: 5%;
-      height: 70vh;
+      height: 62vh;
       z-index: 1;
       opacity: 0;
       pointer-events: none;
@@ -61,29 +61,29 @@
       cursor: grab;
     }
 
-    /* Control button frames */
+    /* Control button frames (compacted & touching) */
     #run, #clear, #clearAll, #move,
     #light, #save, #anchor, #add {
-      width: 90px;
-      height: 50px;
+      width: 80px;
+      height: 45px;
       opacity: 0;
       pointer-events: none;
       z-index: 6;
     }
 
     /* Row 1 */
-    #run      { bottom: 150px; left: calc(50% - 150px); }
-    #clear    { bottom: 150px; left: calc(50% -  50px); }
-    #clearAll { bottom: 150px; left: calc(50% +  50px); }
-    #move     { bottom: 150px; left: calc(50% + 150px); }
+    #run      { bottom: 140px; left: calc(50% - 160px); }
+    #clear    { bottom: 140px; left: calc(50% - 80px); }
+    #clearAll { bottom: 140px; left: calc(50% + 0px); }
+    #move     { bottom: 140px; left: calc(50% + 80px); }
 
     /* Row 2 */
-    #light    { bottom: 80px; left: calc(50% - 150px); }
-    #save     { bottom: 80px; left: calc(50% -  50px); }
-    #anchor   { bottom: 80px; left: calc(50% +  50px); }
-    #add      { bottom: 80px; left: calc(50% + 150px); }
+    #light    { bottom: 85px; left: calc(50% - 160px); }
+    #save     { bottom: 85px; left: calc(50% - 80px); }
+    #anchor   { bottom: 85px; left: calc(50% + 0px); }
+    #add      { bottom: 85px; left: calc(50% + 80px); }
 
-    /* ---- Toggle Notepad (matches other bright buttons) ---- */
+    /* Toggle Notepad */
     #toggleNotepad {
       position: fixed;
       bottom: 15px;
@@ -143,7 +143,6 @@
     const frame3 = document.getElementById('frame3');
     const frame7 = document.getElementById('frame7');
     const toggleBtn = document.getElementById('toggleNotepad');
-
     const ids = ['run','clear','clearAll','move','light','save','anchor','add'];
     const buttons = ids.map(id => document.getElementById(id));
 
@@ -152,15 +151,14 @@
     frame2.src = `layer1.html?v=${v}`;
     frame3.src = `preview.html?v=${v}`;
     frame7.src = `notepad.html?v=${v}`;
-
-    document.getElementById('run').src      = `run.html?v=${v}`;
-    document.getElementById('clear').src    = `clear.html?v=${v}`;
+    document.getElementById('run').src = `run.html?v=${v}`;
+    document.getElementById('clear').src = `clear.html?v=${v}`;
     document.getElementById('clearAll').src = `clear-all.html?v=${v}`;
-    document.getElementById('move').src     = `move.html?v=${v}`;
-    document.getElementById('light').src    = `light.html?v=${v}`;
-    document.getElementById('save').src     = `save.html?v=${v}`;
-    document.getElementById('anchor').src   = `ancr.html?v=${v}`;
-    document.getElementById('add').src      = `add-layer.html?v=${v}`;
+    document.getElementById('move').src = `move.html?v=${v}`;
+    document.getElementById('light').src = `light.html?v=${v}`;
+    document.getElementById('save').src = `save.html?v=${v}`;
+    document.getElementById('anchor').src = `ancr.html?v=${v}`;
+    document.getElementById('add').src = `add-layer.html?v=${v}`;
 
     // Reveal buttons after paste
     window.addEventListener('message', (e) => {
