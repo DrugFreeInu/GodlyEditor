@@ -30,7 +30,7 @@
       transition: opacity 0.8s ease;
     }
 
-    /* Poem (centered now) */
+    /* Poem (centered start) */
     #frame1 {
       width: 90%;
       height: 15%;
@@ -41,16 +41,17 @@
       transition: opacity 1s ease;
     }
 
-    /* Paste box (lowered to yellow square area) */
+    /* Paste box (lowered to bottom start position) */
     #frame2 {
       width: 90%;
       height: 20%;
       bottom: 120px;
       z-index: 2;
       pointer-events: auto;
+      transition: all 1s ease;
     }
 
-    /* Preview (same size but hidden initially) */
+    /* Preview */
     #frame3 {
       width: 92%;
       top: 5%;
@@ -174,24 +175,24 @@
     document.getElementById('anchor').src = `ancr.html?v=${v}`;
     document.getElementById('add').src = `add-layer.html?v=${v}`;
 
-    // Hide poem and move paste area up after paste
+    // After paste: fade poem, reveal preview, keep paste box as layer 1
     window.addEventListener('message', (e) => {
       const d = e.data;
       if (!d) return;
       if (d.type === 'updatePreview') {
+        // Fade out poem
         frame1.style.opacity = '0';
         setTimeout(() => { frame1.style.display = 'none'; }, 1000);
 
-        // Move paste area up and show preview
-        frame2.style.opacity = '0';
-        setTimeout(() => {
-          frame2.style.bottom = 'unset';
-          frame2.style.top = '22%';
-          frame2.style.opacity = '1';
-        }, 1000);
+        // Keep paste box in place and rename it as layer 1
+        frame2.style.transition = 'none';
+        frame2.src = `layer1.html?v=${v}`;
 
+        // Show preview
         frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
         setTimeout(() => { frame3.style.opacity = '1'; }, 800);
+
+        // Show buttons
         setTimeout(() => {
           buttons.forEach(b => {
             b.style.opacity = '1';
