@@ -30,7 +30,7 @@
       transition: opacity 0.8s ease;
     }
 
-    /* Poem (centered start) */
+    /* Poem centered initially */
     #frame1 {
       width: 90%;
       height: 15%;
@@ -41,13 +41,14 @@
       transition: opacity 1s ease;
     }
 
-    /* Paste box (lowered to bottom start position) */
+    /* Paste box (starts lower, moves up smoothly to layer 1 position) */
     #frame2 {
       width: 90%;
       height: 20%;
       bottom: 120px;
       z-index: 2;
       pointer-events: auto;
+      opacity: 1;
       transition: all 1s ease;
     }
 
@@ -59,6 +60,7 @@
       z-index: 1;
       opacity: 0;
       pointer-events: none;
+      transition: opacity 1s ease;
     }
 
     /* Notepad */
@@ -76,7 +78,7 @@
       cursor: grab;
     }
 
-    /* Compact button layout */
+    /* Compact buttons */
     #run, #clear, #clearAll, #move,
     #light, #save, #anchor, #add {
       width: 80px;
@@ -138,7 +140,7 @@
   <iframe id="frame6"></iframe>
   <iframe id="frame7"></iframe>
 
-  <!-- Button Frames -->
+  <!-- Buttons -->
   <iframe id="run"></iframe>
   <iframe id="clear"></iframe>
   <iframe id="clearAll"></iframe>
@@ -148,7 +150,7 @@
   <iframe id="anchor"></iframe>
   <iframe id="add"></iframe>
 
-  <!-- Toggle Notepad -->
+  <!-- Notepad Toggle -->
   <button id="toggleNotepad">NOTEPAD</button>
 
   <script>
@@ -175,7 +177,7 @@
     document.getElementById('anchor').src = `ancr.html?v=${v}`;
     document.getElementById('add').src = `add-layer.html?v=${v}`;
 
-    // After paste: fade poem, reveal preview, keep paste box as layer 1
+    // Handle paste event -> transition, keep layer visible, and show 1
     window.addEventListener('message', (e) => {
       const d = e.data;
       if (!d) return;
@@ -184,15 +186,22 @@
         frame1.style.opacity = '0';
         setTimeout(() => { frame1.style.display = 'none'; }, 1000);
 
-        // Keep paste box in place and rename it as layer 1
-        frame2.style.transition = 'none';
-        frame2.src = `layer1.html?v=${v}`;
+        // Animate paste box upward slightly and fade to final position
+        frame2.style.bottom = 'unset';
+        frame2.style.top = '22%';
+        frame2.style.transition = 'all 1s ease';
+        frame2.style.opacity = '1';
+
+        // Show layer transformation (fade text to number "1" inside frame2)
+        setTimeout(() => {
+          frame2.contentWindow.postMessage({ type: 'showLayerNumber', number: 1 }, '*');
+        }, 800);
 
         // Show preview
         frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
-        setTimeout(() => { frame3.style.opacity = '1'; }, 800);
+        setTimeout(() => { frame3.style.opacity = '1'; }, 1000);
 
-        // Show buttons
+        // Reveal buttons
         setTimeout(() => {
           buttons.forEach(b => {
             b.style.opacity = '1';
@@ -202,7 +211,7 @@
       }
     });
 
-    // Toggle Notepad
+    // Toggle Notepad visibility
     toggleBtn.addEventListener('click', () => {
       const open = frame7.style.opacity === '1';
       frame7.style.opacity = open ? '0' : '1';
