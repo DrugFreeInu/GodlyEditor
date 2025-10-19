@@ -69,7 +69,7 @@
       cursor: grab;
     }
 
-    /* Compact buttons */
+    /* Compact button layout (lowered) */
     #run, #clear, #clearAll, #move,
     #light, #save, #anchor, #add {
       width: 80px;
@@ -79,17 +79,17 @@
       z-index: 6;
     }
 
-    /* Row 1 */
-    #run      { bottom: 140px; left: calc(50% - 160px); }
-    #clear    { bottom: 140px; left: calc(50% - 80px); }
-    #clearAll { bottom: 140px; left: calc(50% + 0px); }
-    #move     { bottom: 140px; left: calc(50% + 80px); }
+    /* Row 1 (lowered equally) */
+    #run      { bottom: 100px; left: calc(50% - 160px); }
+    #clear    { bottom: 100px; left: calc(50% - 80px); }
+    #clearAll { bottom: 100px; left: calc(50% + 0px); }
+    #move     { bottom: 100px; left: calc(50% + 80px); }
 
-    /* Row 2 */
-    #light    { bottom: 85px; left: calc(50% - 160px); }
-    #save     { bottom: 85px; left: calc(50% - 80px); }
-    #anchor   { bottom: 85px; left: calc(50% + 0px); }
-    #add      { bottom: 85px; left: calc(50% + 80px); }
+    /* Row 2 (lowered equally, now near Notepad) */
+    #light    { bottom: 40px; left: calc(50% - 160px); }
+    #save     { bottom: 40px; left: calc(50% - 80px); }
+    #anchor   { bottom: 40px; left: calc(50% + 0px); }
+    #add      { bottom: 40px; left: calc(50% + 80px); }
 
     /* Toggle Notepad */
     #toggleNotepad {
@@ -173,11 +173,8 @@
       const d = e.data;
       if (!d) return;
       if (d.type === 'updatePreview') {
-        // Hide poem
         frame1.style.opacity = '0';
         setTimeout(() => { frame1.style.display = 'none'; }, 1000);
-
-        // Update preview
         frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
         setTimeout(() => { frame3.style.opacity = '1'; }, 800);
         setTimeout(() => {
@@ -189,7 +186,7 @@
       }
     });
 
-    // Toggle Notepad visibility
+    // Toggle Notepad
     toggleBtn.addEventListener('click', () => {
       const open = frame7.style.opacity === '1';
       frame7.style.opacity = open ? '0' : '1';
