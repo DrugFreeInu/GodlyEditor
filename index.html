@@ -178,4 +178,61 @@
     window.addEventListener('message', (e) => {
       const d = e.data;
       if (!d) return;
-      if (d.type === 'update
+      if (d.type === 'updatePreview') {
+        frame1.style.opacity = '0';
+        setTimeout(() => { frame1.style.display = 'none'; }, 1000);
+
+        // Move paste area up and show preview
+        frame2.style.opacity = '0';
+        setTimeout(() => {
+          frame2.style.bottom = 'unset';
+          frame2.style.top = '22%';
+          frame2.style.opacity = '1';
+        }, 1000);
+
+        frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
+        setTimeout(() => { frame3.style.opacity = '1'; }, 800);
+        setTimeout(() => {
+          buttons.forEach(b => {
+            b.style.opacity = '1';
+            b.style.pointerEvents = 'auto';
+          });
+        }, 1600);
+      }
+    });
+
+    // Toggle Notepad
+    toggleBtn.addEventListener('click', () => {
+      const open = frame7.style.opacity === '1';
+      frame7.style.opacity = open ? '0' : '1';
+      frame7.style.pointerEvents = open ? 'none' : 'auto';
+      toggleBtn.textContent = open ? 'NOTEPAD' : 'CLOSE';
+    });
+
+    // Drag Notepad
+    let isDragging = false, offsetX = 0, offsetY = 0;
+    frame7.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - frame7.getBoundingClientRect().left;
+      offsetY = e.clientY - frame7.getBoundingClientRect().top;
+      frame7.style.cursor = 'grabbing';
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      let x = e.clientX - offsetX;
+      let y = e.clientY - offsetY;
+      x = Math.max(0, Math.min(window.innerWidth - frame7.offsetWidth, x));
+      y = Math.max(0, Math.min(window.innerHeight - frame7.offsetHeight, y));
+      frame7.style.left = x + 'px';
+      frame7.style.top = y + 'px';
+      frame7.style.transform = 'none';
+    });
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        frame7.style.cursor = 'grab';
+      }
+    });
+  </script>
+</body>
+</html>
