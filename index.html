@@ -30,7 +30,7 @@
       transition: opacity 0.8s ease;
     }
 
-    /* Poem centered initially */
+    /* Poem centered start */
     #frame1 {
       width: 90%;
       height: 15%;
@@ -41,7 +41,7 @@
       transition: opacity 1s ease;
     }
 
-    /* Paste box (starts lower, moves up smoothly to layer 1 position) */
+    /* Paste box (fixed position, will fade into 1) */
     #frame2 {
       width: 90%;
       height: 20%;
@@ -49,7 +49,7 @@
       z-index: 2;
       pointer-events: auto;
       opacity: 1;
-      transition: all 1s ease;
+      transition: opacity 1s ease;
     }
 
     /* Preview */
@@ -60,7 +60,6 @@
       z-index: 1;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 1s ease;
     }
 
     /* Notepad */
@@ -78,7 +77,7 @@
       cursor: grab;
     }
 
-    /* Compact buttons */
+    /* Compact button layout */
     #run, #clear, #clearAll, #move,
     #light, #save, #anchor, #add {
       width: 80px;
@@ -140,7 +139,7 @@
   <iframe id="frame6"></iframe>
   <iframe id="frame7"></iframe>
 
-  <!-- Buttons -->
+  <!-- Button Frames -->
   <iframe id="run"></iframe>
   <iframe id="clear"></iframe>
   <iframe id="clearAll"></iframe>
@@ -150,7 +149,7 @@
   <iframe id="anchor"></iframe>
   <iframe id="add"></iframe>
 
-  <!-- Notepad Toggle -->
+  <!-- Toggle Notepad -->
   <button id="toggleNotepad">NOTEPAD</button>
 
   <script>
@@ -177,7 +176,7 @@
     document.getElementById('anchor').src = `ancr.html?v=${v}`;
     document.getElementById('add').src = `add-layer.html?v=${v}`;
 
-    // Handle paste event -> transition, keep layer visible, and show 1
+    // Paste triggers layer 1 fade morph without movement
     window.addEventListener('message', (e) => {
       const d = e.data;
       if (!d) return;
@@ -186,32 +185,30 @@
         frame1.style.opacity = '0';
         setTimeout(() => { frame1.style.display = 'none'; }, 1000);
 
-        // Animate paste box upward slightly and fade to final position
-        frame2.style.bottom = 'unset';
-        frame2.style.top = '22%';
-        frame2.style.transition = 'all 1s ease';
-        frame2.style.opacity = '1';
-
-        // Show layer transformation (fade text to number "1" inside frame2)
+        // Fade paste box into its layer 1 version (no move)
         setTimeout(() => {
-          frame2.contentWindow.postMessage({ type: 'showLayerNumber', number: 1 }, '*');
+          frame2.style.opacity = '0';
+          setTimeout(() => {
+            frame2.src = `layer1.html?v=${v}`;
+            frame2.style.opacity = '1';
+          }, 500);
         }, 800);
 
         // Show preview
         frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
-        setTimeout(() => { frame3.style.opacity = '1'; }, 1000);
+        setTimeout(() => { frame3.style.opacity = '1'; }, 1200);
 
-        // Reveal buttons
+        // Show buttons
         setTimeout(() => {
           buttons.forEach(b => {
             b.style.opacity = '1';
             b.style.pointerEvents = 'auto';
           });
-        }, 1600);
+        }, 1800);
       }
     });
 
-    // Toggle Notepad visibility
+    // Toggle Notepad
     toggleBtn.addEventListener('click', () => {
       const open = frame7.style.opacity === '1';
       frame7.style.opacity = open ? '0' : '1';
