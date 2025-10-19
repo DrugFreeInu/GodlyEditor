@@ -30,21 +30,27 @@
       transition: opacity 0.8s ease;
     }
 
-    /* Title (poem) */
+    /* Poem (centered now) */
     #frame1 {
       width: 90%;
       height: 15%;
-      top: 5%;
+      top: 35%;
       z-index: 3;
       pointer-events: none;
       opacity: 1;
       transition: opacity 1s ease;
     }
 
-    /* Paste box */
-    #frame2 { width: 90%; height: 20%; top: 22%; z-index: 2; pointer-events: auto; }
+    /* Paste box (lowered to yellow square area) */
+    #frame2 {
+      width: 90%;
+      height: 20%;
+      bottom: 120px;
+      z-index: 2;
+      pointer-events: auto;
+    }
 
-    /* Preview */
+    /* Preview (same size but hidden initially) */
     #frame3 {
       width: 92%;
       top: 5%;
@@ -69,7 +75,7 @@
       cursor: grab;
     }
 
-    /* Compact button layout (lowered) */
+    /* Compact button layout */
     #run, #clear, #clearAll, #move,
     #light, #save, #anchor, #add {
       width: 80px;
@@ -79,13 +85,13 @@
       z-index: 6;
     }
 
-    /* Row 1 (lowered equally) */
+    /* Row 1 */
     #run      { bottom: 100px; left: calc(50% - 160px); }
     #clear    { bottom: 100px; left: calc(50% - 80px); }
     #clearAll { bottom: 100px; left: calc(50% + 0px); }
     #move     { bottom: 100px; left: calc(50% + 80px); }
 
-    /* Row 2 (lowered equally, now near Notepad) */
+    /* Row 2 */
     #light    { bottom: 40px; left: calc(50% - 160px); }
     #save     { bottom: 40px; left: calc(50% - 80px); }
     #anchor   { bottom: 40px; left: calc(50% + 0px); }
@@ -168,56 +174,8 @@
     document.getElementById('anchor').src = `ancr.html?v=${v}`;
     document.getElementById('add').src = `add-layer.html?v=${v}`;
 
-    // Fade out poem when user pastes content
+    // Hide poem and move paste area up after paste
     window.addEventListener('message', (e) => {
       const d = e.data;
       if (!d) return;
-      if (d.type === 'updatePreview') {
-        frame1.style.opacity = '0';
-        setTimeout(() => { frame1.style.display = 'none'; }, 1000);
-        frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
-        setTimeout(() => { frame3.style.opacity = '1'; }, 800);
-        setTimeout(() => {
-          buttons.forEach(b => {
-            b.style.opacity = '1';
-            b.style.pointerEvents = 'auto';
-          });
-        }, 1600);
-      }
-    });
-
-    // Toggle Notepad
-    toggleBtn.addEventListener('click', () => {
-      const open = frame7.style.opacity === '1';
-      frame7.style.opacity = open ? '0' : '1';
-      frame7.style.pointerEvents = open ? 'none' : 'auto';
-      toggleBtn.textContent = open ? 'NOTEPAD' : 'CLOSE';
-    });
-
-    // Drag Notepad
-    let isDragging = false, offsetX = 0, offsetY = 0;
-    frame7.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      offsetX = e.clientX - frame7.getBoundingClientRect().left;
-      offsetY = e.clientY - frame7.getBoundingClientRect().top;
-      frame7.style.cursor = 'grabbing';
-    });
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      let x = e.clientX - offsetX;
-      let y = e.clientY - offsetY;
-      x = Math.max(0, Math.min(window.innerWidth - frame7.offsetWidth, x));
-      y = Math.max(0, Math.min(window.innerHeight - frame7.offsetHeight, y));
-      frame7.style.left = x + 'px';
-      frame7.style.top = y + 'px';
-      frame7.style.transform = 'none';
-    });
-    document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        frame7.style.cursor = 'grab';
-      }
-    });
-  </script>
-</body>
-</html>
+      if (d.type === 'update
