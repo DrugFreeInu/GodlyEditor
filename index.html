@@ -76,12 +76,42 @@ iframe{
 }
 
 /* compact button layout */
-#run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
+/* ---- Button Grid (bottom zone) ---- */
+#buttonZone{
+  position:fixed;
+  bottom:35px;
+  left:50%;
+  transform:translateX(-50%);
+  display:grid;
+  grid-template-columns:repeat(4,80px);
+  grid-gap:12px 20px;
+  justify-content:center;
+  z-index:6;
+}
+
+/* every button iframe fits grid cell */
+#buttonZone iframe{
   width:80px;
   height:45px;
+  border:none;
+  border-radius:8px;
+  background:transparent;
   opacity:0;
   pointer-events:none;
-  z-index:6;
+  transition:opacity .3s ease;
+}
+
+/* footer label */
+#footer{
+  position:fixed;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#555;
+  font-family:monospace;
+  font-size:.9rem;
+  letter-spacing:1px;
+}
 }
 #run{bottom:100px;left:calc(50% -160px);}
 #clear{bottom:100px;left:calc(50% -80px);}
