@@ -98,7 +98,15 @@ iframe{
   opacity:0;
   pointer-events:none;
   z-index:6;
-  transition:opacity .5s ease;
+  transition:opacity .5s ease, box-shadow .3s ease, border .3s ease;
+  border:2px solid transparent;
+  border-radius:8px;
+}
+
+/* selected button state */
+.selected {
+  border:2px solid #ffcc00 !important;
+  box-shadow:0 0 15px #ffcc00aa;
 }
 
 /* arrow row */
@@ -119,8 +127,9 @@ iframe{
   box-shadow:0 0 10px rgba(0,255,204,.4);
   opacity:0;
   pointer-events:none;
-  transition:opacity .5s ease;
+  transition:opacity .5s ease, box-shadow .3s ease, border .3s ease;
   z-index:6;
+  border:2px solid transparent;
 }
 #up{bottom:70px;left:calc(50% - 105px);}
 #left{bottom:70px;left:calc(50% - 35px);}
@@ -232,7 +241,7 @@ frame2.addEventListener('click',()=>{
   frame2.classList.toggle('active');
 });
 
-// arrow controls — move shape only if layer selected
+// arrow move messages
 const moveMap = {
   up: {x:0, y:-10},
   down: {x:0, y:10},
@@ -240,10 +249,24 @@ const moveMap = {
   right: {x:10, y:0}
 };
 ['up','down','left','right'].forEach(dir=>{
-  document.getElementById(dir).addEventListener('click',()=>{
+  const btn=document.getElementById(dir);
+  btn.addEventListener('click',()=>{
     if(!frame2.classList.contains('active')) return;
     frame3.contentWindow.postMessage({type:'moveShape',dir,offset:moveMap[dir]},'*');
+    selectButton(btn);
   });
+});
+
+// select visual
+function selectButton(el){
+  buttons.forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// all other buttons get same yellow highlight on click
+buttons.forEach(b=>{
+  if(b.classList.contains('arrow')) return; // arrows handled above
+  b.addEventListener('click',()=>selectButton(b));
 });
 
 // toggle notepad
