@@ -79,19 +79,22 @@ iframe{
   cursor:grab;
 }
 
-/* two perfect rows centered and spaced */
-#run{bottom:120px;left:calc(50% - 140px);}
-#clear{bottom:120px;left:calc(50% - 40px);}
-#clearAll{bottom:120px;left:calc(50% + 60px);}
-#move{bottom:120px;left:calc(50% + 160px);}
-#light{bottom:60px;left:calc(50% - 140px);}
-#save{bottom:60px;left:calc(50% - 40px);}
-#anchor{bottom:60px;left:calc(50% + 60px);}
-#add{bottom:60px;left:calc(50% + 160px);}
+/* button layout — 5 per top row (SAVE next to MOVE) */
+#run{bottom:120px;left:calc(50% - 160px);}
+#clear{bottom:120px;left:calc(50% - 80px);}
+#clearAll{bottom:120px;left:calc(50%);}
+#move{bottom:120px;left:calc(50% + 80px);}
+#save{bottom:120px;left:calc(50% + 160px);}
 
+/* bottom row (centered 3) */
+#light{bottom:60px;left:calc(50% - 80px);}
+#anchor{bottom:60px;left:calc(50%);}
+#add{bottom:60px;left:calc(50% + 80px);}
+
+/* button sizing */
 #run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
-  width:90px;
-  height:45px;
+  width:65px;
+  height:35px;
   opacity:0;
   pointer-events:none;
   z-index:6;
