@@ -15,33 +15,77 @@ html, body {
   top: 0;
   left: 0;
   font-family: monospace;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
 }
 
-/* Poem in the middle */
-#poem {
-  text-align: center;
-  color: white;
-  font-size: 1.4rem;
-  letter-spacing: 1px;
-  margin-bottom: 100px;
+/* Centered poem */
+#frame1 {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 15%;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 1s ease;
 }
 
-/* Bottom buttons row */
-.bottom-bar {
+/* Paste box - bottom right beside Notepad */
+#frame2 {
   position: fixed;
-  bottom: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+  bottom: 15px;
+  right: calc(50% - -100px); /* offset so it sits just right of Notepad */
+  width: 320px;
+  height: 200px;
+  z-index: 2;
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity 1s ease;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
 }
 
-/* Shared button style */
-button {
+/* Preview */
+#frame3 {
+  width: 92%;
+  top: 5%;
+  height: 62vh;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Notepad - bottom left aligned with paste box */
+#frame7 {
+  width: 320px;
+  height: 200px;
+  bottom: 15px;
+  left: calc(50% - 420px);
+  position: fixed;
+  border-radius: 12px;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+  cursor: grab;
+}
+
+/* Control buttons still exist but hidden by default */
+#run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
+  width:80px;height:45px;opacity:0;pointer-events:none;z-index:6;
+}
+
+/* Toggle Notepad button */
+#toggleNotepad {
+  position: fixed;
+  bottom: 230px;
+  left: calc(50% - 420px);
+  z-index: 10;
   font-family: monospace;
   font-size: 1rem;
   letter-spacing: 1px;
@@ -49,37 +93,121 @@ button {
   color: #000;
   background: #00ffcc;
   border: none;
-  padding: 12px 30px;
+  padding: 10px 25px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 0 10px rgba(0,255,204,0.3);
 }
-
-button:hover {
+#toggleNotepad:hover {
   background: #00ddb0;
   box-shadow: 0 0 20px rgba(0,255,204,0.6);
   transform: scale(1.05);
 }
-
-button:active {
+#toggleNotepad:active {
   transform: scale(0.96);
   box-shadow: 0 0 25px rgba(0,255,204,0.9);
 }
 </style>
 </head>
 <body>
+<!-- Frames -->
+<iframe id="frame1"></iframe>
+<iframe id="frame2"></iframe>
+<iframe id="frame3"></iframe>
+<iframe id="frame6"></iframe>
+<iframe id="frame7"></iframe>
 
-<div id="poem">
-  <strong>LAYER 1:</strong><br>
-  THE FOUNDATION<br>
-  FOR YOUR CREATION
-</div>
+<!-- Hidden control frames -->
+<iframe id="run"></iframe>
+<iframe id="clear"></iframe>
+<iframe id="clearAll"></iframe>
+<iframe id="move"></iframe>
+<iframe id="light"></iframe>
+<iframe id="save"></iframe>
+<iframe id="anchor"></iframe>
+<iframe id="add"></iframe>
 
-<div class="bottom-bar">
-  <button id="notepad">NOTEPAD</button>
-  <button id="paste">PASTE CODE</button>
-</div>
+<!-- Toggle Notepad -->
+<button id="toggleNotepad">NOTEPAD</button>
 
+<script>
+const v = Date.now();
+const frame1 = document.getElementById('frame1');
+const frame2 = document.getElementById('frame2');
+const frame3 = document.getElementById('frame3');
+const frame7 = document.getElementById('frame7');
+const toggleBtn = document.getElementById('toggleNotepad');
+const ids = ['run','clear','clearAll','move','light','save','anchor','add'];
+const buttons = ids.map(id => document.getElementById(id));
+
+// Load sources
+frame1.src = `welcome.html?v=${v}`;
+frame2.src = `layer1.html?v=${v}`;
+frame3.src = `preview.html?v=${v}`;
+frame7.src = `notepad.html?v=${v}`;
+document.getElementById('run').src = `run.html?v=${v}`;
+document.getElementById('clear').src = `clear.html?v=${v}`;
+document.getElementById('clearAll').src = `clear-all.html?v=${v}`;
+document.getElementById('move').src = `move.html?v=${v}`;
+document.getElementById('light').src = `light.html?v=${v}`;
+document.getElementById('save').src = `save.html?v=${v}`;
+document.getElementById('anchor').src = `ancr.html?v=${v}`;
+document.getElementById('add').src = `add-layer.html?v=${v}`;
+
+// Handle paste -> fade to Layer 1 permanent
+window.addEventListener('message', e => {
+  const d = e.data;
+  if (!d) return;
+  if (d.type === 'updatePreview') {
+    frame1.style.opacity = '0';
+    setTimeout(() => { frame1.style.display = 'none'; }, 1000);
+    setTimeout(() => {
+      frame2.contentWindow.postMessage({ type: 'fadeToLayerNumber', number: 1 }, '*');
+    }, 600);
+    frame3.contentWindow.postMessage({ type: 'addLayer', code: d.code }, '*');
+    setTimeout(() => { frame3.style.opacity = '1'; }, 1200);
+    setTimeout(() => {
+      buttons.forEach(b => {
+        b.style.opacity = '1';
+        b.style.pointerEvents = 'auto';
+      });
+    }, 1800);
+  }
+});
+
+// Toggle Notepad
+toggleBtn.addEventListener('click', () => {
+  const open = frame7.style.opacity === '1';
+  frame7.style.opacity = open ? '0' : '1';
+  frame7.style.pointerEvents = open ? 'none' : 'auto';
+  toggleBtn.textContent = open ? 'NOTEPAD' : 'CLOSE';
+});
+
+// Drag Notepad
+let isDragging = false, offsetX = 0, offsetY = 0;
+frame7.addEventListener('mousedown', e => {
+  isDragging = true;
+  offsetX = e.clientX - frame7.getBoundingClientRect().left;
+  offsetY = e.clientY - frame7.getBoundingClientRect().top;
+  frame7.style.cursor = 'grabbing';
+});
+document.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  let x = e.clientX - offsetX;
+  let y = e.clientY - offsetY;
+  x = Math.max(0, Math.min(window.innerWidth - frame7.offsetWidth, x));
+  y = Math.max(0, Math.min(window.innerHeight - frame7.offsetHeight, y));
+  frame7.style.left = x + 'px';
+  frame7.style.top = y + 'px';
+  frame7.style.transform = 'none';
+});
+document.addEventListener('mouseup', () => {
+  if (isDragging) {
+    isDragging = false;
+    frame7.style.cursor = 'grab';
+  }
+});
+</script>
 </body>
 </html>
