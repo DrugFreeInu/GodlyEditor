@@ -110,12 +110,14 @@
     const placeholder = document.getElementById('placeholder');
     const input = document.getElementById('input');
     const confirm = document.getElementById('confirm');
+    let isConfirmed = false; // track whether it’s become "1"
 
     function transitionToOne() {
       placeholder.classList.add('hidden');
       confirm.classList.remove('hidden');
       confirm.classList.add('fade-in');
       input.contentEditable = "false";
+      isConfirmed = true;
     }
 
     function sendToPreview(code) {
@@ -126,8 +128,9 @@
       parent.postMessage({ type: 'pasteDetected' }, '*');
     }
 
-    // highlight toggle on tap
+    // only allow glow toggle AFTER it's "1"
     container.addEventListener('click', () => {
+      if (!isConfirmed) return;
       const active = container.classList.toggle('active');
       parent.postMessage({ type: 'highlightLayer1', active }, '*');
     });
