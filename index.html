@@ -52,17 +52,17 @@ iframe{
 
 /* preview */
 #frame3 {
-  width: 72%;                /* slightly narrower */
+  width: 72%;
   height: 60vh;
   top: 6%;
   left: 50%;
-  transform: translateX(-49%); /* tiny correction for mobile centering */
-  border: 2px solid #00ff00;  /* ensure full visible green border */
+  transform: translateX(-50%);
+  border: 2px solid #00ff00;
   border-radius: 12px;
   z-index: 1;
-  opacity: 1;
+  opacity: 0;
   pointer-events: none;
-  box-sizing: border-box;     /* keeps border inside width */
+  box-sizing: content-box; /* restores original internal sizing */
 }
 /* notepad */
 #frame7{
