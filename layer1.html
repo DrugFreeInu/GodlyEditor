@@ -110,7 +110,7 @@
     const placeholder = document.getElementById('placeholder');
     const input = document.getElementById('input');
     const confirm = document.getElementById('confirm');
-    let isConfirmed = false; // track whether it’s become "1"
+    let isConfirmed = false;
 
     function transitionToOne() {
       placeholder.classList.add('hidden');
@@ -128,7 +128,6 @@
       parent.postMessage({ type: 'pasteDetected' }, '*');
     }
 
-    // only allow glow toggle AFTER it's "1"
     container.addEventListener('click', () => {
       if (!isConfirmed) return;
       const active = container.classList.toggle('active');
@@ -155,6 +154,20 @@
 
     document.addEventListener('click', e => {
       if (!input.contains(e.target)) input.blur();
+    });
+
+    // Movement handler from index via postMessage
+    window.addEventListener('message', (e) => {
+      const d = e.data;
+      if (d.type === 'moveBox' && d.offset) {
+        const target = document.querySelector('.box') || document.querySelector('.diamond');
+        if (!target) return;
+        const currentLeft = parseInt(target.style.left || 0);
+        const currentTop = parseInt(target.style.top || 0);
+        target.style.position = 'absolute';
+        target.style.left = (currentLeft + d.offset.x) + 'px';
+        target.style.top = (currentTop + d.offset.y) + 'px';
+      }
     });
   </script>
 </body>
