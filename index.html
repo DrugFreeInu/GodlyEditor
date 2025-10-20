@@ -2,12 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
-<title>Godly Editor</title>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <title>Editor</title>
 <style>
@@ -30,6 +24,7 @@ iframe{
   transform:translateX(-50%);
   transition:opacity .8s ease;
 }
+
 /* poem centered */
 #frame1{
   width:90%;height:15%;
@@ -39,19 +34,36 @@ iframe{
   opacity:1;
   transition:opacity 1s ease;
 }
-/* paste box fixed — becomes layer 1 */
+
+/* paste box (becomes layer 1) */
 #frame2{
-  width:90%;height:20%;
-  bottom:120px;
+  width:100px;
+  height:55px;
+  position:fixed;
+  bottom:15px;
+  left:160px; /* exact spot next to NOTEPAD */
+  border:none;
+  border-radius:10px;
+  background:rgba(255,255,255,0.07);
+  color:#aaa;
+  text-align:center;
+  line-height:55px;
+  font-size:1rem;
+  letter-spacing:1px;
+  text-transform:lowercase;
   z-index:2;
   pointer-events:auto;
   opacity:1;
   transition:opacity 1s ease;
 }
+
+/* preview */
 #frame3{
   width:92%;top:5%;height:62vh;
   z-index:1;opacity:0;pointer-events:none;
 }
+
+/* notepad */
 #frame7{
   width:340px;height:320px;
   bottom:10px;right:10px;
@@ -60,6 +72,7 @@ iframe{
   transition:opacity .3s ease,transform .2s ease;
   cursor:grab;
 }
+
 /* buttons compact */
 #run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
   width:80px;height:45px;opacity:0;
@@ -73,6 +86,8 @@ iframe{
 #save{bottom:40px;left:calc(50% -80px);}
 #anchor{bottom:40px;left:calc(50%);}
 #add{bottom:40px;left:calc(50% +80px);}
+
+/* notepad toggle */
 #toggleNotepad{
   position:fixed;bottom:15px;left:15px;
   z-index:10;font-family:monospace;
@@ -94,7 +109,7 @@ iframe{
 </head>
 <body>
 <iframe id="frame1"></iframe>
-<iframe id="frame2"></iframe>
+<div id="frame2">paste<br>code</div>
 <iframe id="frame3"></iframe>
 <iframe id="frame6"></iframe>
 <iframe id="frame7"></iframe>
@@ -113,16 +128,14 @@ iframe{
 <script>
 const v=Date.now();
 const frame1=document.getElementById('frame1');
-const frame2=document.getElementById('frame2');
+const pasteBox=document.getElementById('frame2');
 const frame3=document.getElementById('frame3');
 const frame7=document.getElementById('frame7');
 const toggleBtn=document.getElementById('toggleNotepad');
 const ids=['run','clear','clearAll','move','light','save','anchor','add'];
 const buttons=ids.map(id=>document.getElementById(id));
 
-// sources
 frame1.src=`welcome.html?v=${v}`;
-frame2.src=`layer1.html?v=${v}`;
 frame3.src=`preview.html?v=${v}`;
 frame7.src=`notepad.html?v=${v}`;
 document.getElementById('run').src=`run.html?v=${v}`;
@@ -134,24 +147,17 @@ document.getElementById('save').src=`save.html?v=${v}`;
 document.getElementById('anchor').src=`ancr.html?v=${v}`;
 document.getElementById('add').src=`add-layer.html?v=${v}`;
 
-// paste triggers fade → permanent layer 1
 window.addEventListener('message',(e)=>{
   const d=e.data;if(!d)return;
   if(d.type==='updatePreview'){
-    // fade poem
     frame1.style.opacity='0';
     setTimeout(()=>{frame1.style.display='none';},1000);
-
-    // fade paste box into 1 in place, then keep forever
     setTimeout(()=>{
-      frame2.contentWindow.postMessage({type:'fadeToLayerNumber',number:1},'*');
+      pasteBox.textContent='1';
+      pasteBox.style.color='#fff';
     },600);
-
-    // show preview
     frame3.contentWindow.postMessage({type:'addLayer',code:d.code},'*');
     setTimeout(()=>{frame3.style.opacity='1';},1200);
-
-    // reveal buttons
     setTimeout(()=>{
       buttons.forEach(b=>{
         b.style.opacity='1';
@@ -161,131 +167,12 @@ window.addEventListener('message',(e)=>{
   }
 });
 
-// toggle notepad
 toggleBtn.addEventListener('click',()=>{
   const open=frame7.style.opacity==='1';
   frame7.style.opacity=open?'0':'1';
   frame7.style.pointerEvents=open?'none':'auto';
   toggleBtn.textContent=open?'NOTEPAD':'CLOSE';
 });
-
-// drag notepad
-let isDragging=false,offsetX=0,offsetY=0;
-frame7.addEventListener('mousedown',e=>{
-  isDragging=true;
-  offsetX=e.clientX-frame7.getBoundingClientRect().left;
-  offsetY=e.clientY-frame7.getBoundingClientRect().top;
-  frame7.style.cursor='grabbing';
-});
-document.addEventListener('mousemove',e=>{
-  if(!isDragging)return;
-  let x=e.clientX-offsetX;
-  let y=e.clientY-offsetY;
-  x=Math.max(0,Math.min(window.innerWidth-frame7.offsetWidth,x));
-  y=Math.max(0,Math.min(window.innerHeight-frame7.offsetHeight,y));
-  frame7.style.left=x+'px';
-  frame7.style.top=y+'px';
-  frame7.style.transform='none';
-});
-document.addEventListener('mouseup',()=>{
-  if(isDragging){isDragging=false;frame7.style.cursor='grab';}
-});
 </script>
-</body>
-</html>
-<style>
-html, body {
-  margin: 0;
-  height: 100%;
-  width: 100%;
-  background: #000;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: "Courier New", monospace;
-  overflow: hidden;
-}
-
-/* --- poem --- */
-#poem {
-  text-align: center;
-  font-size: 1.2rem;
-  letter-spacing: 2px;
-  line-height: 1.6;
-  margin-bottom: 100px;
-  transition: opacity 1s ease;
-}
-
-/* --- paste box --- */
-#pasteBox {
-  position: fixed;
-  bottom: 15px;
-  left: calc(50% - 60px);
-  width: 100px;
-  height: 55px;
-  background: rgba(255,255,255,0.07);
-  color: #aaa;
-  border-radius: 10px;
-  font-size: 1rem;
-  text-align: center;
-  line-height: 55px;
-  letter-spacing: 1px;
-  text-transform: lowercase;
-  user-select: none;
-  transition: all 0.5s ease;
-}
-
-/* --- notepad button --- */
-#notepad {
-  position: fixed;
-  bottom: 15px;
-  left: 15px;
-  padding: 12px 28px;
-  font-family: monospace;
-  font-size: 1rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: #000;
-  background: #00ffcc;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(0,255,204,0.5);
-  transition: all 0.3s ease;
-}
-#notepad:hover { background: #00ddb0; box-shadow: 0 0 25px rgba(0,255,204,0.7); }
-
-/* --- move paste box to right of notepad --- */
-#pasteBox {
-  left: 140px; /* right of notepad */
-}
-</style>
-</head>
-
-<body>
-  <div id="poem">
-    <strong>LAYER 1:</strong><br />
-    THE FOUNDATION<br />
-    FOR YOUR CREATION
-  </div>
-
-  <div id="pasteBox">paste<br>code</div>
-  <button id="notepad">NOTEPAD</button>
-
-  <script>
-  const poem = document.getElementById('poem');
-  const box = document.getElementById('pasteBox');
-
-  // simulate paste event -> fade poem to 0 and fade box into “1”
-  window.addEventListener('paste', () => {
-    poem.style.opacity = '0';
-    setTimeout(() => {
-      box.textContent = '1';
-      box.style.color = '#fff';
-    }, 800);
-  });
-  </script>
 </body>
 </html>
