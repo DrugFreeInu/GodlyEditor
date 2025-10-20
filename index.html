@@ -61,8 +61,9 @@ iframe{
   z-index: 1;
   opacity: 0;
   pointer-events: none;
-  box-sizing: content-box; /* restores original internal sizing */
+  box-sizing: content-box;
 }
+
 /* notepad */
 #frame7{
   width:340px;
@@ -91,9 +92,10 @@ iframe{
 #run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
   width:90px;
   height:45px;
-  opacity:1;
-  pointer-events:auto;
+  opacity:0;
+  pointer-events:none;
   z-index:6;
+  transition:opacity .5s ease;
 }
 
 /* toggle notepad button */
@@ -171,6 +173,15 @@ document.getElementById('add').src=`add-layer.html?v=${v}`;
 // paste triggers fade → permanent layer 1
 window.addEventListener('message',(e)=>{
   const d=e.data;if(!d)return;
+
+  // show buttons only after paste
+  if(d.type==='pasteDetected'){
+    buttons.forEach(b=>{
+      b.style.opacity='1';
+      b.style.pointerEvents='auto';
+    });
+  }
+
   if(d.type==='updatePreview'){
     frame1.style.opacity='0';
     setTimeout(()=>{frame1.style.display='none';},1000);
@@ -179,12 +190,6 @@ window.addEventListener('message',(e)=>{
     },600);
     frame3.contentWindow.postMessage({type:'addLayer',code:d.code},'*');
     setTimeout(()=>{frame3.style.opacity='1';},1200);
-    setTimeout(()=>{
-      buttons.forEach(b=>{
-        b.style.opacity='1';
-        b.style.pointerEvents='auto';
-      });
-    },1800);
   }
 });
 
