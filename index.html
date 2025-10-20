@@ -35,7 +35,7 @@ iframe{
   transition:opacity 1s ease;
 }
 
-/* paste box (bottom-right beside Notepad) */
+/* layer box */
 #frame2{
   width:340px;
   height:200px;
@@ -50,8 +50,6 @@ iframe{
   background:transparent;
   border:2px solid transparent;
 }
-
-/* selected layer glow */
 #frame2.active {
   border:2px solid #ffcc00;
   box-shadow:0 0 20px #ffcc00aa;
@@ -68,7 +66,6 @@ iframe{
   z-index: 1;
   opacity: 0;
   pointer-events: none;
-  box-sizing: content-box;
 }
 
 /* notepad */
@@ -233,6 +230,20 @@ window.addEventListener('message',(e)=>{
 // layer selection highlight
 frame2.addEventListener('click',()=>{
   frame2.classList.toggle('active');
+});
+
+// arrow controls — move shape only if layer selected
+const moveMap = {
+  up: {x:0, y:-10},
+  down: {x:0, y:10},
+  left: {x:-10, y:0},
+  right: {x:10, y:0}
+};
+['up','down','left','right'].forEach(dir=>{
+  document.getElementById(dir).addEventListener('click',()=>{
+    if(!frame2.classList.contains('active')) return;
+    frame3.contentWindow.postMessage({type:'moveShape',dir,offset:moveMap[dir]},'*');
+  });
 });
 
 // toggle notepad
