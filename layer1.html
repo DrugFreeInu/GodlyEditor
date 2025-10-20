@@ -12,6 +12,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
     }
 
     .border-wrap {
@@ -27,7 +28,13 @@
       height: 4em;
       border-radius: 12px;
       background: #222;
-      box-shadow: none;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.15);
+      transition: box-shadow .4s ease, transform .3s ease;
+    }
+
+    .input-container:focus-within {
+      box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
+      transform: scale(1.02);
     }
 
     :root {
@@ -114,6 +121,7 @@
     const input = document.getElementById('input');
     const confirm = document.getElementById('confirm');
 
+    // graceful fade transition to "1"
     function transitionToOne() {
       placeholder.classList.add('hidden');
       confirm.classList.remove('hidden');
@@ -121,6 +129,7 @@
       input.contentEditable = "false";
     }
 
+    // send pasted code to main preview frame
     function sendToPreview(code) {
       try {
         parent.postMessage({ type: 'updatePreview', code: code }, '*');
@@ -129,26 +138,38 @@
       }
     }
 
+    // notify parent to reveal buttons
+    function notifyPaste() {
+      try {
+        parent.postMessage({ type: 'pasteDetected' }, '*');
+      } catch (err) {
+        console.error('Notification failed:', err);
+      }
+    }
+
+    // handle paste event
     input.addEventListener('paste', (e) => {
       e.preventDefault();
       const pasted = (e.clipboardData || window.clipboardData).getData('text');
       if (pasted.trim() === '') return;
       transitionToOne();
       sendToPreview(pasted);
+      notifyPaste();
     });
 
+    // also handle manual typing (just in case)
     input.addEventListener('input', () => {
       const val = input.textContent.trim();
       if (val !== '') {
         transitionToOne();
         sendToPreview(val);
+        notifyPaste();
       }
     });
 
+    // blur outside click
     document.addEventListener('click', (e) => {
-      if (!input.contains(e.target)) {
-        input.blur();
-      }
+      if (!input.contains(e.target)) input.blur();
     });
   </script>
 </body>
