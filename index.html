@@ -75,18 +75,6 @@ iframe{
   cursor:grab;
 }
 
-/* === 4x2 grid === */
-#run, #clear, #clearAll, #move,
-#light, #save, #anchor, #add {
-  position: fixed;
-  width: 120px;
-  height: 50px;
-  border-radius: 8px;
-  pointer-events: auto;
-  z-index: 6;
-  opacity: 1;
-}
-
 /* === 4x2 button layout — fits on screen === */
 #run, #clear, #clearAll, #move,
 #light, #save, #anchor, #add {
@@ -99,17 +87,29 @@ iframe{
   opacity: 1;
 }
 
-/* top row */
-#run      { bottom: 150px; left: calc(50% - 190px); }
-#clear    { bottom: 150px; left: calc(50% - 95px); }
-#clearAll { bottom: 150px; left: calc(50%); }
-#move     { bottom: 150px; left: calc(50% + 95px); }
+//* Centered two-row button grid */
+#buttonZone {
+  position: fixed;
+  bottom: 100px;           /* adjust to move whole grid up/down */
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: repeat(4, 80px);
+  grid-template-rows: repeat(2, 45px);
+  grid-gap: 15px 20px;     /* vertical | horizontal spacing */
+  justify-content: center;
+  z-index: 6;
+}
 
-/* bottom row */
-#light    { bottom: 90px; left: calc(50% - 190px); }
-#save     { bottom: 90px; left: calc(50% - 95px); }
-#anchor   { bottom: 90px; left: calc(50%); }
-#add      { bottom: 90px; left: calc(50% + 95px); }
+/* each button iframe inside grid */
+#buttonZone iframe {
+  width: 80px;
+  height: 45px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  opacity: 1;
+}
 
 /* toggle notepad button */
 #toggleNotepad{
