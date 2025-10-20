@@ -75,22 +75,29 @@ iframe{
   cursor:grab;
 }
 
-/* compact button layout */
-#run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
-  width:80px;
-  height:45px;
-  opacity:0;
-  pointer-events:none;
-  z-index:6;
+/* === 4x2 grid === */
+#run, #clear, #clearAll, #move,
+#light, #save, #anchor, #add {
+  position: fixed;
+  width: 120px;
+  height: 50px;
+  border-radius: 8px;
+  pointer-events: auto;
+  z-index: 6;
+  opacity: 1;
 }
-#run{bottom:100px;left:calc(50% -160px);}
-#clear{bottom:100px;left:calc(50% -80px);}
-#clearAll{bottom:100px;left:calc(50%);}
-#move{bottom:100px;left:calc(50% +80px);}
-#light{bottom:40px;left:calc(50% -160px);}
-#save{bottom:40px;left:calc(50% -80px);}
-#anchor{bottom:40px;left:calc(50%);}
-#add{bottom:40px;left:calc(50% +80px);}
+
+/* top row */
+#run      { bottom: 150px; left: calc(50% - 240px); }
+#clear    { bottom: 150px; left: calc(50% - 120px); }
+#clearAll { bottom: 150px; left: calc(50%); }
+#move     { bottom: 150px; left: calc(50% + 120px); }
+
+/* bottom row */
+#light    { bottom: 85px; left: calc(50% - 240px); }
+#save     { bottom: 85px; left: calc(50% - 120px); }
+#anchor   { bottom: 85px; left: calc(50%); }
+#add      { bottom: 85px; left: calc(50% + 120px); }
 
 /* toggle notepad button */
 #toggleNotepad{
