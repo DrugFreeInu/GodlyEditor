@@ -121,7 +121,7 @@
     }
 
     function sendToPreview(code) {
-      parent.postMessage({ type: 'updatePreview', code }, '*');
+      parent.postMessage({ type: 'updatePreview', code, layer: 1 }, '*');
     }
 
     function notifyPaste() {
@@ -156,7 +156,6 @@
       if (!input.contains(e.target)) input.blur();
     });
 
-    // Movement handler from index via postMessage
     window.addEventListener('message', (e) => {
       const d = e.data;
       if (d.type === 'moveBox' && d.offset) {
