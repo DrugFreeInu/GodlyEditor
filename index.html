@@ -41,7 +41,7 @@ iframe{
   height:200px;
   position:fixed;
   top: calc(100% - 140px);
-  left:calc(50% + -30px); /* aligned slightly right of center */
+  left:calc(50% - 30px);
   z-index:2;
   pointer-events:auto;
   opacity:1;
@@ -75,40 +75,22 @@ iframe{
   cursor:grab;
 }
 
-/* === 4x2 button layout — fits on screen === */
-#run, #clear, #clearAll, #move,
-#light, #save, #anchor, #add {
-  position: fixed;
-  width: 90px;
-  height: 45px;
-  border-radius: 8px;
-  pointer-events: auto;
-  z-index: 6;
-  opacity: 1;
-}
+/* two perfect rows centered and spaced */
+#run{bottom:100px;left:calc(50% - 180px);}
+#clear{bottom:100px;left:calc(50% - 90px);}
+#clearAll{bottom:100px;left:calc(50%);}
+#move{bottom:100px;left:calc(50% + 90px);}
+#light{bottom:40px;left:calc(50% - 180px);}
+#save{bottom:40px;left:calc(50% - 90px);}
+#anchor{bottom:40px;left:calc(50%);}
+#add{bottom:40px;left:calc(50% + 90px);}
 
-//* Centered two-row button grid */
-#buttonZone {
-  position: fixed;
-  bottom: 100px;           /* adjust to move whole grid up/down */
-  left: 50%;
-  transform: translateX(-50%);
-  display: grid;
-  grid-template-columns: repeat(4, 80px);
-  grid-template-rows: repeat(2, 45px);
-  grid-gap: 15px 20px;     /* vertical | horizontal spacing */
-  justify-content: center;
-  z-index: 6;
-}
-
-/* each button iframe inside grid */
-#buttonZone iframe {
-  width: 80px;
-  height: 45px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  opacity: 1;
+#run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
+  width:90px;
+  height:45px;
+  opacity:1;
+  pointer-events:auto;
+  z-index:6;
 }
 
 /* toggle notepad button */
