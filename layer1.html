@@ -27,19 +27,16 @@
       height: 4em;
       border-radius: 12px;
       background: #222;
-      transition: all .3s ease;
-      box-shadow: 0 0 0px transparent;
+      transition: all .25s ease;
+      box-shadow: 0 0 0 transparent;
       border: 2px solid transparent;
+      cursor: pointer;
     }
 
     .input-container.active {
-      border-color: #ffcc00;
+      border: 2px solid #ffcc00;
       box-shadow: 0 0 25px #ffcc00aa;
       transform: scale(1.05);
-    }
-
-    .input-container:focus-within {
-      transform: scale(1.02);
     }
 
     :root {
@@ -129,12 +126,10 @@
       parent.postMessage({ type: 'pasteDetected' }, '*');
     }
 
-    // highlight command from parent
-    window.addEventListener('message', e => {
-      const d = e.data;
-      if (d.type === 'highlightLayer1') {
-        container.classList.toggle('active', d.active);
-      }
+    // highlight toggle on tap
+    container.addEventListener('click', () => {
+      const active = container.classList.toggle('active');
+      parent.postMessage({ type: 'highlightLayer1', active }, '*');
     });
 
     input.addEventListener('paste', e => {
