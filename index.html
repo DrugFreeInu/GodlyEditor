@@ -45,9 +45,16 @@ iframe{
   z-index:2;
   pointer-events:auto;
   opacity:1;
-  transition:opacity 1s ease;
+  transition:opacity 1s ease, box-shadow .3s ease, border .3s ease;
   border-radius:10px;
   background:transparent;
+  border:2px solid transparent;
+}
+
+/* selected layer glow */
+#frame2.active {
+  border:2px solid #ffcc00;
+  box-shadow:0 0 20px #ffcc00aa;
 }
 
 /* preview */
@@ -79,19 +86,15 @@ iframe{
   cursor:grab;
 }
 
-/* button layout — 5 per top row (SAVE next to MOVE) */
-/* top row */
+/* button layout */
 #run{bottom:160px;left:calc(50% - 160px);}
 #clear{bottom:160px;left:calc(50% - 80px);}
 #clearAll{bottom:160px;left:calc(50%);}
 #move{bottom:160px;left:calc(50% + 80px);}
 #save{bottom:160px;left:calc(50% + 160px);}
-
-/* second row */
 #light{bottom:120px;left:calc(50% - 80px);}
 #anchor{bottom:120px;left:calc(50%);}
 
-/* shared button sizing */
 #run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
   width:65px;
   height:35px;
@@ -101,7 +104,7 @@ iframe{
   transition:opacity .5s ease;
 }
 
-/* arrow row (third row) */
+/* arrow row */
 .arrow{
   width:55px;
   height:35px;
@@ -122,8 +125,6 @@ iframe{
   transition:opacity .5s ease;
   z-index:6;
 }
-
-/* align horizontally */
 #up{bottom:70px;left:calc(50% - 105px);}
 #left{bottom:70px;left:calc(50% - 35px);}
 #down{bottom:70px;left:calc(50% + 35px);}
@@ -175,7 +176,6 @@ iframe{
 <iframe id="anchor"></iframe>
 <iframe id="add"></iframe>
 
-<!-- arrow buttons -->
 <div id="up" class="arrow">↑</div>
 <div id="left" class="arrow">←</div>
 <div id="down" class="arrow">↓</div>
@@ -228,6 +228,11 @@ window.addEventListener('message',(e)=>{
     frame3.contentWindow.postMessage({type:'addLayer',code:d.code},'*');
     setTimeout(()=>{frame3.style.opacity='1';},1200);
   }
+});
+
+// layer selection highlight
+frame2.addEventListener('click',()=>{
+  frame2.classList.toggle('active');
 });
 
 // toggle notepad
