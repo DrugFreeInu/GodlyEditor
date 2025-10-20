@@ -16,7 +16,7 @@ html,body{
   font-family:monospace;
 }
 
-/* iframe base */
+/* frames */
 iframe{
   border:none;
   border-radius:10px;
@@ -26,8 +26,6 @@ iframe{
   transform:translateX(-50%);
   transition:opacity .8s ease;
 }
-
-/* poem centered */
 #frame1{
   width:90%;
   height:15%;
@@ -35,10 +33,7 @@ iframe{
   z-index:3;
   pointer-events:none;
   opacity:1;
-  transition:opacity 1s ease;
 }
-
-/* layer 1 box */
 #frame2{
   width:340px;
   height:200px;
@@ -48,30 +43,24 @@ iframe{
   z-index:2;
   pointer-events:auto;
   opacity:1;
-  transition:opacity 1s ease, box-shadow .3s ease, border .3s ease;
   border-radius:10px;
-  background:transparent;
   border:2px solid transparent;
+  background:transparent;
+  transition:border .3s, box-shadow .3s;
 }
 #frame2.active{
   border:2px solid #ffcc00;
   box-shadow:0 0 20px #ffcc00aa;
 }
-
-/* preview */
 #frame3{
   width:60%;
   height:55vh;
   top:8%;
-  left:50%;
-  transform:translateX(-50%);
   border-radius:12px;
   z-index:1;
   opacity:0;
   pointer-events:none;
 }
-
-/* notepad */
 #frame7{
   width:340px;
   height:320px;
@@ -82,72 +71,89 @@ iframe{
   z-index:5;
   opacity:0;
   pointer-events:none;
-  transition:opacity .3s ease,transform .2s ease;
   cursor:grab;
+  transition:opacity .3s ease;
 }
 
-/* base button style */
+/* button style restored */
 .btn{
   width:65px;
   height:35px;
+  border:none;
   border-radius:8px;
-  border:2px solid transparent;
   position:absolute;
   left:50%;
   transform:translateX(-50%);
   opacity:0;
   pointer-events:none;
   z-index:6;
-  background:transparent;
-  color:#00ffcc;
+  color:#111;
   font-weight:bold;
+  font-family:monospace;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  transition:opacity .4s, box-shadow .15s, border .15s, transform .1s;
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:border .1s ease, box-shadow .1s ease, opacity .5s ease;
   cursor:pointer;
 }
+
+/* colored backgrounds */
+#run{background:#32cd32;}
+#clear{background:#ff3333;}
+#clearAll{background:#9933ff;color:#fff;}
+#move{background:#00aaff;}
+#save{background:#ffaa00;}
+#light{background:#00cccc;}
+#anchor{background:#00ff66;}
+
+/* position grid */
+#run{bottom:160px;left:calc(50% - 160px);}
+#clear{bottom:160px;left:calc(50% - 80px);}
+#clearAll{bottom:160px;left:calc(50%);}
+#move{bottom:160px;left:calc(50% + 80px);}
+#save{bottom:160px;left:calc(50% + 160px);}
+#light{bottom:120px;left:calc(50% - 80px);}
+#anchor{bottom:120px;left:calc(50%);}
+
+/* glow effect */
 .btn.show{
   opacity:1;
   pointer-events:auto;
+  box-shadow:0 0 10px rgba(255,255,255,.15);
+}
+.btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 18px rgba(255,255,255,.3);
 }
 .btn.selected{
   border:2px solid #ffcc00;
   box-shadow:0 0 15px #ffcc00aa;
 }
 
-/* top row (5 buttons) */
-#run{bottom:160px;left:calc(50% - 160px);}
-#clear{bottom:160px;left:calc(50% - 80px);}
-#clearAll{bottom:160px;left:calc(50%);}
-#move{bottom:160px;left:calc(50% + 80px);}
-#save{bottom:160px;left:calc(50% + 160px);}
-
-/* second row */
-#light{bottom:120px;left:calc(50% - 80px);}
-#anchor{bottom:120px;left:calc(50%);}
-
 /* arrow row */
 .arrow{
   width:55px;
   height:35px;
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
+  background:#00ffcc;
+  color:#000;
+  border-radius:8px;
+  border:none;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:#00ffcc;
-  color:#000;
   font-weight:bold;
-  border-radius:8px;
+  font-size:1.2rem;
   box-shadow:0 0 10px rgba(0,255,204,.4);
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
   opacity:0;
   pointer-events:none;
-  transition:opacity .3s ease, border .1s ease, box-shadow .1s ease;
   z-index:6;
-  border:2px solid transparent;
   cursor:pointer;
+  transition:opacity .3s,border .15s,box-shadow .15s;
 }
 .arrow.show{
   opacity:1;
@@ -162,7 +168,7 @@ iframe{
 #down{bottom:70px;left:calc(50% + 35px);}
 #right{bottom:70px;left:calc(50% + 105px);}
 
-/* toggle notepad */
+/* notepad button */
 #toggleNotepad{
   position:fixed;
   bottom:15px;
@@ -170,16 +176,14 @@ iframe{
   z-index:10;
   font-family:monospace;
   font-size:1rem;
-  letter-spacing:1px;
-  text-transform:uppercase;
   color:#000;
   background:#00ffcc;
   border:none;
   padding:10px 25px;
   border-radius:8px;
   cursor:pointer;
-  transition:all .3s ease;
   box-shadow:0 0 10px rgba(0,255,204,.3);
+  transition:all .3s;
 }
 #toggleNotepad:hover{
   background:#00ddb0;
@@ -194,23 +198,21 @@ iframe{
 </head>
 <body>
 
-<!-- frames -->
 <iframe id="frame1"></iframe>
 <iframe id="frame2"></iframe>
 <iframe id="frame3"></iframe>
-<iframe id="frame6"></iframe>
 <iframe id="frame7"></iframe>
 
-<!-- main buttons -->
+<!-- Buttons -->
 <div id="run" class="btn">RUN</div>
-<div id="clear" class="btn">CLR</div>
-<div id="clearAll" class="btn">ALL</div>
-<div id="move" class="btn">MOV</div>
-<div id="save" class="btn">SAV</div>
-<div id="light" class="btn">LIT</div>
-<div id="anchor" class="btn">ANC</div>
+<div id="clear" class="btn">CLEAR</div>
+<div id="clearAll" class="btn">CLEAR ALL</div>
+<div id="move" class="btn">MOVE</div>
+<div id="save" class="btn">SAVE</div>
+<div id="light" class="btn">LIGHT</div>
+<div id="anchor" class="btn">ANCHOR</div>
 
-<!-- arrow controls -->
+<!-- Arrows -->
 <div id="up" class="arrow">↑</div>
 <div id="left" class="arrow">←</div>
 <div id="down" class="arrow">↓</div>
@@ -227,7 +229,7 @@ const frame7=document.getElementById('frame7');
 const toggleBtn=document.getElementById('toggleNotepad');
 const buttons=[...document.querySelectorAll('.btn,.arrow')];
 
-// load sources
+/* load sources */
 frame1.src=`welcome.html?v=${v}`;
 frame2.src=`layer1.html?v=${v}`;
 frame3.src=`preview.html?v=${v}`;
@@ -241,24 +243,24 @@ window.addEventListener('message',e=>{
   }
   if(d.type==='updatePreview'){
     frame1.style.opacity='0';
-    setTimeout(()=>{frame1.style.display='none';},1000);
+    setTimeout(()=>frame1.style.display='none',1000);
     frame3.contentWindow.postMessage({type:'addLayer',code:d.code},'*');
-    setTimeout(()=>{frame3.style.opacity='1';},1200);
+    setTimeout(()=>frame3.style.opacity='1',1200);
   }
 });
 
-/* select highlight */
+/* selection glow */
 function select(el){
   buttons.forEach(b=>b.classList.remove('selected'));
   el.classList.add('selected');
 }
 
-/* main buttons click */
+/* normal buttons */
 document.querySelectorAll('.btn').forEach(b=>{
   b.addEventListener('click',()=>select(b));
 });
 
-/* arrows move */
+/* arrows movement */
 const moveMap={up:{x:0,y:-10},down:{x:0,y:10},left:{x:-10,y:0},right:{x:10,y:0}};
 ['up','down','left','right'].forEach(id=>{
   const el=document.getElementById(id);
@@ -296,11 +298,8 @@ document.addEventListener('mousemove',e=>{
   y=Math.max(0,Math.min(window.innerHeight-frame7.offsetHeight,y));
   frame7.style.left=x+'px';
   frame7.style.top=y+'px';
-  frame7.style.transform='none';
 });
-document.addEventListener('mouseup',()=>{
-  if(dragging){dragging=false;frame7.style.cursor='grab';}
-});
+document.addEventListener('mouseup',()=>{dragging=false;frame7.style.cursor='grab';});
 </script>
 </body>
 </html>
