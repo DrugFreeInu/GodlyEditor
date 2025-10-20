@@ -52,8 +52,8 @@ iframe{
 
 /* preview */
 #frame3 {
-  width: 60%;        /* was 72% */
-  height: 55vh;      /* slightly shorter */
+  width: 60%;
+  height: 55vh;
   top: 8%;
   left: 50%;
   transform: translateX(-50%);
@@ -87,11 +87,25 @@ iframe{
 #move{bottom:160px;left:calc(50% + 80px);}
 #save{bottom:160px;left:calc(50% + 160px);}
 
-/* bottom row */
+/* second row */
 #light{bottom:120px;left:calc(50% - 80px);}
 #anchor{bottom:120px;left:calc(50%);}
-  
-/* button sizing */
+
+/* arrow row (third row) */
+#up,#left,#down,#right{
+  width:55px;
+  height:35px;
+  opacity:0;
+  pointer-events:none;
+  z-index:6;
+  transition:opacity .5s ease;
+}
+#up{bottom:80px;left:calc(50%);}
+#left{bottom:40px;left:calc(50% - 60px);}
+#down{bottom:40px;left:calc(50%);}
+#right{bottom:40px;left:calc(50% + 60px);}
+
+/* shared button sizing */
 #run,#clear,#clearAll,#move,#light,#save,#anchor,#add{
   width:65px;
   height:35px;
@@ -147,6 +161,12 @@ iframe{
 <iframe id="anchor"></iframe>
 <iframe id="add"></iframe>
 
+<!-- new arrow buttons -->
+<iframe id="up"></iframe>
+<iframe id="left"></iframe>
+<iframe id="down"></iframe>
+<iframe id="right"></iframe>
+
 <button id="toggleNotepad">NOTEPAD</button>
 
 <script>
@@ -156,7 +176,7 @@ const frame2=document.getElementById('frame2');
 const frame3=document.getElementById('frame3');
 const frame7=document.getElementById('frame7');
 const toggleBtn=document.getElementById('toggleNotepad');
-const ids=['run','clear','clearAll','move','light','save','anchor','add'];
+const ids=['run','clear','clearAll','move','light','save','anchor','add','up','left','down','right'];
 const buttons=ids.map(id=>document.getElementById(id));
 
 // sources
@@ -172,6 +192,10 @@ document.getElementById('light').src=`light.html?v=${v}`;
 document.getElementById('save').src=`save.html?v=${v}`;
 document.getElementById('anchor').src=`ancr.html?v=${v}`;
 document.getElementById('add').src=`add-layer.html?v=${v}`;
+document.getElementById('up').src=`up.html?v=${v}`;
+document.getElementById('left').src=`left.html?v=${v}`;
+document.getElementById('down').src=`down.html?v=${v}`;
+document.getElementById('right').src=`right.html?v=${v}`;
 
 // paste triggers fade → permanent layer 1
 window.addEventListener('message',(e)=>{
