@@ -252,20 +252,37 @@ function select(el){
   el.classList.add('selected');
 }
 
-/* normal buttons */
+/* track move mode */
+let moveMode = false;
 document.querySelectorAll('.btn').forEach(b=>{
-  b.addEventListener('click',()=>select(b));
+  b.addEventListener('click',()=>{
+    select(b);
+    moveMode = (b.id === 'move');
+  });
 });
 
-/* arrows movement */
+/* arrow movement */
 const moveMap={up:{x:0,y:-10},down:{x:0,y:10},left:{x:-10,y:0},right:{x:10,y:0}};
 ['up','down','left','right'].forEach(id=>{
   const el=document.getElementById(id);
   el.addEventListener('click',()=>{
-    if(!frame2.classList.contains('active'))return;
+    if(!moveMode || !frame2.classList.contains('active')) return;
     select(el);
-    frame3.contentWindow.postMessage({type:'moveShape',dir:id,offset:moveMap[id]},'*');
+    frame2.contentWindow.postMessage({type:'moveBox',dir:id,offset:moveMap[id]},'*');
   });
+});
+
+/* arrow key support */
+document.addEventListener('keydown',e=>{
+  const keyMap = {
+    ArrowUp: 'up',
+    ArrowDown: 'down',
+    ArrowLeft: 'left',
+    ArrowRight: 'right'
+  };
+  const dir = keyMap[e.key];
+  if(!dir || !moveMode || !frame2.classList.contains('active')) return;
+  frame2.contentWindow.postMessage({type:'moveBox',dir,offset:moveMap[dir]}, '*');
 });
 
 /* layer selection */
