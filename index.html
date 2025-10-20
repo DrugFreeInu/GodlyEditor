@@ -98,7 +98,7 @@ iframe{
   opacity:0;
   pointer-events:none;
   z-index:6;
-  transition:opacity .5s ease, box-shadow .3s ease, border .3s ease;
+  transition:opacity .5s ease, box-shadow .15s ease, border .15s ease;
   border:2px solid transparent;
   border-radius:8px;
 }
@@ -127,7 +127,7 @@ iframe{
   box-shadow:0 0 10px rgba(0,255,204,.4);
   opacity:0;
   pointer-events:none;
-  transition:opacity .5s ease, box-shadow .3s ease, border .3s ease;
+  transition:opacity .5s ease, box-shadow .15s ease, border .15s ease;
   z-index:6;
   border:2px solid transparent;
 }
@@ -199,7 +199,7 @@ const toggleBtn=document.getElementById('toggleNotepad');
 const ids=['run','clear','clearAll','move','light','save','anchor','add','up','left','down','right'];
 const buttons=ids.map(id=>document.getElementById(id));
 
-// sources
+// load iframes
 frame1.src=`welcome.html?v=${v}`;
 frame2.src=`layer1.html?v=${v}`;
 frame3.src=`preview.html?v=${v}`;
@@ -213,24 +213,18 @@ document.getElementById('save').src=`save.html?v=${v}`;
 document.getElementById('anchor').src=`ancr.html?v=${v}`;
 document.getElementById('add').src=`add-layer.html?v=${v}`;
 
-// paste triggers fade → permanent layer 1
-window.addEventListener('message',(e)=>{
+// show buttons after paste
+window.addEventListener('message',e=>{
   const d=e.data;if(!d)return;
-
-  // show buttons only after paste
   if(d.type==='pasteDetected'){
     buttons.forEach(b=>{
       b.style.opacity='1';
       b.style.pointerEvents='auto';
     });
   }
-
   if(d.type==='updatePreview'){
     frame1.style.opacity='0';
     setTimeout(()=>{frame1.style.display='none';},1000);
-    setTimeout(()=>{
-      frame2.contentWindow.postMessage({type:'fadeToLayerNumber',number:1},'*');
-    },600);
     frame3.contentWindow.postMessage({type:'addLayer',code:d.code},'*');
     setTimeout(()=>{frame3.style.opacity='1';},1200);
   }
@@ -241,31 +235,28 @@ frame2.addEventListener('click',()=>{
   frame2.classList.toggle('active');
 });
 
-// arrow move messages
-const moveMap = {
-  up: {x:0, y:-10},
-  down: {x:0, y:10},
-  left: {x:-10, y:0},
-  right: {x:10, y:0}
-};
-['up','down','left','right'].forEach(dir=>{
-  const btn=document.getElementById(dir);
-  btn.addEventListener('click',()=>{
-    if(!frame2.classList.contains('active')) return;
-    frame3.contentWindow.postMessage({type:'moveShape',dir,offset:moveMap[dir]},'*');
-    selectButton(btn);
-  });
-});
-
-// select visual
+// quick visual select
 function selectButton(el){
   buttons.forEach(b=>b.classList.remove('selected'));
   el.classList.add('selected');
 }
 
-// all other buttons get same yellow highlight on click
+// arrows movement
+const moveMap = {
+  up:{x:0,y:-10}, down:{x:0,y:10}, left:{x:-10,y:0}, right:{x:10,y:0}
+};
+['up','down','left','right'].forEach(dir=>{
+  const btn=document.getElementById(dir);
+  btn.addEventListener('click',()=>{
+    if(!frame2.classList.contains('active')) return;
+    selectButton(btn);
+    frame3.contentWindow.postMessage({type:'moveShape',dir,offset:moveMap[dir]},'*');
+  });
+});
+
+// main buttons instant select
 buttons.forEach(b=>{
-  if(b.classList.contains('arrow')) return; // arrows handled above
+  if(b.classList.contains('arrow')) return;
   b.addEventListener('click',()=>selectButton(b));
 });
 
@@ -278,17 +269,17 @@ toggleBtn.addEventListener('click',()=>{
 });
 
 // drag notepad
-let isDragging=false,offsetX=0,offsetY=0;
+let drag=false,offX=0,offY=0;
 frame7.addEventListener('mousedown',e=>{
-  isDragging=true;
-  offsetX=e.clientX-frame7.getBoundingClientRect().left;
-  offsetY=e.clientY-frame7.getBoundingClientRect().top;
+  drag=true;
+  offX=e.clientX-frame7.getBoundingClientRect().left;
+  offY=e.clientY-frame7.getBoundingClientRect().top;
   frame7.style.cursor='grabbing';
 });
 document.addEventListener('mousemove',e=>{
-  if(!isDragging)return;
-  let x=e.clientX-offsetX;
-  let y=e.clientY-offsetY;
+  if(!drag)return;
+  let x=e.clientX-offX;
+  let y=e.clientY-offY;
   x=Math.max(0,Math.min(window.innerWidth-frame7.offsetWidth,x));
   y=Math.max(0,Math.min(window.innerHeight-frame7.offsetHeight,y));
   frame7.style.left=x+'px';
@@ -296,7 +287,7 @@ document.addEventListener('mousemove',e=>{
   frame7.style.transform='none';
 });
 document.addEventListener('mouseup',()=>{
-  if(isDragging){isDragging=false;frame7.style.cursor='grab';}
+  if(drag){drag=false;frame7.style.cursor='grab';}
 });
 </script>
 </body>
