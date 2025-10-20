@@ -87,17 +87,29 @@ iframe{
   opacity: 1;
 }
 
+/* === 4x2 button layout — fits on screen === */
+#run, #clear, #clearAll, #move,
+#light, #save, #anchor, #add {
+  position: fixed;
+  width: 90px;
+  height: 45px;
+  border-radius: 8px;
+  pointer-events: auto;
+  z-index: 6;
+  opacity: 1;
+}
+
 /* top row */
-#run      { bottom: 150px; left: calc(50% - 240px); }
-#clear    { bottom: 150px; left: calc(50% - 120px); }
+#run      { bottom: 150px; left: calc(50% - 190px); }
+#clear    { bottom: 150px; left: calc(50% - 95px); }
 #clearAll { bottom: 150px; left: calc(50%); }
-#move     { bottom: 150px; left: calc(50% + 120px); }
+#move     { bottom: 150px; left: calc(50% + 95px); }
 
 /* bottom row */
-#light    { bottom: 85px; left: calc(50% - 240px); }
-#save     { bottom: 85px; left: calc(50% - 120px); }
-#anchor   { bottom: 85px; left: calc(50%); }
-#add      { bottom: 85px; left: calc(50% + 120px); }
+#light    { bottom: 90px; left: calc(50% - 190px); }
+#save     { bottom: 90px; left: calc(50% - 95px); }
+#anchor   { bottom: 90px; left: calc(50%); }
+#add      { bottom: 90px; left: calc(50% + 95px); }
 
 /* toggle notepad button */
 #toggleNotepad{
