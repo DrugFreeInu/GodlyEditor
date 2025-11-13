@@ -20,18 +20,39 @@
     width: 100%;
     height: 100%;
     border: none;
+    background: white;
   }
 </style>
 </head>
 <body>
 <script>
-  const layers = {};
+  function wrapIfNeeded(code) {
+    const trimmed = code.trim();
+
+    // Already valid HTML doc
+    if (trimmed.startsWith("<!DOCTYPE") || trimmed.startsWith("<html")) {
+      return code;
+    }
+
+    // Inject into a simple safe HTML shell
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>body{white-space:pre; font-family:monospace; padding:20px;}</style>
+</head>
+<body>
+${code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+</body>
+</html>`;
+  }
 
   window.addEventListener('message', e => {
     const { type, code, layer } = e.data;
     if (type === 'updatePreview' && layer && code) {
-      let el = document.getElementById('layer' + layer);
 
+      let el = document.getElementById('layer' + layer);
       if (!el) {
         el = document.createElement('div');
         el.id = 'layer' + layer;
@@ -39,15 +60,13 @@
         document.body.appendChild(el);
       }
 
-      // Clear previous content
       el.innerHTML = '';
 
-      // Create iframe for full HTML rendering
       const iframe = document.createElement('iframe');
-      iframe.srcdoc = code; // render full HTML including head/body/styles
-      el.appendChild(iframe);
 
-      layers[layer] = code;
+      iframe.srcdoc = wrapIfNeeded(code);
+
+      el.appendChild(iframe);
     }
   });
 </script>
