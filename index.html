@@ -241,7 +241,7 @@ window.addEventListener('message',e=>{
   if(d.type==='updatePreview'){
     frame1.style.opacity='0';
     setTimeout(()=>frame1.style.display='none',1000);
-    frame3.contentWindow.postMessage({type:'addLayer',code:d.code},'*');
+frame3.contentWindow.postMessage({type:'updatePreview', code:d.code, layer:1}, '*');
     setTimeout(()=>frame3.style.opacity='1',1200);
   }
 });
