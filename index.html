@@ -232,17 +232,22 @@ frame2.src=`layer1.html?v=${v}`;
 frame3.src=`preview.html?v=${v}`;
 frame7.src=`notepad.html?v=${v}`;
 
-/* show buttons after paste */
-window.addEventListener('message',e=>{
-  const d=e.data;if(!d)return;
-  if(d.type==='pasteDetected'){
-    buttons.forEach(b=>b.classList.add('show'));
+/* show buttons after paste & update preview */
+window.addEventListener('message', e => {
+  const d = e.data;
+  if (!d) return;
+
+  if (d.type === 'pasteDetected') {
+    buttons.forEach(b => b.classList.add('show'));
   }
-  if(d.type==='updatePreview'){
-    frame1.style.opacity='0';
-    setTimeout(()=>frame1.style.display='none',1000);
-frame3.contentWindow.postMessage({type:'updatePreview', code:d.code, layer:1}, '*');
-    setTimeout(()=>frame3.style.opacity='1',1200);
+
+  if (d.type === 'updatePreview' && d.code) {
+    frame1.style.opacity = '0';
+    setTimeout(() => frame1.style.display = 'none', 1000);
+
+    frame3.contentWindow.postMessage({ type: 'updatePreview', code: d.code, layer: 1 }, '*');
+
+    setTimeout(() => frame3.style.opacity = '1', 1200);
   }
 });
 
