@@ -47,28 +47,27 @@ ${code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
 </body>
 </html>`;
   }
+<script>
+window.addEventListener('message', e => {
+  const d = e.data;
+  if (!d || d.type !== 'updatePreview') return;
 
-  window.addEventListener('message', e => {
-    const { type, code, layer } = e.data;
-    if (type === 'updatePreview' && layer && code) {
+  let el = document.getElementById('layer' + d.layer);
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'layer' + d.layer;
+    el.className = 'layer';
+    document.body.appendChild(el);
+  }
 
-      let el = document.getElementById('layer' + layer);
-      if (!el) {
-        el = document.createElement('div');
-        el.id = 'layer' + layer;
-        el.className = 'layer';
-        document.body.appendChild(el);
-      }
+  el.innerHTML = '';
 
-      el.innerHTML = '';
+  const iframe = document.createElement('iframe');
+  iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+  iframe.srcdoc = d.code;
 
-      const iframe = document.createElement('iframe');
-
-      iframe.srcdoc = wrapIfNeeded(code);
-
-      el.appendChild(iframe);
-    }
-  });
+  el.appendChild(iframe);
+});
 </script>
 </body>
 </html>
