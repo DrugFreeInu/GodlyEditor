@@ -11,10 +11,10 @@
   }
   .layer {
     position: absolute;
-    top: 50px;
-    left: 50px;
-    width: 80%;
-    height: 80%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
   iframe {
     width: 100%;
@@ -25,49 +25,30 @@
 </style>
 </head>
 <body>
-<script>
-  function wrapIfNeeded(code) {
-    const trimmed = code.trim();
 
-    // Already valid HTML doc
-    if (trimmed.startsWith("<!DOCTYPE") || trimmed.startsWith("<html")) {
-      return code;
-    }
-
-    // Inject into a simple safe HTML shell
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<style>body{white-space:pre; font-family:monospace; padding:20px;}</style>
-</head>
-<body>
-${code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
-</body>
-</html>`;
-  }
 <script>
 window.addEventListener('message', e => {
   const d = e.data;
   if (!d || d.type !== 'updatePreview') return;
 
-  let el = document.getElementById('layer' + d.layer);
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'layer' + d.layer;
-    el.className = 'layer';
-    document.body.appendChild(el);
+  let container = document.getElementById('layer' + d.layer);
+
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'layer' + d.layer;
+    container.className = 'layer';
+    document.body.appendChild(container);
   }
 
-  el.innerHTML = '';
+  container.innerHTML = '';
 
   const iframe = document.createElement('iframe');
-  iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
   iframe.srcdoc = d.code;
 
-  el.appendChild(iframe);
+  container.appendChild(iframe);
 });
 </script>
+
 </body>
 </html>
