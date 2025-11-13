@@ -242,12 +242,16 @@ window.addEventListener('message', e => {
   }
 
   if (d.type === 'updatePreview' && d.code) {
+    // hide welcome frame
     frame1.style.opacity = '0';
     setTimeout(() => frame1.style.display = 'none', 1000);
 
+    // send pasted code to preview
     frame3.contentWindow.postMessage({ type: 'updatePreview', code: d.code, layer: 1 }, '*');
 
-    setTimeout(() => frame3.style.opacity = '1', 1200);
+    // fade in preview
+    frame3.style.opacity = '1';
+    frame3.style.pointerEvents = 'auto';
   }
 });
 
