@@ -75,7 +75,7 @@ iframe{
   transition:opacity .3s ease;
 }
 
-/* button style restored */
+/* BUTTON FADE STYLING */
 .btn{
   width:65px;
   height:35px;
@@ -83,7 +83,7 @@ iframe{
   border-radius:8px;
   position:absolute;
   left:50%;
-  transform:translateX(-50%);
+  transform:translateX(-50%) translateY(10px);
   opacity:0;
   pointer-events:none;
   z-index:6;
@@ -92,7 +92,11 @@ iframe{
   font-family:monospace;
   letter-spacing:1px;
   text-transform:uppercase;
-  transition:opacity .4s, box-shadow .15s, border .15s;
+  transition:
+    opacity .5s ease,
+    transform .5s ease,
+    box-shadow .2s,
+    border .2s;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -121,6 +125,7 @@ iframe{
 .btn.show{
   opacity:1;
   pointer-events:auto;
+  transform:translateX(-50%) translateY(0px);
   box-shadow:0 0 10px rgba(255,255,255,.15);
 }
 .btn:hover{
@@ -131,7 +136,7 @@ iframe{
   box-shadow:0 0 15px #ffcc00aa;
 }
 
-/* arrow row */
+/* ARROW BUTTONS WITH FADE */
 .arrow{
   width:55px;
   height:35px;
@@ -147,16 +152,21 @@ iframe{
   box-shadow:0 0 10px rgba(0,255,204,.4);
   position:absolute;
   left:50%;
-  transform:translateX(-50%);
+  transform:translateX(-50%) translateY(10px);
   opacity:0;
   pointer-events:none;
   z-index:6;
   cursor:pointer;
-  transition:opacity .3s,border .15s,box-shadow .15s;
+  transition:
+    opacity .5s ease,
+    transform .5s ease,
+    border .15s,
+    box-shadow .15s;
 }
 .arrow.show{
   opacity:1;
   pointer-events:auto;
+  transform:translateX(-50%) translateY(0px);
 }
 .arrow.selected{
   border:2px solid #ffcc00;
@@ -167,7 +177,7 @@ iframe{
 #down{bottom:70px;left:calc(50% + 35px);}
 #right{bottom:70px;left:calc(50% + 105px);}
 
-/* notepad button */
+/* NOTEPAD BUTTON FADE */
 #toggleNotepad{
   position:fixed;
   bottom:15px;
@@ -182,7 +192,12 @@ iframe{
   border-radius:8px;
   cursor:pointer;
   box-shadow:0 0 10px rgba(0,255,204,.3);
-  transition:all .3s;
+  transition:
+    opacity .5s ease,
+    transform .5s ease,
+    box-shadow .3s;
+  opacity:1;
+  transform:translateY(0);
 }
 #toggleNotepad:hover{
   background:#00ddb0;
@@ -242,14 +257,11 @@ window.addEventListener('message', e => {
   }
 
   if (d.type === 'updatePreview' && d.code) {
-    // hide welcome frame
     frame1.style.opacity = '0';
     setTimeout(() => frame1.style.display = 'none', 1000);
 
-    // send pasted code to preview
-    frame3.contentWindow.postMessage({ type: 'updatePreview', code: d.code, layer: 1 }, '*');
+    frame3.contentWindow.postMessage({ type:'updatePreview', code:d.code, layer:1 }, '*');
 
-    // fade in preview
     frame3.style.opacity = '1';
     frame3.style.pointerEvents = 'auto';
   }
@@ -283,11 +295,11 @@ const moveMap={up:{x:0,y:-10},down:{x:0,y:10},left:{x:-10,y:0},right:{x:10,y:0}}
 
 /* arrow key support */
 document.addEventListener('keydown',e=>{
-  const keyMap = {
-    ArrowUp: 'up',
-    ArrowDown: 'down',
-    ArrowLeft: 'left',
-    ArrowRight: 'right'
+  const keyMap={
+    ArrowUp:'up',
+    ArrowDown:'down',
+    ArrowLeft:'left',
+    ArrowRight:'right'
   };
   const dir = keyMap[e.key];
   if(!dir || !moveMode || !frame2.classList.contains('active')) return;
@@ -299,10 +311,10 @@ frame2.addEventListener('click',()=>frame2.classList.toggle('active'));
 
 /* toggle notepad */
 toggleBtn.addEventListener('click',()=>{
-  const open=frame7.style.opacity==='1';
-  frame7.style.opacity=open?'0':'1';
-  frame7.style.pointerEvents=open?'none':'auto';
-  toggleBtn.textContent=open?'NOTEPAD':'CLOSE';
+  const open = frame7.style.opacity === '1';
+  frame7.style.opacity = open ? '0' : '1';
+  frame7.style.pointerEvents = open ? 'none' : 'auto';
+  toggleBtn.textContent = open ? 'NOTEPAD' : 'CLOSE';
 });
 
 /* drag notepad */
@@ -322,7 +334,10 @@ document.addEventListener('mousemove',e=>{
   frame7.style.left=x+'px';
   frame7.style.top=y+'px';
 });
-document.addEventListener('mouseup',()=>{dragging=false;frame7.style.cursor='grab';});
+document.addEventListener('mouseup',()=>{
+  dragging=false;
+  frame7.style.cursor='grab';
+});
 </script>
 </body>
 </html>
