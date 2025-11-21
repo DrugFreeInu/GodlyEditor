@@ -1,343 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Editor</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DrugFreeInu</title>
+
+<!-- Peak storage-access protection -->
+<meta http-equiv="Permissions-Policy" content="storage-access=()">
+
 <style>
-html,body{
-  margin:0;
-  background:#111;
-  height:100%;
-  width:100%;
-  overflow:hidden;
-  position:fixed;
-  top:0;left:0;
-  font-family:monospace;
-}
+  html, body {
+    height: 100%;
+    margin: 0;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    font-family: "Arial Rounded MT Bold", sans-serif;
+    padding: 20px 20px 40px 20px;
+  }
 
-/* frames */
-iframe{
-  border:none;
-  border-radius:10px;
-  background:transparent;
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  transition:opacity .8s ease;
-}
-#frame1{
-  width:90%;
-  height:15%;
-  top:35%;
-  z-index:3;
-  pointer-events:none;
-  opacity:1;
-}
-#frame2{
-  width:340px;
-  height:200px;
-  position:fixed;
-  top:calc(100% - 140px);
-  left:calc(50% - 30px);
-  z-index:2;
-  pointer-events:auto;
-  opacity:1;
-  border-radius:10px;
-  border:2px solid transparent;
-  background:transparent;
-  transition:border .3s, box-shadow .3s;
-}
-#frame2.active{
-  border:2px solid #ffcc00;
-  box-shadow:0 0 20px #ffcc00aa;
-}
-#frame3{
-  width:60%;
-  height:55vh;
-  top:8%;
-  border-radius:12px;
-  z-index:1;
-  opacity:0;
-  pointer-events:none;
-}
-#frame7{
-  width:340px;
-  height:320px;
-  bottom:10px;
-  right:10px;
-  position:fixed;
-  border-radius:12px;
-  z-index:5;
-  opacity:0;
-  pointer-events:none;
-  cursor:grab;
-  transition:opacity .3s ease;
-}
+  .border-box {
+    width: 100%;
+    max-width: 100%;
+    border: 2px solid white;
+    padding: 20px 30px;
+    border-radius: 15px;
+    text-align: center;
+    display: block;
+    position: relative;
+    line-height: 1.1;
+    background: black;
+    box-sizing: border-box;
+  }
 
-/* BUTTON FADE STYLING */
-.btn{
-  width:65px;
-  height:35px;
-  border:none;
-  border-radius:8px;
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%) translateY(10px);
-  opacity:0;
-  pointer-events:none;
-  z-index:6;
-  color:#111;
-  font-weight:bold;
-  font-family:monospace;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  transition:
-    opacity .5s ease,
-    transform .5s ease,
-    box-shadow .2s,
-    border .2s;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-}
+  h1 {
+    color: white;
+    font-size: 60px;
+    font-weight: normal;
+    font-style: italic;
+    letter-spacing: 1.5px;
+    margin: -2.5px 0 12.5px 0;
+    line-height: 1.05;
+  }
 
-/* colored backgrounds */
-#run{background:#32cd32;}
-#clear{background:#ff3333;}
-#clearAll{background:#9933ff;color:#fff;}
-#move{background:#00aaff;}
-#save{background:#ffaa00;}
-#light{background:#00cccc;}
-#anchor{background:#00ff66;}
+  .border-box p {
+    margin: 0;
+    color: white;
+    font-size: 22px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    line-height: 1.1;
+  }
 
-/* position grid */
-#run{bottom:160px;left:calc(50% - 160px);}
-#clear{bottom:160px;left:calc(50% - 80px);}
-#clearAll{bottom:160px;left:calc(50%);}
-#move{bottom:160px;left:calc(50% + 80px);}
-#save{bottom:160px;left:calc(50% + 160px);}
-#light{bottom:120px;left:calc(50% - 80px);}
-#anchor{bottom:120px;left:calc(50%);}
+  .subline {
+    font-size: 16px;
+    margin-top: 20px;
+    color: white;
+    max-width: 90%;
+    text-align: center;
+    overflow-wrap: break-word;
+  }
 
-/* glow effect */
-.btn.show{
-  opacity:1;
-  pointer-events:auto;
-  transform:translateX(-50%) translateY(0px);
-  box-shadow:0 0 10px rgba(255,255,255,.15);
-}
-.btn:hover{
-  box-shadow:0 0 18px rgba(255,255,255,.3);
-}
-.btn.selected{
-  border:2px solid #ffcc00;
-  box-shadow:0 0 15px #ffcc00aa;
-}
+  .subline + .subline {
+    margin-top: 12px;
+  }
 
-/* ARROW BUTTONS WITH FADE */
-.arrow{
-  width:55px;
-  height:35px;
-  background:#00ffcc;
-  color:#000;
-  border-radius:8px;
-  border:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:1.2rem;
-  box-shadow:0 0 10px rgba(0,255,204,.4);
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%) translateY(10px);
-  opacity:0;
-  pointer-events:none;
-  z-index:6;
-  cursor:pointer;
-  transition:
-    opacity .5s ease,
-    transform .5s ease,
-    border .15s,
-    box-shadow .15s;
-}
-.arrow.show{
-  opacity:1;
-  pointer-events:auto;
-  transform:translateX(-50%) translateY(0px);
-}
-.arrow.selected{
-  border:2px solid #ffcc00;
-  box-shadow:0 0 15px #ffcc00aa;
-}
-#up{bottom:70px;left:calc(50% - 105px);}
-#left{bottom:70px;left:calc(50% - 35px);}
-#down{bottom:70px;left:calc(50% + 35px);}
-#right{bottom:70px;left:calc(50% + 105px);}
+  .dictionary-wrapper {
+    margin-top: -5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-/* NOTEPAD BUTTON FADE */
-#toggleNotepad{
-  position:fixed;
-  bottom:15px;
-  left:15px;
-  z-index:10;
-  font-family:monospace;
-  font-size:1rem;
-  color:#000;
-  background:#00ffcc;
-  border:none;
-  padding:10px 25px;
-  border-radius:8px;
-  cursor:pointer;
-  box-shadow:0 0 10px rgba(0,255,204,.3);
-  transition:
-    opacity .5s ease,
-    transform .5s ease,
-    box-shadow .3s;
-  opacity:1;
-  transform:translateY(0);
-}
-#toggleNotepad:hover{
-  background:#00ddb0;
-  box-shadow:0 0 20px rgba(0,255,204,.6);
-}
-#toggleNotepad:active{
-  box-shadow:0 0 25px rgba(0,255,204,.9);
-}
+  .new-words {
+    font-size: 16px;
+    color: white;
+    max-width: 90%;
+    text-align: left;
+    line-height: 1.8;
+  }
+
+  .new-words p {
+    margin: 5px 0;
+  }
+
+  .new-words .title {
+    font-weight: bold;
+    font-size: 2em;
+    margin-bottom: 10px;
+
+    /* 🔥 FIXED: prevent breaking into two lines */
+    white-space: nowrap;
+  }
+
+  .dfi-button {
+    background: linear-gradient(90deg, #ffcc00, #000);
+    color: black;
+    font-weight: bold;
+    font-size: 24px;
+    border: none;
+    border-radius: 12px;
+    padding: 15px 40px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: transform 0.2s ease;
+  }
+
+  .dfi-button:hover {
+    transform: scale(1.05);
+  }
+
+  a {
+    color: white;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 400px) {
+    h1 { font-size: 45px; }
+    .dfi-button { font-size: 20px; }
+  }
 </style>
 </head>
 <body>
 
-<iframe id="frame1"></iframe>
-<iframe id="frame2"></iframe>
-<iframe id="frame3"></iframe>
-<iframe id="frame7"></iframe>
+  <div class="border-box">
+    <h1>DrugFreeInu</h1>
+    <p>an opportunity to<br>learn and create</p>
+  </div>
 
-<!-- Buttons -->
-<div id="run" class="btn">RUN</div>
-<div id="clear" class="btn">CLEAR</div>
-<div id="clearAll" class="btn">CLEAR ALL</div>
-<div id="move" class="btn">MOVE</div>
-<div id="save" class="btn">SAVE</div>
-<div id="light" class="btn">LIGHT</div>
-<div id="anchor" class="btn">ANCHOR</div>
+  <p class="subline">
+    DrugFreeInu exists to help people. You may find value in the tools and insights DrugFreeInu provides.
+  </p>
 
-<!-- Arrows -->
-<div id="up" class="arrow">↑</div>
-<div id="left" class="arrow">←</div>
-<div id="down" class="arrow">↓</div>
-<div id="right" class="arrow">→</div>
+  <p class="subline">
+    DrugFreeInu was built with Luhvcraft, an art technique DrugFreeInu created. To learn this technique, visit <a href="https://luhvcraft.art" target="_blank">luhvcraft.art</a>
+  </p>
 
-<button id="toggleNotepad">NOTEPAD</button>
+  <div class="dictionary-wrapper">
 
-<script>
-const v=Date.now();
-const frame1=document.getElementById('frame1');
-const frame2=document.getElementById('frame2');
-const frame3=document.getElementById('frame3');
-const frame7=document.getElementById('frame7');
-const toggleBtn=document.getElementById('toggleNotepad');
-const buttons=[...document.querySelectorAll('.btn,.arrow')];
+    <div class="new-words">
+      <p class="title">drug-free-in-u</p>
+      <p><span style="display:inline-block; width:90px;">Noun:</span></p>
+      <p><span style="display:inline-block; width:90px;">Adjective:</span></p>
+      <p><span style="display:inline-block; width:90px;">Adverb:</span></p>
+      <p><span style="display:inline-block; width:90px;">Verb:</span></p>
+    </div>
 
-/* load sources */
-frame1.src=`welcome.html?v=${v}`;
-frame2.src=`layer1.html?v=${v}`;
-frame3.src=`preview.html?v=${v}`;
-frame7.src=`notepad.html?v=${v}`;
+    <button class="dfi-button">Why DFI</button>
 
-/* show buttons after paste & update preview */
-window.addEventListener('message', e => {
-  const d = e.data;
-  if (!d) return;
+  </div>
 
-  if (d.type === 'pasteDetected') {
-    buttons.forEach(b => b.classList.add('show'));
-  }
-
-  if (d.type === 'updatePreview' && d.code) {
-    frame1.style.opacity = '0';
-    setTimeout(() => frame1.style.display = 'none', 1000);
-
-    frame3.contentWindow.postMessage({ type:'updatePreview', code:d.code, layer:1 }, '*');
-
-    frame3.style.opacity = '1';
-    frame3.style.pointerEvents = 'auto';
-  }
-});
-
-/* selection glow */
-function select(el){
-  buttons.forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-/* track move mode */
-let moveMode = false;
-document.querySelectorAll('.btn').forEach(b=>{
-  b.addEventListener('click',()=>{
-    select(b);
-    moveMode = (b.id === 'move');
-  });
-});
-
-/* arrow movement */
-const moveMap={up:{x:0,y:-10},down:{x:0,y:10},left:{x:-10,y:0},right:{x:10,y:0}};
-['up','down','left','right'].forEach(id=>{
-  const el=document.getElementById(id);
-  el.addEventListener('click',()=>{
-    if(!moveMode || !frame2.classList.contains('active')) return;
-    select(el);
-    frame2.contentWindow.postMessage({type:'moveBox',dir:id,offset:moveMap[id]},'*');
-  });
-});
-
-/* arrow key support */
-document.addEventListener('keydown',e=>{
-  const keyMap={
-    ArrowUp:'up',
-    ArrowDown:'down',
-    ArrowLeft:'left',
-    ArrowRight:'right'
-  };
-  const dir = keyMap[e.key];
-  if(!dir || !moveMode || !frame2.classList.contains('active')) return;
-  frame2.contentWindow.postMessage({type:'moveBox',dir,offset:moveMap[dir]}, '*');
-});
-
-/* layer selection */
-frame2.addEventListener('click',()=>frame2.classList.toggle('active'));
-
-/* toggle notepad */
-toggleBtn.addEventListener('click',()=>{
-  const open = frame7.style.opacity === '1';
-  frame7.style.opacity = open ? '0' : '1';
-  frame7.style.pointerEvents = open ? 'none' : 'auto';
-  toggleBtn.textContent = open ? 'NOTEPAD' : 'CLOSE';
-});
-
-/* drag notepad */
-let dragging=false,offX=0,offY=0;
-frame7.addEventListener('mousedown',e=>{
-  dragging=true;
-  offX=e.clientX-frame7.getBoundingClientRect().left;
-  offY=e.clientY-frame7.getBoundingClientRect().top;
-  frame7.style.cursor='grabbing';
-});
-document.addEventListener('mousemove',e=>{
-  if(!dragging)return;
-  let x=e.clientX-offX;
-  let y=e.clientY-offY;
-  x=Math.max(0,Math.min(window.innerWidth-frame7.offsetWidth,x));
-  y=Math.max(0,Math.min(window.innerHeight-frame7.offsetHeight,y));
-  frame7.style.left=x+'px';
-  frame7.style.top=y+'px';
-});
-document.addEventListener('mouseup',()=>{
-  dragging=false;
-  frame7.style.cursor='grab';
-});
-</script>
 </body>
 </html>
