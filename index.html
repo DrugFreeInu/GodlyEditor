@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,7 +76,7 @@ iframe{
   transition:opacity .3s ease;
 }
 
-/* BUTTONS */
+/* BUTTON CORE */
 .btn{
   width:65px;
   height:35px;
@@ -121,10 +122,34 @@ iframe{
 #vingLeft  { background:linear-gradient(90deg,#ffffff,#000); }
 #vingRight { background:linear-gradient(90deg,#ffb65c,#000); }
 
-/* NEW — 123 BUTTON (light pink → black) */
+/* 123 button */
 #btn123 { background:linear-gradient(90deg,#ff9ad7,#000); }
 
-/* POSITIONS */
+/* --- NEW 8 VERTICAL BUTTONS (random colors → black) --- */
+.lvBtn{
+  left:20px !important;
+  transform:translateX(0) translateY(10px);
+}
+#lv1{ background:linear-gradient(90deg,#00eaff,#000); }
+#lv2{ background:linear-gradient(90deg,#ff6bb3,#000); }
+#lv3{ background:linear-gradient(90deg,#ffd447,#000); }
+#lv4{ background:linear-gradient(90deg,#7fff6f,#000); }
+#lv5{ background:linear-gradient(90deg,#ff7a4a,#000); }
+#lv6{ background:linear-gradient(90deg,#6b5bff,#000); }
+#lv7{ background:linear-gradient(90deg,#00ffc8,#000); }
+#lv8{ background:linear-gradient(90deg,#ff3f6d,#000); }
+
+/* vertical positions */
+#lv1{ top:12%; }
+#lv2{ top:18%; }
+#lv3{ top:24%; }
+#lv4{ top:30%; }
+#lv5{ top:36%; }
+#lv6{ top:42%; }
+#lv7{ top:48%; }
+#lv8{ top:54%; }
+
+/* POSITIONS (existing) */
 #run{bottom:160px;left:calc(50% - 160px);}
 #vingLeft{bottom:120px;left:calc(50% - 160px);}
 
@@ -135,7 +160,7 @@ iframe{
 #vingRight{bottom:120px;left:calc(50% + 80px);}
 
 #save{bottom:160px;left:calc(50% + 160px);}
-#btn123{bottom:120px;left:calc(50% + 160px);}  /* ⭐ NEW BUTTON UNDER SAVE */
+#btn123{bottom:120px;left:calc(50% + 160px);}
 
 #light{bottom:120px;left:calc(50% - 80px);}
 #anchor{bottom:120px;left:calc(50%);}
@@ -144,12 +169,12 @@ iframe{
 .btn.show{
   opacity:1;
   pointer-events:auto;
-  transform:translateX(-50%) translateY(0);
+  transform:translateY(0);
   background-position:right center;
   box-shadow:0 0 10px rgba(255,255,255,.15);
 }
 .btn:hover{
-  transform:translateX(-50%) translateY(0) scale(1.05);
+  transform:scale(1.05);
   box-shadow:0 0 18px rgba(255,255,255,.3);
 }
 .btn.selected{
@@ -195,7 +220,7 @@ iframe{
   background-position:right center;
 }
 .arrow:hover{
-  transform:translateX(-50%) translateY(0) scale(1.05);
+  transform:scale(1.05);
   box-shadow:0 0 18px rgba(0,255,204,.6);
 }
 .arrow.selected{
@@ -251,7 +276,7 @@ iframe{
 <iframe id="frame3"></iframe>
 <iframe id="frame7"></iframe>
 
-<!-- BUTTONS -->
+<!-- EXISTING BUTTONS -->
 <div id="run" class="btn">RUN</div>
 <div id="vingLeft" class="btn">VinG</div>
 
@@ -266,6 +291,16 @@ iframe{
 
 <div id="light" class="btn">LIGHT</div>
 <div id="anchor" class="btn">ANCHOR</div>
+
+<!-- NEW LEFT VERTICAL BUTTONS -->
+<div id="lv1" class="btn lvBtn">LV1</div>
+<div id="lv2" class="btn lvBtn">LV2</div>
+<div id="lv3" class="btn lvBtn">LV3</div>
+<div id="lv4" class="btn lvBtn">LV4</div>
+<div id="lv5" class="btn lvBtn">LV5</div>
+<div id="lv6" class="btn lvBtn">LV6</div>
+<div id="lv7" class="btn lvBtn">LV7</div>
+<div id="lv8" class="btn lvBtn">LV8</div>
 
 <!-- ARROWS -->
 <div id="up" class="arrow">↑</div>
@@ -373,5 +408,6 @@ document.addEventListener('mouseup',()=>{
   frame7.style.cursor='grab';
 });
 </script>
+
 </body>
 </html>
