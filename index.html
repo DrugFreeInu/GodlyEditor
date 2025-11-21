@@ -108,7 +108,7 @@ iframe{
   cursor:pointer;
 }
 
-/* 🔥 GRADIENTS */
+/* GRADIENTS */
 #run      { background:linear-gradient(90deg,#32cd32,#000); }
 #clear    { background:linear-gradient(90deg,#ff3333,#000); }
 #clearAll { background:linear-gradient(90deg,#9933ff,#000); }
@@ -117,11 +117,19 @@ iframe{
 #light    { background:linear-gradient(90deg,#00cccc,#000); }
 #anchor   { background:linear-gradient(90deg,#00ff66,#000); }
 
-/* position grid */
+/* NEW VinG BUTTONS (light orange → black) */
+#vingLeft  { background:linear-gradient(90deg,#ffb65c,#000); }
+#vingRight { background:linear-gradient(90deg,#ffb65c,#000); }
+
+/* POSITION GRID (NEW VinG BUTTONS ADDED) */
 #run{bottom:160px;left:calc(50% - 160px);}
+#vingLeft{bottom:120px;left:calc(50% - 160px);} /* under RUN */
+
 #clear{bottom:160px;left:calc(50% - 80px);}
 #clearAll{bottom:160px;left:calc(50%);}
 #move{bottom:160px;left:calc(50% + 80px);}
+#vingRight{bottom:120px;left:calc(50% + 80px);} /* under MOVE */
+
 #save{bottom:160px;left:calc(50% + 160px);}
 #light{bottom:120px;left:calc(50% - 80px);}
 #anchor{bottom:120px;left:calc(50%);}
@@ -131,7 +139,7 @@ iframe{
   opacity:1;
   pointer-events:auto;
   transform:translateX(-50%) translateY(0);
-  background-position:right center; /* 🔥 smooth fade sweep */
+  background-position:right center;
   box-shadow:0 0 10px rgba(255,255,255,.15);
 }
 .btn:hover{
@@ -143,7 +151,7 @@ iframe{
   box-shadow:0 0 15px #ffcc00aa;
 }
 
-/* ARROWS — same gradient fade */
+/* ARROWS */
 .arrow{
   width:55px;
   height:35px;
@@ -174,7 +182,6 @@ iframe{
     border .2s ease,
     box-shadow .2s ease;
 }
-
 .arrow.show{
   opacity:1;
   pointer-events:auto;
@@ -195,7 +202,7 @@ iframe{
 #down{bottom:70px;left:calc(50% + 35px);}
 #right{bottom:70px;left:calc(50% + 105px);}
 
-/* notepad button – gradient too */
+/* notepad button */
 #toggleNotepad{
   position:fixed;
   bottom:15px;
@@ -240,9 +247,14 @@ iframe{
 
 <!-- Buttons -->
 <div id="run" class="btn">RUN</div>
+<div id="vingLeft" class="btn">VinG</div>
+
 <div id="clear" class="btn">CLEAR</div>
 <div id="clearAll" class="btn">CLEAR ALL</div>
+
 <div id="move" class="btn">MOVE</div>
+<div id="vingRight" class="btn">VinG</div>
+
 <div id="save" class="btn">SAVE</div>
 <div id="light" class="btn">LIGHT</div>
 <div id="anchor" class="btn">ANCHOR</div>
@@ -270,21 +282,17 @@ frame2.src=`layer1.html?v=${v}`;
 frame3.src=`preview.html?v=${v}`;
 frame7.src=`notepad.html?v=${v}`;
 
-/* show buttons after paste & update preview */
+/* show buttons after paste */
 window.addEventListener('message', e => {
   const d=e.data;
   if(!d) return;
-
   if(d.type==='pasteDetected'){
     buttons.forEach(b=>b.classList.add('show'));
   }
-
   if(d.type==='updatePreview' && d.code){
     frame1.style.opacity='0';
     setTimeout(()=>frame1.style.display='none',1000);
-
     frame3.contentWindow.postMessage({type:'updatePreview',code:d.code,layer:1},'*');
-
     frame3.style.opacity='1';
     frame3.style.pointerEvents='auto';
   }
