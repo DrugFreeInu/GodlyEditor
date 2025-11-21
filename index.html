@@ -91,10 +91,8 @@ iframe{
   font-family:monospace;
   letter-spacing:1px;
   text-transform:uppercase;
-
   background-size:200% 100%;
   background-position:left center;
-
   transition:
     background-position .45s ease,
     opacity .5s ease,
@@ -105,6 +103,12 @@ iframe{
   align-items:center;
   justify-content:center;
   cursor:pointer;
+}
+
+/* MULTI-PRESS ACTIVE GLOW */
+.btn.pressed, .arrow.pressed{
+  border:2px solid #ffcc00;
+  box-shadow:0 0 15px #ffcc00aa;
 }
 
 /* EXISTING BUTTONS */
@@ -137,11 +141,9 @@ iframe{
   pointer-events:none;
   z-index:6;
   cursor:pointer;
-
   background:linear-gradient(90deg,#00ffcc,#000);
   background-size:200% 100%;
   background-position:left center;
-
   transition:
     background-position .45s ease,
     opacity .5s ease,
@@ -169,7 +171,7 @@ iframe{
 #lv7L{ background:linear-gradient(90deg,#00ffc8,#000); top:48%; }
 #lv8L{ background:linear-gradient(90deg,#ff3f6d,#000); top:54%; }
 
-/* RIGHT PRESTIGE STACK (Mirrored) */
+/* RIGHT PRESTIGE STACK */
 .lvBtnR{
   right:20px !important;
   left:auto !important;
@@ -199,11 +201,6 @@ iframe{
   box-shadow:0 0 18px rgba(255,255,255,.3);
 }
 
-.btn.selected, .arrow.selected{
-  border:2px solid #ffcc00;
-  box-shadow:0 0 15px #ffcc00aa;
-}
-
 /* notepad */
 #toggleNotepad{
   position:fixed;
@@ -217,13 +214,10 @@ iframe{
   padding:10px 25px;
   border-radius:8px;
   cursor:pointer;
-
   background:linear-gradient(90deg,#00ffcc,#000);
   background-size:200% 100%;
   background-position:left center;
-
   box-shadow:0 0 10px rgba(0,255,204,.3);
-
   transition:
     background-position .45s ease,
     opacity .5s ease,
@@ -325,17 +319,17 @@ window.addEventListener('message', e => {
   }
 });
 
-/* selection glow */
-function select(el){
-  buttons.forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected');
-}
+/* --- MULTI-PRESS SYSTEM --- */
+document.querySelectorAll('.btn, .arrow').forEach(b=>{
+  b.addEventListener('click',()=>{
+    b.classList.toggle('pressed');
+  });
+});
 
 /* move mode */
 let moveMode=false;
 document.querySelectorAll('.btn').forEach(b=>{
   b.addEventListener('click',()=>{
-    select(b);
     moveMode=(b.id==='move');
   });
 });
@@ -346,7 +340,6 @@ const moveMap={up:{x:0,y:-10},down:{x:0,y:10},left:{x:-10,y:0},right:{x:10,y:0}}
   const el=document.getElementById(id);
   el.addEventListener('click',()=>{
     if(!moveMode || !frame2.classList.contains('active')) return;
-    select(el);
     frame2.contentWindow.postMessage({type:'moveBox',dir:id,offset:moveMap[id]},'*');
   });
 });
