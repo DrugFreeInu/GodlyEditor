@@ -75,7 +75,7 @@ iframe{
   transition:opacity .3s ease;
 }
 
-/* BUTTON FADE + GRADIENTS */
+/* BUTTONS */
 .btn{
   width:65px;
   height:35px;
@@ -108,7 +108,7 @@ iframe{
   cursor:pointer;
 }
 
-/* GRADIENTS */
+/* EXISTING GRADIENTS */
 #run      { background:linear-gradient(90deg,#32cd32,#000); }
 #clear    { background:linear-gradient(90deg,#ff3333,#000); }
 #clearAll { background:linear-gradient(90deg,#9933ff,#000); }
@@ -117,20 +117,26 @@ iframe{
 #light    { background:linear-gradient(90deg,#00cccc,#000); }
 #anchor   { background:linear-gradient(90deg,#00ff66,#000); }
 
-/* NEW VinG BUTTONS (light orange → black) */
+/* VinG buttons */
 #vingLeft  { background:linear-gradient(90deg,#ffb65c,#000); }
 #vingRight { background:linear-gradient(90deg,#ffb65c,#000); }
 
-/* POSITION GRID (NEW VinG BUTTONS ADDED) */
+/* NEW — 123 BUTTON (light pink → black) */
+#btn123 { background:linear-gradient(90deg,#ff9ad7,#000); }
+
+/* POSITIONS */
 #run{bottom:160px;left:calc(50% - 160px);}
-#vingLeft{bottom:120px;left:calc(50% - 160px);} /* under RUN */
+#vingLeft{bottom:120px;left:calc(50% - 160px);}
 
 #clear{bottom:160px;left:calc(50% - 80px);}
 #clearAll{bottom:160px;left:calc(50%);}
+
 #move{bottom:160px;left:calc(50% + 80px);}
-#vingRight{bottom:120px;left:calc(50% + 80px);} /* under MOVE */
+#vingRight{bottom:120px;left:calc(50% + 80px);}
 
 #save{bottom:160px;left:calc(50% + 160px);}
+#btn123{bottom:120px;left:calc(50% + 160px);}  /* ⭐ NEW BUTTON UNDER SAVE */
+
 #light{bottom:120px;left:calc(50% - 80px);}
 #anchor{bottom:120px;left:calc(50%);}
 
@@ -202,7 +208,7 @@ iframe{
 #down{bottom:70px;left:calc(50% + 35px);}
 #right{bottom:70px;left:calc(50% + 105px);}
 
-/* notepad button */
+/* notepad */
 #toggleNotepad{
   position:fixed;
   bottom:15px;
@@ -245,7 +251,7 @@ iframe{
 <iframe id="frame3"></iframe>
 <iframe id="frame7"></iframe>
 
-<!-- Buttons -->
+<!-- BUTTONS -->
 <div id="run" class="btn">RUN</div>
 <div id="vingLeft" class="btn">VinG</div>
 
@@ -256,10 +262,12 @@ iframe{
 <div id="vingRight" class="btn">VinG</div>
 
 <div id="save" class="btn">SAVE</div>
+<div id="btn123" class="btn">123</div>
+
 <div id="light" class="btn">LIGHT</div>
 <div id="anchor" class="btn">ANCHOR</div>
 
-<!-- Arrows -->
+<!-- ARROWS -->
 <div id="up" class="arrow">↑</div>
 <div id="left" class="arrow">←</div>
 <div id="down" class="arrow">↓</div>
@@ -276,13 +284,13 @@ const frame7=document.getElementById('frame7');
 const toggleBtn=document.getElementById('toggleNotepad');
 const buttons=[...document.querySelectorAll('.btn,.arrow')];
 
-/* load sources */
+/* load iframes */
 frame1.src=`welcome.html?v=${v}`;
 frame2.src=`layer1.html?v=${v}`;
 frame3.src=`preview.html?v=${v}`;
 frame7.src=`notepad.html?v=${v}`;
 
-/* show buttons after paste */
+/* paste detection */
 window.addEventListener('message', e => {
   const d=e.data;
   if(!d) return;
@@ -304,7 +312,7 @@ function select(el){
   el.classList.add('selected');
 }
 
-/* track move mode */
+/* move mode */
 let moveMode=false;
 document.querySelectorAll('.btn').forEach(b=>{
   b.addEventListener('click',()=>{
@@ -335,7 +343,7 @@ document.addEventListener('keydown',e=>{
 /* layer selection */
 frame2.addEventListener('click',()=>frame2.classList.toggle('active'));
 
-/* toggle notepad */
+/* notepad open/close */
 toggleBtn.addEventListener('click',()=>{
   const open=frame7.style.opacity==='1';
   frame7.style.opacity=open?'0':'1';
