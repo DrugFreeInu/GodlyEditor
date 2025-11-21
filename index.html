@@ -75,7 +75,7 @@ iframe{
   transition:opacity .3s ease;
 }
 
-/* BUTTON FADE (updated ONLY this section) */
+/* BUTTON FADE + GRADIENTS */
 .btn{
   width:65px;
   height:35px;
@@ -87,14 +87,17 @@ iframe{
   opacity:0;
   pointer-events:none;
   z-index:6;
-  color:#111;
+  color:#000;
   font-weight:bold;
   font-family:monospace;
   letter-spacing:1px;
   text-transform:uppercase;
 
-  /* 🔥 New DFI fade style */
+  background-size:200% 100%;
+  background-position:left center;
+
   transition:
+    background-position .45s ease,
     opacity .5s ease,
     transform .2s ease,
     box-shadow .2s ease,
@@ -105,14 +108,14 @@ iframe{
   cursor:pointer;
 }
 
-/* colored backgrounds */
-#run{background:#32cd32;}
-#clear{background:#ff3333;}
-#clearAll{background:#9933ff;color:#fff;}
-#move{background:#00aaff;}
-#save{background:#ffaa00;}
-#light{background:#00cccc;}
-#anchor{background:#00ff66;}
+/* 🔥 GRADIENTS */
+#run      { background:linear-gradient(90deg,#32cd32,#000); }
+#clear    { background:linear-gradient(90deg,#ff3333,#000); }
+#clearAll { background:linear-gradient(90deg,#9933ff,#000); }
+#move     { background:linear-gradient(90deg,#00aaff,#000); }
+#save     { background:linear-gradient(90deg,#ffaa00,#000); }
+#light    { background:linear-gradient(90deg,#00cccc,#000); }
+#anchor   { background:linear-gradient(90deg,#00ff66,#000); }
 
 /* position grid */
 #run{bottom:160px;left:calc(50% - 160px);}
@@ -128,10 +131,11 @@ iframe{
   opacity:1;
   pointer-events:auto;
   transform:translateX(-50%) translateY(0);
+  background-position:right center; /* 🔥 smooth fade sweep */
   box-shadow:0 0 10px rgba(255,255,255,.15);
 }
 .btn:hover{
-  transform:translateX(-50%) translateY(0) scale(1.05); /* 🔥 DFI hover scale */
+  transform:translateX(-50%) translateY(0) scale(1.05);
   box-shadow:0 0 18px rgba(255,255,255,.3);
 }
 .btn.selected{
@@ -139,11 +143,10 @@ iframe{
   box-shadow:0 0 15px #ffcc00aa;
 }
 
-/* ARROW BUTTONS — fade updated */
+/* ARROWS — same gradient fade */
 .arrow{
   width:55px;
   height:35px;
-  background:#00ffcc;
   color:#000;
   border-radius:8px;
   border:none;
@@ -152,7 +155,6 @@ iframe{
   justify-content:center;
   font-weight:bold;
   font-size:1.2rem;
-  box-shadow:0 0 10px rgba(0,255,204,.4);
   position:absolute;
   left:50%;
   transform:translateX(-50%) translateY(10px);
@@ -161,17 +163,23 @@ iframe{
   z-index:6;
   cursor:pointer;
 
-  /* 🔥 DFI fade system */
+  background:linear-gradient(90deg,#00ffcc,#000);
+  background-size:200% 100%;
+  background-position:left center;
+
   transition:
+    background-position .45s ease,
     opacity .5s ease,
     transform .2s ease,
     border .2s ease,
     box-shadow .2s ease;
 }
+
 .arrow.show{
   opacity:1;
   pointer-events:auto;
   transform:translateX(-50%) translateY(0);
+  background-position:right center;
 }
 .arrow:hover{
   transform:translateX(-50%) translateY(0) scale(1.05);
@@ -181,12 +189,13 @@ iframe{
   border:2px solid #ffcc00;
   box-shadow:0 0 15px #ffcc00aa;
 }
+
 #up{bottom:70px;left:calc(50% - 105px);}
 #left{bottom:70px;left:calc(50% - 35px);}
 #down{bottom:70px;left:calc(50% + 35px);}
 #right{bottom:70px;left:calc(50% + 105px);}
 
-/* notepad button */
+/* notepad button – gradient too */
 #toggleNotepad{
   position:fixed;
   bottom:15px;
@@ -195,22 +204,26 @@ iframe{
   font-family:monospace;
   font-size:1rem;
   color:#000;
-  background:#00ffcc;
   border:none;
   padding:10px 25px;
   border-radius:8px;
   cursor:pointer;
+
+  background:linear-gradient(90deg,#00ffcc,#000);
+  background-size:200% 100%;
+  background-position:left center;
+
   box-shadow:0 0 10px rgba(0,255,204,.3);
 
-  /* 🔥 apply same fade style */
   transition:
+    background-position .45s ease,
     opacity .5s ease,
     transform .2s ease,
     box-shadow .2s ease;
 }
 #toggleNotepad:hover{
   transform:scale(1.05);
-  background:#00ddb0;
+  background-position:right center;
   box-shadow:0 0 20px rgba(0,255,204,.6);
 }
 #toggleNotepad:active{
@@ -259,21 +272,21 @@ frame7.src=`notepad.html?v=${v}`;
 
 /* show buttons after paste & update preview */
 window.addEventListener('message', e => {
-  const d = e.data;
-  if (!d) return;
+  const d=e.data;
+  if(!d) return;
 
-  if (d.type === 'pasteDetected') {
-    buttons.forEach(b => b.classList.add('show'));
+  if(d.type==='pasteDetected'){
+    buttons.forEach(b=>b.classList.add('show'));
   }
 
-  if (d.type === 'updatePreview' && d.code) {
-    frame1.style.opacity = '0';
-    setTimeout(() => frame1.style.display = 'none', 1000);
+  if(d.type==='updatePreview' && d.code){
+    frame1.style.opacity='0';
+    setTimeout(()=>frame1.style.display='none',1000);
 
-    frame3.contentWindow.postMessage({ type:'updatePreview', code:d.code, layer:1 }, '*');
+    frame3.contentWindow.postMessage({type:'updatePreview',code:d.code,layer:1},'*');
 
-    frame3.style.opacity = '1';
-    frame3.style.pointerEvents = 'auto';
+    frame3.style.opacity='1';
+    frame3.style.pointerEvents='auto';
   }
 });
 
@@ -284,11 +297,11 @@ function select(el){
 }
 
 /* track move mode */
-let moveMode = false;
+let moveMode=false;
 document.querySelectorAll('.btn').forEach(b=>{
   b.addEventListener('click',()=>{
     select(b);
-    moveMode = (b.id === 'move');
+    moveMode=(b.id==='move');
   });
 });
 
@@ -303,17 +316,12 @@ const moveMap={up:{x:0,y:-10},down:{x:0,y:10},left:{x:-10,y:0},right:{x:10,y:0}}
   });
 });
 
-/* arrow key support */
+/* arrow keys */
 document.addEventListener('keydown',e=>{
-  const keyMap={
-    ArrowUp:'up',
-    ArrowDown:'down',
-    ArrowLeft:'left',
-    ArrowRight:'right'
-  };
-  const dir = keyMap[e.key];
+  const keyMap={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
+  const dir=keyMap[e.key];
   if(!dir || !moveMode || !frame2.classList.contains('active')) return;
-  frame2.contentWindow.postMessage({type:'moveBox',dir,offset:moveMap[dir]}, '*');
+  frame2.contentWindow.postMessage({type:'moveBox',dir,offset:moveMap[dir]},'*');
 });
 
 /* layer selection */
@@ -321,10 +329,10 @@ frame2.addEventListener('click',()=>frame2.classList.toggle('active'));
 
 /* toggle notepad */
 toggleBtn.addEventListener('click',()=>{
-  const open = frame7.style.opacity === '1';
-  frame7.style.opacity = open ? '0' : '1';
-  frame7.style.pointerEvents = open ? 'none' : 'auto';
-  toggleBtn.textContent = open ? 'NOTEPAD' : 'CLOSE';
+  const open=frame7.style.opacity==='1';
+  frame7.style.opacity=open?'0':'1';
+  frame7.style.pointerEvents=open?'none':'auto';
+  toggleBtn.textContent=open?'NOTEPAD':'CLOSE';
 });
 
 /* drag notepad */
@@ -336,7 +344,7 @@ frame7.addEventListener('mousedown',e=>{
   frame7.style.cursor='grabbing';
 });
 document.addEventListener('mousemove',e=>{
-  if(!dragging)return;
+  if(!dragging) return;
   let x=e.clientX-offX;
   let y=e.clientY-offY;
   x=Math.max(0,Math.min(window.innerWidth-frame7.offsetWidth,x));
