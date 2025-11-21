@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,8 +82,7 @@ iframe{
   border:none;
   border-radius:8px;
   position:absolute;
-  left:50%;
-  transform:translateX(-50%) translateY(10px);
+  transform:translateY(10px);
   opacity:0;
   pointer-events:none;
   z-index:6;
@@ -109,78 +107,21 @@ iframe{
   cursor:pointer;
 }
 
-/* EXISTING GRADIENTS */
-#run      { background:linear-gradient(90deg,#32cd32,#000); }
-#clear    { background:linear-gradient(90deg,#ff3333,#000); }
-#clearAll { background:linear-gradient(90deg,#9933ff,#000); }
-#move     { background:linear-gradient(90deg,#00aaff,#000); }
-#save     { background:linear-gradient(90deg,#ffaa00,#000); }
-#light    { background:linear-gradient(90deg,#00cccc,#000); }
-#anchor   { background:linear-gradient(90deg,#00ff66,#000); }
+/* EXISTING BUTTONS */
+#run      { background:linear-gradient(90deg,#32cd32,#000); left:calc(50% - 160px);bottom:160px; }
+#vingLeft { background:linear-gradient(90deg,#ffffff,#000); left:calc(50% - 160px);bottom:120px; }
 
-/* VinG buttons */
-#vingLeft  { background:linear-gradient(90deg,#ffffff,#000); }
-#vingRight { background:linear-gradient(90deg,#ffb65c,#000); }
+#clear    { background:linear-gradient(90deg,#ff3333,#000); left:calc(50% - 80px);bottom:160px; }
+#clearAll { background:linear-gradient(90deg,#9933ff,#000); left:50%;bottom:160px; }
 
-/* 123 button */
-#btn123 { background:linear-gradient(90deg,#ff9ad7,#000); }
+#move     { background:linear-gradient(90deg,#00aaff,#000); left:calc(50% + 80px);bottom:160px; }
+#vingRight{ background:linear-gradient(90deg,#ffb65c,#000); left:calc(50% + 80px);bottom:120px; }
 
-/* --- NEW 8 VERTICAL BUTTONS (random colors → black) --- */
-.lvBtn{
-  left:20px !important;
-  transform:translateX(0) translateY(10px);
-}
-#lv1{ background:linear-gradient(90deg,#00eaff,#000); }
-#lv2{ background:linear-gradient(90deg,#ff6bb3,#000); }
-#lv3{ background:linear-gradient(90deg,#ffd447,#000); }
-#lv4{ background:linear-gradient(90deg,#7fff6f,#000); }
-#lv5{ background:linear-gradient(90deg,#ff7a4a,#000); }
-#lv6{ background:linear-gradient(90deg,#6b5bff,#000); }
-#lv7{ background:linear-gradient(90deg,#00ffc8,#000); }
-#lv8{ background:linear-gradient(90deg,#ff3f6d,#000); }
+#save     { background:linear-gradient(90deg,#ffaa00,#000); left:calc(50% + 160px);bottom:160px; }
+#btn123   { background:linear-gradient(90deg,#ff9ad7,#000); left:calc(50% + 160px);bottom:120px; }
 
-/* vertical positions */
-#lv1{ top:12%; }
-#lv2{ top:18%; }
-#lv3{ top:24%; }
-#lv4{ top:30%; }
-#lv5{ top:36%; }
-#lv6{ top:42%; }
-#lv7{ top:48%; }
-#lv8{ top:54%; }
-
-/* POSITIONS (existing) */
-#run{bottom:160px;left:calc(50% - 160px);}
-#vingLeft{bottom:120px;left:calc(50% - 160px);}
-
-#clear{bottom:160px;left:calc(50% - 80px);}
-#clearAll{bottom:160px;left:calc(50%);}
-
-#move{bottom:160px;left:calc(50% + 80px);}
-#vingRight{bottom:120px;left:calc(50% + 80px);}
-
-#save{bottom:160px;left:calc(50% + 160px);}
-#btn123{bottom:120px;left:calc(50% + 160px);}
-
-#light{bottom:120px;left:calc(50% - 80px);}
-#anchor{bottom:120px;left:calc(50%);}
-
-/* glow + fade */
-.btn.show{
-  opacity:1;
-  pointer-events:auto;
-  transform:translateY(0);
-  background-position:right center;
-  box-shadow:0 0 10px rgba(255,255,255,.15);
-}
-.btn:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 18px rgba(255,255,255,.3);
-}
-.btn.selected{
-  border:2px solid #ffcc00;
-  box-shadow:0 0 15px #ffcc00aa;
-}
+#light    { background:linear-gradient(90deg,#00cccc,#000); left:calc(50% - 80px);bottom:120px; }
+#anchor   { background:linear-gradient(90deg,#00ff66,#000); left:50%;bottom:120px; }
 
 /* ARROWS */
 .arrow{
@@ -189,14 +130,9 @@ iframe{
   color:#000;
   border-radius:8px;
   border:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
   font-weight:bold;
   font-size:1.2rem;
   position:absolute;
-  left:50%;
-  transform:translateX(-50%) translateY(10px);
   opacity:0;
   pointer-events:none;
   z-index:6;
@@ -213,25 +149,60 @@ iframe{
     border .2s ease,
     box-shadow .2s ease;
 }
-.arrow.show{
+#up    { bottom:70px;left:calc(50% - 105px); }
+#left  { bottom:70px;left:calc(50% - 35px); }
+#down  { bottom:70px;left:calc(50% + 35px); }
+#right { bottom:70px;left:calc(50% + 105px); }
+
+/* LEFT PRESTIGE STACK */
+.lvBtnL{
+  left:20px !important;
+  width:65px;
+}
+#lv0L{ background:linear-gradient(90deg,#999,#000); top:6%; }
+#lv1L{ background:linear-gradient(90deg,#00eaff,#000); top:12%; }
+#lv2L{ background:linear-gradient(90deg,#ff6bb3,#000); top:18%; }
+#lv3L{ background:linear-gradient(90deg,#ffd447,#000); top:24%; }
+#lv4L{ background:linear-gradient(90deg,#7fff6f,#000); top:30%; }
+#lv5L{ background:linear-gradient(90deg,#ff7a4a,#000); top:36%; }
+#lv6L{ background:linear-gradient(90deg,#6b5bff,#000); top:42%; }
+#lv7L{ background:linear-gradient(90deg,#00ffc8,#000); top:48%; }
+#lv8L{ background:linear-gradient(90deg,#ff3f6d,#000); top:54%; }
+
+/* RIGHT PRESTIGE STACK (Mirrored) */
+.lvBtnR{
+  right:20px !important;
+  left:auto !important;
+  width:65px;
+}
+#lv0R{ background:linear-gradient(90deg,#999,#000); top:6%; }
+#lv1R{ background:linear-gradient(90deg,#00eaff,#000); top:12%; }
+#lv2R{ background:linear-gradient(90deg,#ff6bb3,#000); top:18%; }
+#lv3R{ background:linear-gradient(90deg,#ffd447,#000); top:24%; }
+#lv4R{ background:linear-gradient(90deg,#7fff6f,#000); top:30%; }
+#lv5R{ background:linear-gradient(90deg,#ff7a4a,#000); top:36%; }
+#lv6R{ background:linear-gradient(90deg,#6b5bff,#000); top:42%; }
+#lv7R{ background:linear-gradient(90deg,#00ffc8,#000); top:48%; }
+#lv8R{ background:linear-gradient(90deg,#ff3f6d,#000); top:54%; }
+
+/* glow */
+.btn.show, .arrow.show{
   opacity:1;
   pointer-events:auto;
-  transform:translateX(-50%) translateY(0);
+  transform:translateY(0);
   background-position:right center;
+  box-shadow:0 0 10px rgba(255,255,255,.15);
 }
-.arrow:hover{
+
+.btn:hover, .arrow:hover{
   transform:scale(1.05);
-  box-shadow:0 0 18px rgba(0,255,204,.6);
+  box-shadow:0 0 18px rgba(255,255,255,.3);
 }
-.arrow.selected{
+
+.btn.selected, .arrow.selected{
   border:2px solid #ffcc00;
   box-shadow:0 0 15px #ffcc00aa;
 }
-
-#up{bottom:70px;left:calc(50% - 105px);}
-#left{bottom:70px;left:calc(50% - 35px);}
-#down{bottom:70px;left:calc(50% + 35px);}
-#right{bottom:70px;left:calc(50% + 105px);}
 
 /* notepad */
 #toggleNotepad{
@@ -269,12 +240,35 @@ iframe{
 }
 </style>
 </head>
+
 <body>
 
 <iframe id="frame1"></iframe>
 <iframe id="frame2"></iframe>
 <iframe id="frame3"></iframe>
 <iframe id="frame7"></iframe>
+
+<!-- LEFT PRESTIGE STACK -->
+<div id="lv0L" class="btn lvBtnL">LV0</div>
+<div id="lv1L" class="btn lvBtnL">LV1</div>
+<div id="lv2L" class="btn lvBtnL">LV2</div>
+<div id="lv3L" class="btn lvBtnL">LV3</div>
+<div id="lv4L" class="btn lvBtnL">LV4</div>
+<div id="lv5L" class="btn lvBtnL">LV5</div>
+<div id="lv6L" class="btn lvBtnL">LV6</div>
+<div id="lv7L" class="btn lvBtnL">LV7</div>
+<div id="lv8L" class="btn lvBtnL">LV8</div>
+
+<!-- RIGHT PRESTIGE STACK -->
+<div id="lv0R" class="btn lvBtnR">LV0</div>
+<div id="lv1R" class="btn lvBtnR">LV1</div>
+<div id="lv2R" class="btn lvBtnR">LV2</div>
+<div id="lv3R" class="btn lvBtnR">LV3</div>
+<div id="lv4R" class="btn lvBtnR">LV4</div>
+<div id="lv5R" class="btn lvBtnR">LV5</div>
+<div id="lv6R" class="btn lvBtnR">LV6</div>
+<div id="lv7R" class="btn lvBtnR">LV7</div>
+<div id="lv8R" class="btn lvBtnR">LV8</div>
 
 <!-- EXISTING BUTTONS -->
 <div id="run" class="btn">RUN</div>
@@ -291,16 +285,6 @@ iframe{
 
 <div id="light" class="btn">LIGHT</div>
 <div id="anchor" class="btn">ANCHOR</div>
-
-<!-- NEW LEFT VERTICAL BUTTONS -->
-<div id="lv1" class="btn lvBtn">LV1</div>
-<div id="lv2" class="btn lvBtn">LV2</div>
-<div id="lv3" class="btn lvBtn">LV3</div>
-<div id="lv4" class="btn lvBtn">LV4</div>
-<div id="lv5" class="btn lvBtn">LV5</div>
-<div id="lv6" class="btn lvBtn">LV6</div>
-<div id="lv7" class="btn lvBtn">LV7</div>
-<div id="lv8" class="btn lvBtn">LV8</div>
 
 <!-- ARROWS -->
 <div id="up" class="arrow">↑</div>
@@ -378,7 +362,7 @@ document.addEventListener('keydown',e=>{
 /* layer selection */
 frame2.addEventListener('click',()=>frame2.classList.toggle('active'));
 
-/* notepad open/close */
+/* notepad */
 toggleBtn.addEventListener('click',()=>{
   const open=frame7.style.opacity==='1';
   frame7.style.opacity=open?'0':'1';
