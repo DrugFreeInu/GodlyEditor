@@ -4,7 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <title>Editor</title>
-
 <style>
 html,body{
   margin:0;
@@ -33,16 +32,20 @@ iframe{
   top:35%;
   z-index:3;
   pointer-events:none;
+  opacity:1;
 }
 #frame2{
   width:340px;
   height:200px;
   position:fixed;
   top:calc(100% - 140px);
-  left:calc(50% - 170px);
+  left:calc(50% - 30px);
   z-index:2;
+  pointer-events:auto;
+  opacity:1;
   border-radius:10px;
   border:2px solid transparent;
+  background:transparent;
   transition:border .3s, box-shadow .3s;
 }
 #frame2.active{
@@ -53,6 +56,7 @@ iframe{
   width:60%;
   height:55vh;
   top:8%;
+  border-radius:12px;
   z-index:1;
   opacity:0;
   pointer-events:none;
@@ -63,20 +67,25 @@ iframe{
   bottom:10px;
   right:10px;
   position:fixed;
+  border-radius:12px;
   z-index:5;
   opacity:0;
   pointer-events:none;
   cursor:grab;
+  transition:opacity .3s ease;
 }
 
-/* button core */
-.btn,.arrow{
+/* BUTTON CORE */
+.btn{
   width:65px;
   height:35px;
   border:none;
   border-radius:8px;
+  position:absolute;
+  transform:translateY(10px);
   opacity:0;
   pointer-events:none;
+  z-index:6;
   color:#000;
   font-weight:bold;
   font-family:monospace;
@@ -84,86 +93,144 @@ iframe{
   text-transform:uppercase;
   background-size:200% 100%;
   background-position:left center;
-  transition:.4s;
+  transition:
+    background-position .45s ease,
+    opacity .5s ease,
+    transform .2s ease,
+    box-shadow .2s ease,
+    border .2s ease;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
 }
 
-.btn.show,.arrow.show{
-  opacity:1;
-  pointer-events:auto;
-  background-position:right center;
-  box-shadow:0 0 10px rgba(255,255,255,.15);
-}
-
-.btn.pressed,.arrow.pressed{
+/* MULTI-PRESS ACTIVE GLOW */
+.btn.pressed, .arrow.pressed{
   border:2px solid #ffcc00;
   box-shadow:0 0 15px #ffcc00aa;
 }
 
-/* colors */
-#run{background:linear-gradient(90deg,#32cd32,#000);}
-#clear{background:linear-gradient(90deg,#ff3333,#000);}
-#clearAll{background:linear-gradient(90deg,#9933ff,#000);}
-#move{background:linear-gradient(90deg,#00aaff,#000);}
-#save{background:linear-gradient(90deg,#ffaa00,#000);}
-#btn123{background:linear-gradient(90deg,#ff9ad7,#000);}
-#vingLeft{background:linear-gradient(90deg,#fff,#000);}
-#vingRight{background:linear-gradient(90deg,#ffb65c,#000);}
-#light{background:linear-gradient(90deg,#00cccc,#000);}
-#anchor{background:linear-gradient(90deg,#00ff66,#000);}
-.arrow{background:linear-gradient(90deg,#00ffcc,#000);}
+/* EXISTING BUTTONS */
+#run      { background:linear-gradient(90deg,#32cd32,#000); left:calc(50% - 180px);bottom:160px; }
+#vingLeft { background:linear-gradient(90deg,#ffffff,#000); left:calc(50% - 180px);bottom:120px; }
 
-/* bottom bars */
-#bottomBar,#bottomBar2{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:14px;
+#clear    { background:linear-gradient(90deg,#ff3333,#000); left:calc(50% - 80px);bottom:160px; }
+#clearAll { background:linear-gradient(90deg,#9933ff,#000); left:50%;bottom:160px; }
+
+#move     { background:linear-gradient(90deg,#00aaff,#000); left:calc(50% + 80px);bottom:160px; }
+#vingRight{ background:linear-gradient(90deg,#ffb65c,#000); left:calc(50% + 80px);bottom:120px; }
+
+#save     { background:linear-gradient(90deg,#ffaa00,#000); left:calc(50% + 180px);bottom:160px; }
+#btn123   { background:linear-gradient(90deg,#ff9ad7,#000); left:calc(50% + 180px);bottom:120px; }m
+
+#light    { background:linear-gradient(90deg,#00cccc,#000); left:calc(50% - 80px);bottom:120px; }
+#anchor   { background:linear-gradient(90deg,#00ff66,#000); left:50%;bottom:120px; }
+
+/* ARROWS */
+.arrow{
+  width:55px;
+  height:35px;
+  color:#000;
+  border-radius:8px;
+  border:none;
+  font-weight:bold;
+  font-size:1.2rem;
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
   z-index:6;
+  cursor:pointer;
+  background:linear-gradient(90deg,#00ffcc,#000);
+  background-size:200% 100%;
+  background-position:left center;
+  transition:
+    background-position .45s ease,
+    opacity .5s ease,
+    transform .2s ease,
+    border .2s ease,
+    box-shadow .2s ease;
 }
-#bottomBar{bottom:160px;}
-#bottomBar2{bottom:120px;}
+#up    { bottom:70px;left:calc(50% - 105px); }
+#left  { bottom:70px;left:calc(50% - 35px); }
+#down  { bottom:70px;left:calc(50% + 35px); }
+#right { bottom:70px;left:calc(50% + 105px); }
 
-/* arrows */
-#arrowBar{
-  position:fixed;
-  bottom:70px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:10px;
-  z-index:6;
+/* LEFT PRESTIGE STACK */
+.lvBtnL{
+  left:20px !important;
+  width:65px;
+}
+#lv0L{ background:linear-gradient(90deg,#999,#000); top:6%; }
+#lv1L{ background:linear-gradient(90deg,#00eaff,#000); top:12%; }
+#lv2L{ background:linear-gradient(90deg,#ff6bb3,#000); top:18%; }
+#lv3L{ background:linear-gradient(90deg,#ffd447,#000); top:24%; }
+#lv4L{ background:linear-gradient(90deg,#7fff6f,#000); top:30%; }
+#lv5L{ background:linear-gradient(90deg,#ff7a4a,#000); top:36%; }
+#lv6L{ background:linear-gradient(90deg,#6b5bff,#000); top:42%; }
+#lv7L{ background:linear-gradient(90deg,#00ffc8,#000); top:48%; }
+#lv8L{ background:linear-gradient(90deg,#ff3f6d,#000); top:54%; }
+
+/* RIGHT PRESTIGE STACK */
+.lvBtnR{
+  right:20px !important;
+  left:auto !important;
+  width:65px;
+}
+#lv0R{ background:linear-gradient(90deg,#999,#000); top:6%; }
+#lv1R{ background:linear-gradient(90deg,#00eaff,#000); top:12%; }
+#lv2R{ background:linear-gradient(90deg,#ff6bb3,#000); top:18%; }
+#lv3R{ background:linear-gradient(90deg,#ffd447,#000); top:24%; }
+#lv4R{ background:linear-gradient(90deg,#7fff6f,#000); top:30%; }
+#lv5R{ background:linear-gradient(90deg,#ff7a4a,#000); top:36%; }
+#lv6R{ background:linear-gradient(90deg,#6b5bff,#000); top:42%; }
+#lv7R{ background:linear-gradient(90deg,#00ffc8,#000); top:48%; }
+#lv8R{ background:linear-gradient(90deg,#ff3f6d,#000); top:54%; }
+
+/* glow */
+.btn.show, .arrow.show{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+  background-position:right center;
+  box-shadow:0 0 10px rgba(255,255,255,.15);
 }
 
-/* prestige stacks unchanged */
-.lvBtnL{left:20px!important;position:absolute;width:65px;}
-.lvBtnR{right:20px!important;left:auto!important;position:absolute;width:65px;}
-
-#lv0L,#lv0R{top:6%;background:linear-gradient(90deg,#999,#000);}
-#lv1L,#lv1R{top:12%;background:linear-gradient(90deg,#00eaff,#000);}
-#lv2L,#lv2R{top:18%;background:linear-gradient(90deg,#ff6bb3,#000);}
-#lv3L,#lv3R{top:24%;background:linear-gradient(90deg,#ffd447,#000);}
-#lv4L,#lv4R{top:30%;background:linear-gradient(90deg,#7fff6f,#000);}
-#lv5L,#lv5R{top:36%;background:linear-gradient(90deg,#ff7a4a,#000);}
-#lv6L,#lv6R{top:42%;background:linear-gradient(90deg,#6b5bff,#000);}
-#lv7L,#lv7R{top:48%;background:linear-gradient(90deg,#00ffc8,#000);}
-#lv8L,#lv8R{top:54%;background:linear-gradient(90deg,#ff3f6d,#000);}
+.btn:hover, .arrow:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 18px rgba(255,255,255,.3);
+}
 
 /* notepad */
 #toggleNotepad{
   position:fixed;
   bottom:15px;
   left:15px;
+  z-index:10;
+  font-family:monospace;
+  font-size:1rem;
+  color:#000;
+  border:none;
   padding:10px 25px;
   border-radius:8px;
-  font-family:monospace;
-  font-weight:bold;
-  background:linear-gradient(90deg,#00ffcc,#000);
   cursor:pointer;
+  background:linear-gradient(90deg,#00ffcc,#000);
+  background-size:200% 100%;
+  background-position:left center;
+  box-shadow:0 0 10px rgba(0,255,204,.3);
+  transition:
+    background-position .45s ease,
+    opacity .5s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+#toggleNotepad:hover{
+  transform:scale(1.05);
+  background-position:right center;
+  box-shadow:0 0 20px rgba(0,255,204,.6);
+}
+#toggleNotepad:active{
+  box-shadow:0 0 25px rgba(0,255,204,.9);
 }
 </style>
 </head>
@@ -175,53 +242,148 @@ iframe{
 <iframe id="frame3"></iframe>
 <iframe id="frame7"></iframe>
 
-<!-- prestige -->
-<div id="lv0L" class="btn lvBtnL">LV0</div><div id="lv1L" class="btn lvBtnL">LV1</div><div id="lv2L" class="btn lvBtnL">LV2</div><div id="lv3L" class="btn lvBtnL">LV3</div><div id="lv4L" class="btn lvBtnL">LV4</div><div id="lv5L" class="btn lvBtnL">LV5</div><div id="lv6L" class="btn lvBtnL">LV6</div><div id="lv7L" class="btn lvBtnL">LV7</div><div id="lv8L" class="btn lvBtnL">LV8</div>
-<div id="lv0R" class="btn lvBtnR">LV0</div><div id="lv1R" class="btn lvBtnR">LV1</div><div id="lv2R" class="btn lvBtnR">LV2</div><div id="lv3R" class="btn lvBtnR">LV3</div><div id="lv4R" class="btn lvBtnR">LV4</div><div id="lv5R" class="btn lvBtnR">LV5</div><div id="lv6R" class="btn lvBtnR">LV6</div><div id="lv7R" class="btn lvBtnR">LV7</div><div id="lv8R" class="btn lvBtnR">LV8</div>
+<!-- LEFT PRESTIGE STACK -->
+<div id="lv0L" class="btn lvBtnL">LV0</div>
+<div id="lv1L" class="btn lvBtnL">LV1</div>
+<div id="lv2L" class="btn lvBtnL">LV2</div>
+<div id="lv3L" class="btn lvBtnL">LV3</div>
+<div id="lv4L" class="btn lvBtnL">LV4</div>
+<div id="lv5L" class="btn lvBtnL">LV5</div>
+<div id="lv6L" class="btn lvBtnL">LV6</div>
+<div id="lv7L" class="btn lvBtnL">LV7</div>
+<div id="lv8L" class="btn lvBtnL">LV8</div>
 
-<!-- bottom rows -->
-<div id="bottomBar">
-  <div id="run" class="btn">RUN</div>
-  💚
-  <div id="clear" class="btn">CLEAR</div>
-  <div id="clearAll" class="btn">CLEAR ALL</div>
-  <div id="move" class="btn">MOVE</div>
-  <div id="save" class="btn">SAVE</div>
-  <div id="btn123" class="btn">123</div>
-</div>
+<!-- RIGHT PRESTIGE STACK -->
+<div id="lv0R" class="btn lvBtnR">LV0</div>
+<div id="lv1R" class="btn lvBtnR">LV1</div>
+<div id="lv2R" class="btn lvBtnR">LV2</div>
+<div id="lv3R" class="btn lvBtnR">LV3</div>
+<div id="lv4R" class="btn lvBtnR">LV4</div>
+<div id="lv5R" class="btn lvBtnR">LV5</div>
+<div id="lv6R" class="btn lvBtnR">LV6</div>
+<div id="lv7R" class="btn lvBtnR">LV7</div>
+<div id="lv8R" class="btn lvBtnR">LV8</div>
 
-<div id="bottomBar2">
-  <div id="vingLeft" class="btn">VinG</div>
-  <div id="light" class="btn">LIGHT</div>
-  <div id="anchor" class="btn">ANCHOR</div>
-  <div id="vingRight" class="btn">VinG</div>
-</div>
+<!-- EXISTING BUTTONS -->
+<div id="run" class="btn">RUN</div>
+<div id="vingLeft" class="btn">VinG</div>
 
-<div id="arrowBar">
-  <div id="up" class="arrow">↑</div>
-  <div id="left" class="arrow">←</div>
-  <div id="down" class="arrow">↓</div>
-  <div id="right" class="arrow">→</div>
-</div>
+<div id="clear" class="btn">CLEAR</div>
+<div id="clearAll" class="btn">CLEAR ALL</div>
+
+<div id="move" class="btn">MOVE</div>
+<div id="vingRight" class="btn">VinG</div>
+
+<div id="save" class="btn">SAVE</div>
+<div id="btn123" class="btn">123</div>
+
+<div id="light" class="btn">LIGHT</div>
+<div id="anchor" class="btn">ANCHOR</div>
+
+<!-- ARROWS -->
+<div id="up" class="arrow">↑</div>
+<div id="left" class="arrow">←</div>
+<div id="down" class="arrow">↓</div>
+<div id="right" class="arrow">→</div>
 
 <button id="toggleNotepad">NOTEPAD</button>
 
 <script>
 const v=Date.now();
+const frame1=document.getElementById('frame1');
+const frame2=document.getElementById('frame2');
+const frame3=document.getElementById('frame3');
+const frame7=document.getElementById('frame7');
+const toggleBtn=document.getElementById('toggleNotepad');
+const buttons=[...document.querySelectorAll('.btn,.arrow')];
+
+/* load iframes */
 frame1.src=`welcome.html?v=${v}`;
 frame2.src=`layer1.html?v=${v}`;
 frame3.src=`preview.html?v=${v}`;
 frame7.src=`notepad.html?v=${v}`;
 
-const buttons=[...document.querySelectorAll('.btn,.arrow')];
-window.addEventListener('message',e=>{
-  if(e.data?.type==='pasteDetected')buttons.forEach(b=>b.classList.add('show'));
-  if(e.data?.type==='updatePreview'){
-    frame3.style.opacity=1;
-    frame3.contentWindow.postMessage({type:'updatePreview',code:e.data.code,layer:1},'*');
+/* paste detection */
+window.addEventListener('message', e => {
+  const d=e.data;
+  if(!d) return;
+  if(d.type==='pasteDetected'){
+    buttons.forEach(b=>b.classList.add('show'));
+  }
+  if(d.type==='updatePreview' && d.code){
+    frame1.style.opacity='0';
+    setTimeout(()=>frame1.style.display='none',1000);
+    frame3.contentWindow.postMessage({type:'updatePreview',code:d.code,layer:1},'*');
+    frame3.style.opacity='1';
+    frame3.style.pointerEvents='auto';
   }
 });
-buttons.forEach(b=>b.onclick=()=>b.classList.toggle('pressed'));
+
+/* --- MULTI-PRESS SYSTEM --- */
+document.querySelectorAll('.btn, .arrow').forEach(b=>{
+  b.addEventListener('click',()=>{
+    b.classList.toggle('pressed');
+  });
+});
+
+/* move mode */
+let moveMode=false;
+document.querySelectorAll('.btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    moveMode=(b.id==='move');
+  });
+});
+
+/* arrow movement */
+const moveMap={up:{x:0,y:-10},down:{x:0,y:10},left:{x:-10,y:0},right:{x:10,y:0}};
+['up','down','left','right'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('click',()=>{
+    if(!moveMode || !frame2.classList.contains('active')) return;
+    frame2.contentWindow.postMessage({type:'moveBox',dir:id,offset:moveMap[id]},'*');
+  });
+});
+
+/* arrow keys */
+document.addEventListener('keydown',e=>{
+  const keyMap={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
+  const dir=keyMap[e.key];
+  if(!dir || !moveMode || !frame2.classList.contains('active')) return;
+  frame2.contentWindow.postMessage({type:'moveBox',dir,offset:moveMap[dir]},'*');
+});
+
+/* layer selection */
+frame2.addEventListener('click',()=>frame2.classList.toggle('active'));
+
+/* notepad */
+toggleBtn.addEventListener('click',()=>{
+  const open=frame7.style.opacity==='1';
+  frame7.style.opacity=open?'0':'1';
+  frame7.style.pointerEvents=open?'none':'auto';
+  toggleBtn.textContent=open?'NOTEPAD':'CLOSE';
+});
+
+/* drag notepad */
+let dragging=false,offX=0,offY=0;
+frame7.addEventListener('mousedown',e=>{
+  dragging=true;
+  offX=e.clientX-frame7.getBoundingClientRect().left;
+  offY=e.clientY-frame7.getBoundingClientRect().top;
+  frame7.style.cursor='grabbing';
+});
+document.addEventListener('mousemove',e=>{
+  if(!dragging) return;
+  let x=e.clientX-offX;
+  let y=e.clientY-offY;
+  x=Math.max(0,Math.min(window.innerWidth-frame7.offsetWidth,x));
+  y=Math.max(0,Math.min(window.innerHeight-frame7.offsetHeight,y));
+  frame7.style.left=x+'px';
+  frame7.style.top=y+'px';
+});
+document.addEventListener('mouseup',()=>{
+  dragging=false;
+  frame7.style.cursor='grab';
+});
 </script>
 
 </body>
